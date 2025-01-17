@@ -1,0 +1,12 @@
+version: "3"
+
+tasks:
+  default:
+    cmd:
+      deno task start
+  compile:
+    cmd:
+      deno compile --include static --include fresh.config.ts --include fresh.gen.ts --include deno.json -A main.ts
+  docker:
+    cmd:
+      docker build --build-arg GIT_REVISION=$(git rev-parse HEAD) -t fresh-aimaas-ui .
