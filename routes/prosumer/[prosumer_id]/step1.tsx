@@ -1,11 +1,18 @@
 import { Handlers, PageProps, RouteContext } from "$fresh/server.ts";
-import { Domain, ProsumerWorkflowData, SSISearchCriterion, User } from "@/utils/types.ts";
+import {
+    Domain,
+    ProsumerWorkflowData,
+    ProsumerWorkflowSSIData,
+    SSISearchCriterion,
+    SSISearchResponse,
+    User,
+} from "@/utils/types.ts";
 import { dl_domains, do_ssi_search } from "@/utils/backend.ts";
 import { sessionIdOrSignin } from "@/utils/http.ts";
 import { Session } from "@5t111111/fresh-session";
 
 import ProsumerStep1, { FilterValue } from "@/islands/prosumer/ProsumerStep1.tsx";
-import { db_get, set_user_session_data, user_session_data } from "@/utils/db.ts";
+import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
 
 import { redirect } from "@/utils/http.ts";
 import { prosumer_key } from "@/utils/misc.ts";
@@ -21,6 +28,7 @@ interface Data {
     domains: Domain[];
     user: User;
     criteria: SSISearchCriterion[];
+    process_name: string;
 }
 
 async function user_profile(sessionId: string): Promise<User> {
@@ -57,9 +65,10 @@ export const handler: Handlers<unknown, State> = {
         console.log(data);
         const prosumer_id = ctx.params["prosumer_id"];
 
+        const process_name = data.get("process_name")?.toString() || "";
         const filters: string[][] = [];
         const sep = ":";
-        new Set(data.keys().map((s) => s.split(sep)[1])).forEach((fid) => {
+        new Set(data.keys().filter((v) => v.indexOf(sep) >= 0).map((s) => s.split(sep)[1])).forEach((fid) => {
             const d = data.get(`domain${sep}${fid}`)?.toString();
             const a = data.get(`attribute${sep}${fid}`)?.toString();
             const v = data.get(`value${sep}${fid}`)?.toString();
@@ -73,6 +82,7 @@ export const handler: Handlers<unknown, State> = {
         });
         console.log(filters);
         const user: User = await user_profile(sessionId);
+
         const criteria: SSISearchCriterion[] = filters.map(([d, a, v]) => {
             return {
                 domain: domains.get(d),
@@ -82,7 +92,27 @@ export const handler: Handlers<unknown, State> = {
             };
         });
         console.log("CRITERIA", criteria);
-        await do_ssi_search(user, prosumer_id, criteria);
+
+        const w: ProsumerWorkflowData = {
+            id: prosumer_id,
+            name: process_name,
+            ssi: {
+                status: "NOT STARTED",
+                process_id: "",
+                criteria,
+            },
+        };
+
+        const perform_ssi = data.get("action")?.toString() === "search";
+
+        if (perform_ssi) {
+            const ssi_response = await do_ssi_search(user, criteria);
+            if (ssi_response) {
+                w.ssi.status = ssi_response.status;
+                w.ssi.process_id = ssi_response.process_id || "";
+            }
+        }
+        await db_store(prosumer_key(user, prosumer_id), w);
         return redirect("step1");
     },
     async GET(req, ctx) {
@@ -96,11 +126,23 @@ export const handler: Handlers<unknown, State> = {
         const user: User = await user_profile(sessionId);
 
         const prosumer_id = ctx.params["prosumer_id"];
-        const prosumer_data = await db_get(prosumer_key(user, prosumer_id)) as ProsumerWorkflowData;
-        return ctx.render({ domains: [...domains.values()], user, criteria: prosumer_data?.ssi?.criteria });
+        const prosumer_data = await db_get<ProsumerWorkflowData>(prosumer_key(user, prosumer_id));
+        return ctx.render({
+            domains: [...domains.values()],
+            user,
+            criteria: prosumer_data?.ssi?.criteria,
+            process_name: prosumer_data?.name || "",
+        });
     },
 };
 
 export default function Step1Page(props: PageProps<Data>) {
-    return <ProsumerStep1 domains={props.data.domains} user={props.data.user} criteria={props.data.criteria} />;
+    return (
+        <ProsumerStep1
+            domains={props.data.domains}
+            user={props.data.user}
+            criteria={props.data.criteria}
+            process_name={props.data.process_name}
+        />
+    );
 }

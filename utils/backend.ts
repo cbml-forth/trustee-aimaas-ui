@@ -104,7 +104,10 @@ export async function atr_log(
     return true;
 }
 
-export async function do_ssi_search(user: User, prosumer_id: string, criteria: SSISearchCriterion[]) {
+export async function do_ssi_search(
+    user: User,
+    criteria: SSISearchCriterion[],
+): Promise<SSISearchResponse | null> {
     const timestamp = Math.round(Date.now() * 1000);
     const q = {
         type: "datasets-search",
@@ -131,23 +134,11 @@ export async function do_ssi_search(user: User, prosumer_id: string, criteria: S
     });
     if (!req.ok) {
         print("SSI ERROR", await req.json());
-        return;
+        return null;
     }
     const res = await req.json() as SSISearchResponse;
-    print(res);
-    if (res.status == "ACCEPTED" && !!res.process_id) {
-        // submit_work({ type: "ssi_poll", process_id: res.process_id }, 5000);
-        const a: ProsumerWorkflowSSIData = {
-            status: res.status,
-            process_id: res.process_id,
-            criteria,
-        };
-        const w: ProsumerWorkflowData = {
-            id: prosumer_id,
-            ssi: a,
-        };
-        await db_store(prosumer_key(user, prosumer_id), w);
-    }
+    // print(res);
+    return res;
 }
 
 async function do_ssi_poll(user: User, prosumer_id: string, process_id: string) {

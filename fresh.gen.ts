@@ -6,14 +6,12 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
 import * as $_middleware from "./routes/_middleware.tsx";
-import * as $api_joke from "./routes/api/joke.ts";
 import * as $consumer_steps_layout from "./routes/consumer/(steps)/_layout.tsx";
 import * as $consumer_steps_step1 from "./routes/consumer/(steps)/step1.tsx";
 import * as $consumer_steps_step2 from "./routes/consumer/(steps)/step2.tsx";
 import * as $consumer_steps_step3 from "./routes/consumer/(steps)/step3.tsx";
 import * as $consumer_index from "./routes/consumer/index.tsx";
 import * as $form from "./routes/form.tsx";
-import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $login from "./routes/login.ts";
 import * as $oidc from "./routes/oidc.ts";
@@ -37,14 +35,12 @@ const manifest = {
         "./routes/_app.tsx": $_app,
         "./routes/_layout.tsx": $_layout,
         "./routes/_middleware.tsx": $_middleware,
-        "./routes/api/joke.ts": $api_joke,
         "./routes/consumer/(steps)/_layout.tsx": $consumer_steps_layout,
         "./routes/consumer/(steps)/step1.tsx": $consumer_steps_step1,
         "./routes/consumer/(steps)/step2.tsx": $consumer_steps_step2,
         "./routes/consumer/(steps)/step3.tsx": $consumer_steps_step3,
         "./routes/consumer/index.tsx": $consumer_index,
         "./routes/form.tsx": $form,
-        "./routes/greet/[name].tsx": $greet_name_,
         "./routes/index.tsx": $index,
         "./routes/login.ts": $login,
         "./routes/oidc.ts": $oidc,

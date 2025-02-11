@@ -55,16 +55,16 @@ export async function db_store(key: string[], data: unknown) {
     console.log("DB store at", key, data);
     return await kv.set(key, data);
 }
-export async function db_get(key: string[]): Promise<unknown | null> {
+export async function db_get<T = unknown>(key: string[]): Promise<T | null> {
     const { value } = await kv.get(key);
-    return value;
+    return value as T | null;
 }
 
-export async function list_all(prefix_key: string[]): Promise<unknown[]> {
+export async function list_all<T = unknown>(prefix_key: string[]): Promise<T[]> {
     const entries = kv.list({ prefix: prefix_key });
-    const ret = [];
+    const ret: T[] = [];
     for await (const entry of entries) {
-        ret.push(entry.value);
+        ret.push(entry.value as T);
     }
     return ret;
 }

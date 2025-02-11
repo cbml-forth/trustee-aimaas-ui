@@ -12,7 +12,7 @@ export default defineRoute(async (req, ctx) => {
     }
     const session_id = res as string;
     const user: User = await user_profile(session_id);
-    const list: ProsumerWorkflowData[] = await list_all(prosumer_key(user)) as ProsumerWorkflowData[];
+    const list = await list_all<ProsumerWorkflowData>(prosumer_key(user));
 
     const prosumer_id: string = crypto.randomUUID();
     const props = {
@@ -62,17 +62,26 @@ export default defineRoute(async (req, ctx) => {
     return (
         <div class="vertical">
             <WorkflowWelcome {...props}></WorkflowWelcome>
-            <ul>
-                {list.map((w) => {
-                    return (
-                        <a href={"/prosumer/" + w.id + "/step1"}>
-                            <button type="button" class="bg-trusteeBtn">
-                                {w.id}
-                            </button>
-                        </a>
-                    );
-                })}
-            </ul>
+            <div class="padding align-left">
+                <h5 class="align-left">Or check the status of previous flows:</h5>
+                <article>
+                    {list.map((w, index) => {
+                        return (
+                            <>
+                                {index > 0 && <hr />}
+                                <a class="row large-padding surface-container" href={"/prosumer/" + w.id + "/step1"}>
+                                    <i>home</i>
+                                    <div class="max">
+                                        <h6 class="small">{w.name || w.id}</h6>
+                                        <div></div>
+                                    </div>
+                                    <label>+15 min</label>
+                                </a>
+                            </>
+                        );
+                    })}
+                </article>
+            </div>
         </div>
     );
 });

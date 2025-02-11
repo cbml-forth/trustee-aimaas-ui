@@ -176,6 +176,7 @@ export default function ProsumerStep1(props: {
     domains: Domain[];
     user: User;
     criteria: SSISearchCriterion[];
+    process_name: string;
 }) {
     console.log("STEP1");
     // const first = new_filter_ctor(props.domains[0]);
@@ -197,6 +198,7 @@ export default function ProsumerStep1(props: {
     });
     const d = useSignal<Record<string, FilterValue>>(m);
     const count = useComputed(() => Object.keys(d.value).length);
+    const process_name = useSignal<string>(props.process_name);
 
     useSignalEffect(() => {
         console.log("Now:", dd.value);
@@ -234,11 +236,32 @@ export default function ProsumerStep1(props: {
     );
     return (
         <form method="POST">
+            <div class="field label large">
+                <input
+                    name="process_name"
+                    type="text"
+                    value={process_name}
+                    onChange={(e) => {
+                        process_name.value = e.target.value;
+                    }}
+                />
+                <label>Process name</label>
+            </div>
             <div class="padding">
                 {...dd.value}
             </div>
             <div class="right-align">
-                <button class="button small-round upper elevate bg-trusteeBtn" type="submit">Submit</button>
+                <button
+                    class="button small-round upper elevate bg-trusteeBtn"
+                    type="submit"
+                    name="action"
+                    value="search"
+                >
+                    Submit
+                </button>
+                <button class="button small-round upper elevate bg-trusteeBtn" type="submit" name="action" value="save">
+                    Save
+                </button>
                 <button class="button small-round upper elevate bg-trusteeBtn" type="button" onClick={reset}>
                     Clear
                 </button>

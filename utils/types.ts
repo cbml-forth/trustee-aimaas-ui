@@ -28,7 +28,7 @@ export interface SSISearchCriterion {
     operator: "equal";
     value: string;
 }
-export type SSISearchStatus = "ACCEPTED" | "FINISHED" | "ERROR";
+export type SSISearchStatus = "NOT STARTED" | "ACCEPTED" | "FINISHED" | "ERROR";
 export interface SSISearchResponse {
     status: SSISearchStatus;
     process_id?: string;
@@ -49,5 +49,6 @@ export interface ProsumerWorkflowSSIData {
 
 export interface ProsumerWorkflowData {
     id: string; // "prosumer id"
+    name?: string;
     ssi: ProsumerWorkflowSSIData; // this is for "step 1"
 }
