@@ -2,6 +2,7 @@ import { type PageProps } from "$fresh/server.ts";
 import Header from "@/components/Header.tsx";
 import Footer from "@/components/Footer.tsx";
 import Sidebar from "@/islands/Sidebar.tsx";
+
 export default function App({ Component }: PageProps) {
   return (
     <html>
@@ -9,35 +10,24 @@ export default function App({ Component }: PageProps) {
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>AI Model as a Service - UI</title>
-        <link rel="stylesheet" href="/styles.css" />
+        <link
+          href="https://cdn.jsdelivr.net/npm/beercss@3.8.0/dist/cdn/beer.min.css"
+          rel="stylesheet"
+        />
+        <script
+          type="module"
+          src="https://cdn.jsdelivr.net/npm/beercss@3.8.0/dist/cdn/beer.min.js"
+        >
+        </script>
+        <link rel="stylesheet" href="/styles-wine.css" />
       </head>
-      <body>
-        <div id="app">
-          <div className="v-application v-theme--trusteeLight v-layout v-layout--full-height v-locale--is-ltr">
-            <div className="v-application__wrap">
-              <Header />
-              <div className="d-flex flex-grow-1">
-                <Sidebar />
-                <div className="d-flex flex-grow-1">
-                  <main
-                    className="v-main"
-                    style={{
-                      "--v-layout-left": "0px",
-                      "--v-layout-right": "0px",
-                      "--v-layout-top": "0px",
-                      "--v-layout-bottom": "0px",
-                    }}
-                  >
-                    <Component />
-                  </main>
-                </div>
-              </div>
-              <Footer />
-              <div className="v-overlay-container" id="the-overlay-container">
-              </div>
-            </div>
-          </div>
-        </div>
+      <body class="light">
+        <Header />
+        <main class="max">
+          <Sidebar />
+          <Component />
+          <Footer />
+        </main>
       </body>
     </html>
   );

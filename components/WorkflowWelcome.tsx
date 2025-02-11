@@ -12,7 +12,10 @@ type WorkflowProps = {
 
 function WorkflowItem(props: WorkflowItemProps) {
   return (
-    <div className="v-col" style={{ maxWidth: "150px" }}>
+    <div
+      className="vertical middle-align center-align"
+      style={{ maxWidth: "150px" }}
+    >
       <img
         style={{ maxWidth: "80px", width: "auto", height: "auto" }}
         src={"/img/" + props.imgURL}
@@ -24,6 +27,27 @@ function WorkflowItem(props: WorkflowItemProps) {
 
 export default function WorkflowWelcome(props: WorkflowProps) {
   return (
+    <div className="middle-align center-align vertical">
+      <h4 className="text-primary">{props.titleText}</h4>
+      <div class="middle-align row wrap">
+        {props.items.map((item, index) => (
+          <WorkflowItem
+            key={index}
+            {...item}
+          />
+        ))}
+      </div>
+      <a href={props.pageURL}>
+        <button class="button small-round upper elevate bg-trusteeBtn">
+          Start Here
+        </button>
+      </a>
+    </div>
+  );
+}
+
+/*
+
     <div className="v-container v-locale--is-ltr fill-height text-center">
       <div className="v-row align-center d-flex flex-column">
         <div className="v-col v-col-12 mb-6">
@@ -64,5 +88,4 @@ export default function WorkflowWelcome(props: WorkflowProps) {
         </a>
       </div>
     </div>
-  );
-}
+    */

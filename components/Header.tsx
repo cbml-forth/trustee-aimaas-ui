@@ -1,10 +1,24 @@
 import { asset } from "$fresh/runtime.ts";
 
 export default function Header() {
+    return (
+        <nav id="header" class="row ">
+            <img
+                style={{ "max-width": "170px" }}
+                src="/img/TRUSTEE_logo_croped-9912f73b.svg"
+            />
+            <div class="max"></div>
+            <button class="square round bg-trusteeBtn">
+                <i>person</i>
+            </button>
+        </nav>
+    );
+
+    /*
   return (
-    <header
+    <nav
       data-v-8cb87d4b=""
-      className="v-toolbar v-toolbar--density-default bg-white v-theme--trusteeLight v-locale--is-ltr d-flex flex-row text-white"
+      className="top row"
       style={{ borderBottom: "2px solid rgb(238, 238, 238)" }}
     >
       <div className="v-toolbar__content" style={{ height: "64px" }}>
@@ -179,6 +193,7 @@ export default function Header() {
           </div>
         </div>
       </div>
-    </header>
+    </nav>
   );
+  */
 }

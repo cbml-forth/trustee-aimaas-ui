@@ -1,6 +1,5 @@
-import SidebarItem from "@/components/SidebarItem.tsx";
 import { useSignal, useSignalEffect } from "@preact/signals";
-import { asset } from "$fresh/runtime.ts";
+import classNames from "@/utils/classnames.js";
 
 const dashboard = "https://dashboard.trustee-1.ics.forth.gr";
 
@@ -9,7 +8,7 @@ const sidebarItems = [
     id: 1,
     title: "Home",
     imgURL: "/img/home",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/home",
     isSelected: false,
   },
@@ -17,7 +16,7 @@ const sidebarItems = [
     id: 2,
     title: "Use Data",
     imgURL: "/img/use_data",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/use-data",
     isSelected: false,
   },
@@ -25,7 +24,7 @@ const sidebarItems = [
     id: 3,
     title: "Provide Data",
     imgURL: "/img/provide_data",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/provide-data",
     isSelected: false,
   },
@@ -33,7 +32,7 @@ const sidebarItems = [
     id: 4,
     title: "AIaaS",
     imgURL: "/img/artificial_intelligence",
-    identation: "0px",
+    identation: false,
     redirectTo: "/",
     isSelected: true,
     nested: [
@@ -41,7 +40,7 @@ const sidebarItems = [
         id: 4.1,
         title: "ML Prosumer",
         imgURL: "/img/artificial_intelligence",
-        identation: "20px",
+        identation: true,
         redirectTo: "/prosumer",
         isSelected: false,
       },
@@ -49,7 +48,7 @@ const sidebarItems = [
         id: 4.2,
         title: "ML Provider",
         imgURL: "/img/artificial_intelligence",
-        identation: "20px",
+        identation: true,
         redirectTo: "/provider",
         isSelected: false,
       },
@@ -57,7 +56,7 @@ const sidebarItems = [
         id: 4.3,
         title: "ML Consumer",
         imgURL: "/img/artificial_intelligence",
-        identation: "20px",
+        identation: true,
         redirectTo: "/consumer",
         isSelected: false,
       },
@@ -67,7 +66,7 @@ const sidebarItems = [
     id: 5,
     title: "Knowledge Repository",
     imgURL: "/img/kr",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/knowledge-repository",
     isSelected: false,
   },
@@ -75,7 +74,7 @@ const sidebarItems = [
     id: 6,
     title: "Privacy Impact Assessment",
     imgURL: "/img/pia",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/privacy-impact-assessment",
     isSelected: false,
   },
@@ -83,7 +82,7 @@ const sidebarItems = [
     id: 7,
     title: "My Agreements",
     imgURL: "/img/my_agreements",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/my-agreements",
     isSelected: false,
   },
@@ -91,7 +90,7 @@ const sidebarItems = [
     id: 8,
     title: "My Results",
     imgURL: "/img/my_results",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/my-results",
     isSelected: false,
   },
@@ -99,7 +98,7 @@ const sidebarItems = [
     id: 9,
     title: "My Datasets",
     imgURL: "/img/my_datasets",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/my-datasets",
     isSelected: false,
   },
@@ -107,7 +106,7 @@ const sidebarItems = [
     id: 10,
     title: "Monitor Tool",
     imgURL: "/img/ATR",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/monitor-tool",
     isSelected: false,
   },
@@ -115,52 +114,45 @@ const sidebarItems = [
     id: 11,
     title: "TRUSTEE Guide",
     imgURL: "/img/trustee_guide",
-    identation: "0px",
+    identation: false,
     redirectTo: dashboard + "/trustee-guide",
     isSelected: false,
   },
 ];
 
-const sidebarObjects = sidebarItems.map((x, index) => {
-  const elem = (
-    <SidebarItem
-      key={index}
-      {
-        // id={x.id}
-        // title={x.title}
-        // imgURL={x.imgURL}
-        // identation={x.identation}
-        // redirectTo={x.redirectTo}
-        // isSelected={x.isSelected}
-        ...x
-      }
-    />
-  );
-  let nestedElems;
-  if (x.nested) {
-    nestedElems = x.nested.map((n, nestedIndex) => {
-      return (
-        <SidebarItem
-          key={`${index}-${nestedIndex}`}
-          id={n.id}
-          title={n.title}
-          imgURL={n.imgURL}
-          identation={n.identation}
-          redirectTo={n.redirectTo}
-          isSelected={n.isSelected}
-          // toggleSelection={toggleSelection}
-        />
-      );
-    });
-  }
+function SidebarItem(
+  props: {
+    id: number;
+    isSelected: boolean;
+    redirectTo: string;
+    title: string;
+    imgURL: string;
+    identation: boolean;
+    isClosed: boolean;
+  },
+) {
+  const isExternal = props.redirectTo.startsWith("http");
 
   return (
-    <>
-      {elem}
-      {nestedElems}
-    </>
+    <a
+      class={classNames(
+        {
+          "external-link": isExternal,
+          "aimaas": props.identation,
+        },
+      )}
+      href={props.redirectTo}
+    >
+      <i class={props.isClosed ? "small" : "large"}>
+        <img
+          src={props.imgURL + "_blue.svg"}
+          alt={props.title}
+        />
+      </i>
+      <div>{props.title}</div>
+    </a>
   );
-});
+}
 
 export default function Sidebar() {
   const isClosed = useSignal(false);
@@ -171,6 +163,54 @@ export default function Sidebar() {
   useSignalEffect(() => {
     console.log(`Menu is closed: ${isClosed.value}`);
   });
+
+  const sidebarObjects = sidebarItems.map((x, index) => {
+    const elem = (
+      <SidebarItem
+        key={index}
+        isClosed={isClosed.value}
+        {...x}
+      />
+    );
+    let nestedElems;
+    if (x.nested) {
+      nestedElems = x.nested.map((n, nestedIndex) => {
+        return (
+          <SidebarItem
+            key={`${index}-${nestedIndex}`}
+            isClosed={isClosed.value}
+            id={n.id}
+            title={n.title}
+            imgURL={n.imgURL}
+            identation={n.identation}
+            redirectTo={n.redirectTo}
+            isSelected={n.isSelected}
+            // toggleSelection={toggleSelection}
+          />
+        );
+      });
+    }
+
+    return (
+      <>
+        {elem}
+        {nestedElems}
+      </>
+    );
+  });
+  return (
+    <nav id="sidebar" class={isClosed.value ? "left scroll closed" : "left scroll  drawer"}>
+      <button
+        class="circle transparent"
+        style={isClosed.value ? {} : { "align-self": "flex-end" }}
+        onClick={toggleOpenClose}
+      >
+        <i>{isClosed.value ? "menu" : "close"}</i>
+      </button>
+      {sidebarObjects}
+    </nav>
+  );
+  /*
   if (isClosed.value) {
     return (
       <button
@@ -238,4 +278,5 @@ export default function Sidebar() {
       </div>
     </div>
   );
+  */
 }

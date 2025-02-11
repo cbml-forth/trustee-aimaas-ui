@@ -7,39 +7,63 @@ import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
 import * as $_middleware from "./routes/_middleware.tsx";
 import * as $api_joke from "./routes/api/joke.ts";
+import * as $consumer_steps_layout from "./routes/consumer/(steps)/_layout.tsx";
+import * as $consumer_steps_step1 from "./routes/consumer/(steps)/step1.tsx";
+import * as $consumer_steps_step2 from "./routes/consumer/(steps)/step2.tsx";
+import * as $consumer_steps_step3 from "./routes/consumer/(steps)/step3.tsx";
 import * as $consumer_index from "./routes/consumer/index.tsx";
 import * as $form from "./routes/form.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
+import * as $login from "./routes/login.ts";
+import * as $oidc from "./routes/oidc.ts";
 import * as $profile from "./routes/profile.tsx";
+import * as $prosumer_prosumer_id_layout from "./routes/prosumer/[prosumer_id]/_layout.tsx";
+import * as $prosumer_prosumer_id_step1 from "./routes/prosumer/[prosumer_id]/step1.tsx";
 import * as $prosumer_index from "./routes/prosumer/index.tsx";
+import * as $provider_provider_id_step1 from "./routes/provider/[provider_id]/step1.tsx";
 import * as $provider_index from "./routes/provider/index.tsx";
 import * as $signin from "./routes/signin.tsx";
+import * as $test from "./routes/test.tsx";
 import * as $Counter from "./islands/Counter.tsx";
+import * as $DropMenuField from "./islands/DropMenuField.tsx";
 import * as $Sidebar from "./islands/Sidebar.tsx";
+import * as $prosumer_ProsumerStep1 from "./islands/prosumer/ProsumerStep1.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
-  routes: {
-    "./routes/_404.tsx": $_404,
-    "./routes/_app.tsx": $_app,
-    "./routes/_layout.tsx": $_layout,
-    "./routes/_middleware.tsx": $_middleware,
-    "./routes/api/joke.ts": $api_joke,
-    "./routes/consumer/index.tsx": $consumer_index,
-    "./routes/form.tsx": $form,
-    "./routes/greet/[name].tsx": $greet_name_,
-    "./routes/index.tsx": $index,
-    "./routes/profile.tsx": $profile,
-    "./routes/prosumer/index.tsx": $prosumer_index,
-    "./routes/provider/index.tsx": $provider_index,
-    "./routes/signin.tsx": $signin,
-  },
-  islands: {
-    "./islands/Counter.tsx": $Counter,
-    "./islands/Sidebar.tsx": $Sidebar,
-  },
-  baseUrl: import.meta.url,
+    routes: {
+        "./routes/_404.tsx": $_404,
+        "./routes/_app.tsx": $_app,
+        "./routes/_layout.tsx": $_layout,
+        "./routes/_middleware.tsx": $_middleware,
+        "./routes/api/joke.ts": $api_joke,
+        "./routes/consumer/(steps)/_layout.tsx": $consumer_steps_layout,
+        "./routes/consumer/(steps)/step1.tsx": $consumer_steps_step1,
+        "./routes/consumer/(steps)/step2.tsx": $consumer_steps_step2,
+        "./routes/consumer/(steps)/step3.tsx": $consumer_steps_step3,
+        "./routes/consumer/index.tsx": $consumer_index,
+        "./routes/form.tsx": $form,
+        "./routes/greet/[name].tsx": $greet_name_,
+        "./routes/index.tsx": $index,
+        "./routes/login.ts": $login,
+        "./routes/oidc.ts": $oidc,
+        "./routes/profile.tsx": $profile,
+        "./routes/prosumer/[prosumer_id]/_layout.tsx": $prosumer_prosumer_id_layout,
+        "./routes/prosumer/[prosumer_id]/step1.tsx": $prosumer_prosumer_id_step1,
+        "./routes/prosumer/index.tsx": $prosumer_index,
+        "./routes/provider/[provider_id]/step1.tsx": $provider_provider_id_step1,
+        "./routes/provider/index.tsx": $provider_index,
+        "./routes/signin.tsx": $signin,
+        "./routes/test.tsx": $test,
+    },
+    islands: {
+        "./islands/Counter.tsx": $Counter,
+        "./islands/DropMenuField.tsx": $DropMenuField,
+        "./islands/Sidebar.tsx": $Sidebar,
+        "./islands/prosumer/ProsumerStep1.tsx": $prosumer_ProsumerStep1,
+    },
+    baseUrl: import.meta.url,
 } satisfies Manifest;
 
 export default manifest;

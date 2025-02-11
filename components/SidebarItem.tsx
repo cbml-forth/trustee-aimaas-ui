@@ -1,3 +1,4 @@
+import classNames from "@/utils/classnames.js";
 export default function SidebarItem(
   props: {
     id: number;
@@ -5,10 +6,34 @@ export default function SidebarItem(
     redirectTo: string;
     title: string;
     imgURL: string;
-    identation: string;
+    identation: boolean;
   },
 ) {
   const isExternal = props.redirectTo.startsWith("http");
+
+  return (
+    <a
+      class={classNames(
+        {
+          "external-link": isExternal,
+          "aimaas": props.identation,
+        },
+      )}
+      href={props.redirectTo}
+    >
+      <i class="large">
+        <img
+          src={props.imgURL + "_blue.svg"}
+          alt={props.title}
+        />
+      </i>
+      <div>{props.title}</div>
+    </a>
+  );
+}
+
+/*
+
 
   const item = (
     <div
@@ -55,9 +80,10 @@ export default function SidebarItem(
   return (
     <a
       class={isExternal ? "external-link" : ""}
-      href={props.redirectTo} /* target="_blank" rel="noopener noreferrer" */
+      href={props.redirectTo}
     >
       {item}
     </a>
   );
 }
+*/

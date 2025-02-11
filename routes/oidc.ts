@@ -1,0 +1,71 @@
+import * as oauth from "openid-client";
+import { getRequiredEnv } from "@/utils/misc.ts";
+import { defineRoute, RouteContext } from "$fresh/server.ts";
+import { redirect } from "@/utils/http.ts";
+import { Session } from "@5t111111/fresh-session";
+import { set_user_session_data } from "@/utils/db.ts";
+import { User } from "@/utils/types.ts";
+
+const issuer = new URL(getRequiredEnv("OAUTH_SERVER"));
+
+const oauth_config = await oauth.discovery(
+    issuer,
+    getRequiredEnv("OAUTH_CLIENT_ID"),
+    undefined,
+    oauth.ClientSecretBasic(getRequiredEnv("OAUTH_CLIENT_SECRET")),
+    { execute: [oauth.allowInsecureRequests] },
+);
+
+interface State {
+    session: Session;
+}
+export default defineRoute(async (req: Request, ctx: RouteContext<any, State>) => {
+    const code_verifier = ctx.state.session.get<string>("oauth_code_verifier") || "";
+    const state = ctx.state.session.get<string>("oauth_state");
+    console.log(code_verifier, state);
+    const tokens: oauth.TokenEndpointResponse = await oauth.authorizationCodeGrant(
+        oauth_config,
+        new URL(req.url),
+        {
+            pkceCodeVerifier: code_verifier,
+            expectedState: state,
+        },
+    );
+
+    console.log("Token Endpoint Response", tokens.claims());
+
+    const userInfoRes: Response = await oauth.fetchProtectedResource(
+        oauth_config,
+        tokens.access_token,
+        new URL(getRequiredEnv("OAUTH_SERVER") + "/oauth/userinfo"),
+        "GET",
+    );
+    const user_profile = await userInfoRes.json();
+    console.log("RETRIEVED USER PROFILE:", user_profile);
+
+    const session_id = crypto.randomUUID();
+
+    const user_name = user_profile.name ?? user_profile.firstname + " " + user_profile.lastname;
+
+    const expires_at = tokens.claims().exp * 1000;
+    const now = Date.now();
+    const expires_in = expires_at - now;
+    const u: User = {
+        id: user_profile["sub"],
+        name: user_name,
+        email: user_profile.email ?? "",
+        tokens: {
+            id_token: tokens.id_token,
+            access_token: tokens.access_token,
+            expires_in: expires_in,
+            expires_at: expires_at,
+        },
+    };
+    await set_user_session_data(session_id, "user", u);
+    ctx.state.session.set<string>("session_id", session_id);
+
+    const next_url = ctx.state.session.get<string>("next");
+
+    console.log("OIDC SESSION:", ctx.state.session.getSessionObject().data);
+    return redirect(next_url ? next_url : "/");
+});

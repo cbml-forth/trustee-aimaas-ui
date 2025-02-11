@@ -1,5 +1,22 @@
 export default function Footer() {
   return (
+    <nav id="footer" class="row bottom">
+      <img
+        style={{ "max-width": "170px" }}
+        src="/img/TRUSTEE_logo_croped-9912f73b.svg"
+      />
+      <div class="max"></div>
+      <div class="row">
+        <img
+          class="responsive "
+          style={{ "width": "auto", "max-height": "60px" }}
+          src="/img/EU_flag-14ac5d26.svg"
+        />
+      </div>
+    </nav>
+  );
+  /*
+
     <footer className="v-footer v-theme--trusteeLight bg-white border-top-2-grey text-white d-flex flex-grow-0">
       <div className="v-row v-row--no-gutters d-flex flex-row">
         <div className="v-col-lg-2 v-col-12 d-flex align-center flex-grow-0 justify-left">
@@ -178,6 +195,5 @@ export default function Footer() {
           </div>
         </div>
       </div>
-    </footer>
-  );
+      </footer>*/
 }

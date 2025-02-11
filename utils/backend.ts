@@ -1,0 +1,171 @@
+import {
+    Domain,
+    DomainAttr,
+    ProsumerWorkflowData,
+    ProsumerWorkflowSSIData,
+    SSISearchCriterion,
+    SSISearchPollResponse,
+    SSISearchResponse,
+    User,
+} from "@/utils/types.ts";
+import { db_get, db_store } from "@/utils/db.ts";
+import { prosumer_key } from "@/utils/misc.ts";
+
+const ATR_API = Deno.env.get("ATR_API_SERVER");
+const DL_API = Deno.env.get("DL_API_SERVER") || "http://localhost:3800";
+const SSI_API_SERVER = Deno.env.get("SSI_API_SERVER") || "http://localhost:3500";
+const FL_API_SERVER = Deno.env.get("FL_API_SERVER") || "http://localhost:3701";
+
+const print = console.log;
+
+function _fetch_options(id_token: string) {
+    return { headers: { "Authorization": `Bearer ${id_token}` } };
+}
+
+export async function dl_domains(id_token: string): Promise<Domain[]> {
+    const req1 = await fetch(DL_API + "/domains/attributes", _fetch_options(id_token));
+    const attrs: DomainAttr[] = await req1.json() as DomainAttr[];
+    const m: Map<number, DomainAttr[]> = new Map();
+    attrs.forEach((a: DomainAttr) => {
+        const o = m.get(a.domain_id);
+        if (o) {
+            o.push(a);
+        } else {
+            m.set(a.domain_id, [a]);
+        }
+    });
+
+    const req2 = await fetch(DL_API + "/domains", _fetch_options(id_token));
+    const data: Domain[] = [];
+    for (const d of await req2.json()) {
+        const dom: Domain = {
+            id: d.id,
+            name: d.name,
+            description: d.description,
+            attributes: m.get(d.id) || [],
+        };
+        data.push(dom);
+    }
+    // const data: Domain[] = await req2.json() as Domain[]
+
+    print("RETRIEVED", data.length, "DOMAINS");
+    return data;
+}
+
+export async function atr_log(
+    user: string,
+    domain: string,
+    abb: string,
+    event_name: string,
+): Promise<boolean> {
+    const d = new Date();
+
+    const data = {
+        providerID: "AIMAAS",
+        genericID1: "USER_ID",
+        genericID2: "ABB",
+        genericID3: "",
+        datetime1: d.toISOString(),
+        datetime2: "",
+        textField1: user,
+        textField2: abb,
+        textField3: "",
+        amount: "3",
+        domain1: domain,
+        domain2: "",
+        domain3: "",
+        country: "",
+        year: `${d.getFullYear()}`,
+        description: event_name,
+        content: "",
+        content1: "",
+        content2: "",
+        content3: "",
+    };
+
+    //   print("Sending:", data);
+
+    const response = await fetch(ATR_API + "/transactions", {
+        method: "POST",
+        body: JSON.stringify(data),
+        headers: {
+            "Content-Type": "application/json",
+            "atr-api-key": Deno.env.get("ATR_API_KEY"),
+        },
+    });
+    if (!response.ok) {
+        const text = await response.text();
+        print(`ATR Response status: ${response.status}, full response:\n${text}`);
+        return false;
+    }
+    const json = await response.json();
+    const tn = json.transactionId;
+    print("ATR Response transaction id:", tn);
+    return true;
+}
+
+export async function do_ssi_search(user: User, prosumer_id: string, criteria: SSISearchCriterion[]) {
+    const timestamp = Math.round(Date.now() * 1000);
+    const q = {
+        type: "datasets-search",
+        query: {
+            "logical_operation": "and",
+            "filters": criteria.map((c) => {
+                return {
+                    "domain": c.domain.name.toLowerCase(),
+                    "type": c.attribute.name,
+                    "value": c.value,
+                    "operation": c.operator,
+                };
+            }),
+        },
+        timestamp: `${timestamp}`,
+    };
+    const id_token = user.tokens.id_token;
+    print(`SSI search with token ${id_token}`, q);
+
+    const req = await fetch(SSI_API_SERVER + "/api/v1/verifier/search", {
+        body: JSON.stringify(q),
+        headers: { "Authorization": `Bearer ${id_token}`, "Content-Type": "application/json" },
+        method: "POST",
+    });
+    if (!req.ok) {
+        print("SSI ERROR", await req.json());
+        return;
+    }
+    const res = await req.json() as SSISearchResponse;
+    print(res);
+    if (res.status == "ACCEPTED" && !!res.process_id) {
+        // submit_work({ type: "ssi_poll", process_id: res.process_id }, 5000);
+        const a: ProsumerWorkflowSSIData = {
+            status: res.status,
+            process_id: res.process_id,
+            criteria,
+        };
+        const w: ProsumerWorkflowData = {
+            id: prosumer_id,
+            ssi: a,
+        };
+        await db_store(prosumer_key(user, prosumer_id), w);
+    }
+}
+
+async function do_ssi_poll(user: User, prosumer_id: string, process_id: string) {
+    const id_token = user.tokens.id_token;
+    print(`SSI poll ${process_id} with token ${id_token}`);
+
+    const req = await fetch(SSI_API_SERVER + "/api/v1/verifier/search/" + process_id, {
+        headers: { "Authorization": `Bearer ${id_token}`, "Content-Type": "application/json" },
+    });
+    if (!req.ok) {
+        print("SSI ERROR", await req.json());
+        return;
+    }
+    const res = await req.json() as SSISearchPollResponse;
+    const w: ProsumerWorkflowData = await db_get(prosumer_key(user, prosumer_id)) as ProsumerWorkflowData;
+    w.ssi.status = res.status;
+    if (res.status == "FINISHED") {
+        w.ssi.results = res.datasets_ids;
+    }
+    await db_store(prosumer_key(user, prosumer_id), w);
+}
