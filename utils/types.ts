@@ -48,7 +48,7 @@ export interface ProsumerWorkflowSSIData {
 }
 
 export interface ProsumerWorkflowData {
-    id: string; // "prosumer id"
-    name?: string;
+    readonly id: string; // "prosumer id"
+    name: string;
     ssi: ProsumerWorkflowSSIData; // this is for "step 1"
 }

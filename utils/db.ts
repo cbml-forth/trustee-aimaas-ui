@@ -40,6 +40,8 @@ export async function set_user_session_data(session_id: string, key: string, dat
     );
 }
 
+export async function user_profile(session_id: null): Promise<null>;
+export async function user_profile(session_id: string): Promise<User>;
 export async function user_profile(session_id: string | null): Promise<User | null> {
     if (!session_id) {
         return null;

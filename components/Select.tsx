@@ -1,16 +1,3 @@
-import { useState } from "preact/hooks";
-// import { Box, InputLabel, MenuItem, FormControl, Select } from '$mui';
-// import { Calendar } from '$prime';
-// import InputLabel from '@mui';
-// import MenuItem from '@mui';
-// import FormControl from '@mui';
-// import Select, { SelectChangeEvent } from '@mui';
-// import Box from '@mui/material/Box';
-// import InputLabel from '@mui/material/InputLabel';
-// import MenuItem from '@mui/material/MenuItem';
-// import FormControl from '@mui/material/FormControl';
-// import Select, { SelectChangeEvent } from '@mui/material/Select';
-
 import classNames from "@/utils/classnames.js";
 export interface SelectOption {
     id: number;
@@ -25,6 +12,7 @@ export interface SelectProps {
     help_text?: string;
     error_text?: string;
     onChange?: CallableFunction;
+    disabled?: boolean;
 }
 export function BasicSelect(props: SelectProps) {
     const opts = props.options.map((o) => {
@@ -37,9 +25,10 @@ export function BasicSelect(props: SelectProps) {
 
     const max = Math.ceil(1.5 * Math.max(...props.options.map((o) => o.name.length)));
 
-    const handleChange = (event: any) => {
+    const handleChange = (event: Event) => {
         if (props.onChange) {
-            props.onChange(event.target.value as string);
+            const target = event.currentTarget as HTMLSelectElement;
+            props.onChange(target.value);
         }
     };
 
@@ -51,7 +40,12 @@ export function BasicSelect(props: SelectProps) {
                 "invalid": props.error_text,
             })}
         >
-            <select name={props.name} onChange={handleChange} style={{ "min-width": `${max}ch` }}>
+            <select
+                name={props.name}
+                onChange={handleChange}
+                style={{ "min-width": `${max}ch` }}
+                disabled={props.disabled ?? false}
+            >
                 {opts}
             </select>
             {props.label && <label>{props.label}</label>}

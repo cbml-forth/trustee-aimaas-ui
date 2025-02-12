@@ -1,180 +1,178 @@
 :root, body.light {
-  --background: 255,255,254;
-  --background-overlay-multiplier: 1;
-  --surface: 255,255,255;
-  --surface-overlay-multiplier: 1;
-  --surface-bright: 255,255,255;
-  --surface-bright-overlay-multiplier: 1;
-  --surface-light: 238,238,238;
-  --surface-light-overlay-multiplier: 1;
-  --surface-variant: rgb(66, 66, 66);
-  --surface-variant-overlay-multiplier: 2;
-  --on-surface-variant: rgb(238, 238, 238);
-  --primary: rgb(31, 70, 147);
-  --primary-overlay-multiplier: 2;
-  --primary-darken-1: rgb(31, 85, 146);
-  --primary-darken-1-overlay-multiplier: 2;
-  --secondary: rgb(255, 212, 87);
-  --secondary-overlay-multiplier: 1;
-  --secondary-darken-1: rgb(1, 135, 134);
-  --secondary-darken-1-overlay-multiplier: 1;
-  --error: rgb(176, 0, 32);
-  --error-overlay-multiplier: 2;
-  --info: rgb(33, 150, 243);
-  --info-overlay-multiplier: 1;
-  --success: rgb(76, 175, 80);
-  --success-overlay-multiplier: 1;
-  --warning: rgb(251, 140, 0);
-  --warning-overlay-multiplier: 1;
-  --trusteeBlue: rgb(31, 70, 147);
-  --trusteeBlue-overlay-multiplier: 2;
-  --trusteeYellow: rgb(255, 212, 87);
-  --trusteeYellow-overlay-multiplier: 1;
-  --trusteeGreen: rgb(113, 143, 64);
-  --trusteeGreen-overlay-multiplier: 1;
-  --trusteeLightBlue: rgb(119, 197, 234);
-  --trusteeLightBlue-overlay-multiplier: 1;
-  --trusteeOrange: rgb(255, 158, 22);
-  --trusteeOrange-overlay-multiplier: 1;
-  --trusteeBlack: rgb(0, 0, 0);
-  --trusteeBlack-overlay-multiplier: 2;
-  --trusteeWhite: rgb(255, 255, 255);
-  --trusteeWhite-overlay-multiplier: 1;
-  --trusteeBtn: rgb(207, 223, 255);
-  --trusteeBtn-overlay-multiplier: 1;
-  --trusteeFail: rgb(255, 116, 116);
-  --trusteeFail-overlay-multiplier: 1;
-  --trusteeSuccess: rgb(121, 222, 105);
-  --trusteeSuccess-overlay-multiplier: 1;
-  --trusteeGrey: rgb(158, 158, 158);
-  --trusteeGrey-overlay-multiplier: 1;
-  --primaryText: rgb(0, 0, 0);
-  --primaryText-overlay-multiplier: 2;
-  --secondaryText: rgb(255, 255, 255);
-  --secondaryText-overlay-multiplier: 1;
-  --secondaryAlternative: rgb(119, 197, 234);
-  --secondaryAlternative-overlay-multiplier: 1;
-  --tetriary: rgb(255, 158, 22);
-  --tetriary-overlay-multiplier: 1;
-  --tetriaryText: rgb(16, 52, 124);
-  --tetriaryText-overlay-multiplier: 2;
-  --whiteText: rgb(255, 255, 255);
-  --whiteText-overlay-multiplier: 1;
-  --blackText: rgb(0, 0, 0);
-  --blackText-overlay-multiplier: 2;
-  --yellow: rgb(255, 212, 87);
-  --yellow-overlay-multiplier: 1;
-  --on-background: 0,0,0;
-  --on-surface: 0,0,0;
-  --on-surface-bright: 0,0,0;
-  --on-surface-light: 0,0,0;
-  --on-primary: 255,255,255;
-  --on-primary-darken-1: 255,255,255;
-  --on-secondary: 0,0,0;
-  --on-secondary-darken-1: 255,255,255;
-  --on-error: 255,255,255;
-  --on-info: 255,255,255;
-  --on-success: 255,255,255;
-  --on-warning: 255,255,255;
-  --on-trusteeBlue: 255,255,255;
-  --on-trusteeYellow: 0,0,0;
-  --on-trusteeGreen: 255,255,255;
-  --on-trusteeLightBlue: 0,0,0;
-  --on-trusteeOrange: 0,0,0;
-  --on-trusteeBlack: 255,255,255;
-  --on-trusteeWhite: 0,0,0;
-  --on-trusteeBtn: rgb(0, 0, 0);
-  --on-trusteeFail: 255,255,255;
-  --on-trusteeSuccess: 0,0,0;
-  --on-trusteeGrey: 255,255,255;
-  --on-primaryText: 255,255,255;
-  --on-secondaryText: 0,0,0;
-  --on-secondaryAlternative: 0,0,0;
-  --on-tetriary: 0,0,0;
-  --on-tetriaryText: 255,255,255;
-  --on-whiteText: 0,0,0;
-  --on-blackText: 255,255,255;
-  --on-yellow: 0,0,0;
-  --v-border-color: 0, 0, 0;
-  --v-border-opacity: 0.12;
-  --v-high-emphasis-opacity: 0.87;
-  --v-medium-emphasis-opacity: 0.6;
-  --v-disabled-opacity: 0.38;
-  --v-idle-opacity: 0.04;
-  --v-hover-opacity: 0.04;
-  --v-focus-opacity: 0.12;
-  --v-selected-opacity: 0.08;
-  --v-activated-opacity: 0.12;
-  --v-pressed-opacity: 0.12;
-  --v-dragged-opacity: 0.08;
-  --kbd: 33, 37, 41;
-  --on-kbd: 255, 255, 255;
-  --code: 245, 245, 245;
-  --on-code: 0, 0, 0;
+    --background: 255,255,254;
+    --background-overlay-multiplier: 1;
+    --surface: 255,255,255;
+    --surface-overlay-multiplier: 1;
+    --surface-bright: 255,255,255;
+    --surface-bright-overlay-multiplier: 1;
+    --surface-light: 238,238,238;
+    --surface-light-overlay-multiplier: 1;
+    --surface-variant: rgb(66, 66, 66);
+    --surface-variant-overlay-multiplier: 2;
+    --on-surface-variant: rgb(238, 238, 238);
+    --primary: rgb(31, 70, 147);
+    --primary-overlay-multiplier: 2;
+    --primary-darken-1: rgb(31, 85, 146);
+    --primary-darken-1-overlay-multiplier: 2;
+    --secondary: rgb(255, 212, 87);
+    --secondary-overlay-multiplier: 1;
+    --secondary-darken-1: rgb(1, 135, 134);
+    --secondary-darken-1-overlay-multiplier: 1;
+    --error: rgb(176, 0, 32);
+    --error-overlay-multiplier: 2;
+    --info: rgb(33, 150, 243);
+    --info-overlay-multiplier: 1;
+    --success: rgb(76, 175, 80);
+    --success-overlay-multiplier: 1;
+    --warning: rgb(251, 140, 0);
+    --warning-overlay-multiplier: 1;
+    --trusteeBlue: rgb(31, 70, 147);
+    --trusteeBlue-overlay-multiplier: 2;
+    --trusteeYellow: rgb(255, 212, 87);
+    --trusteeYellow-overlay-multiplier: 1;
+    --trusteeGreen: rgb(113, 143, 64);
+    --trusteeGreen-overlay-multiplier: 1;
+    --trusteeLightBlue: rgb(119, 197, 234);
+    --trusteeLightBlue-overlay-multiplier: 1;
+    --trusteeOrange: rgb(255, 158, 22);
+    --trusteeOrange-overlay-multiplier: 1;
+    --trusteeBlack: rgb(0, 0, 0);
+    --trusteeBlack-overlay-multiplier: 2;
+    --trusteeWhite: rgb(255, 255, 255);
+    --trusteeWhite-overlay-multiplier: 1;
+    --trusteeBtn: rgb(207, 223, 255);
+    --trusteeBtn-overlay-multiplier: 1;
+    --trusteeFail: rgb(255, 116, 116);
+    --trusteeFail-overlay-multiplier: 1;
+    --trusteeSuccess: rgb(121, 222, 105);
+    --trusteeSuccess-overlay-multiplier: 1;
+    --trusteeGrey: rgb(158, 158, 158);
+    --trusteeGrey-overlay-multiplier: 1;
+    --primaryText: rgb(0, 0, 0);
+    --primaryText-overlay-multiplier: 2;
+    --secondaryText: rgb(255, 255, 255);
+    --secondaryText-overlay-multiplier: 1;
+    --secondaryAlternative: rgb(119, 197, 234);
+    --secondaryAlternative-overlay-multiplier: 1;
+    --tetriary: rgb(255, 158, 22);
+    --tetriary-overlay-multiplier: 1;
+    --tetriaryText: rgb(16, 52, 124);
+    --tetriaryText-overlay-multiplier: 2;
+    --whiteText: rgb(255, 255, 255);
+    --whiteText-overlay-multiplier: 1;
+    --blackText: rgb(0, 0, 0);
+    --blackText-overlay-multiplier: 2;
+    --yellow: rgb(255, 212, 87);
+    --yellow-overlay-multiplier: 1;
+    --on-background: 0,0,0;
+    --on-surface: 0,0,0;
+    --on-surface-bright: 0,0,0;
+    --on-surface-light: 0,0,0;
+    --on-primary: 255,255,255;
+    --on-primary-darken-1: 255,255,255;
+    --on-secondary: 0,0,0;
+    --on-secondary-darken-1: 255,255,255;
+    --on-error: 255,255,255;
+    --on-info: 255,255,255;
+    --on-success: 255,255,255;
+    --on-warning: 255,255,255;
+    --on-trusteeBlue: 255,255,255;
+    --on-trusteeYellow: 0,0,0;
+    --on-trusteeGreen: 255,255,255;
+    --on-trusteeLightBlue: 0,0,0;
+    --on-trusteeOrange: 0,0,0;
+    --on-trusteeBlack: 255,255,255;
+    --on-trusteeWhite: 0,0,0;
+    --on-trusteeBtn: rgb(0, 0, 0);
+    --on-trusteeFail: 255,255,255;
+    --on-trusteeSuccess: 0,0,0;
+    --on-trusteeGrey: 255,255,255;
+    --on-primaryText: 255,255,255;
+    --on-secondaryText: 0,0,0;
+    --on-secondaryAlternative: 0,0,0;
+    --on-tetriary: 0,0,0;
+    --on-tetriaryText: 255,255,255;
+    --on-whiteText: 0,0,0;
+    --on-blackText: 255,255,255;
+    --on-yellow: 0,0,0;
+    --v-border-color: 0, 0, 0;
+    --v-border-opacity: 0.12;
+    --v-high-emphasis-opacity: 0.87;
+    --v-medium-emphasis-opacity: 0.6;
+    --v-disabled-opacity: 0.38;
+    --v-idle-opacity: 0.04;
+    --v-hover-opacity: 0.04;
+    --v-focus-opacity: 0.12;
+    --v-selected-opacity: 0.08;
+    --v-activated-opacity: 0.12;
+    --v-pressed-opacity: 0.12;
+    --v-dragged-opacity: 0.08;
+    --kbd: 33, 37, 41;
+    --on-kbd: 255, 255, 255;
+    --code: 245, 245, 245;
+    --on-code: 0, 0, 0;
 }
 
 body {
-  font-family: Arial, sans-serif !important;
-  color: #1f4693;
+    font-family: Arial, sans-serif !important;
+    color: #1f4693;
 }
 #sidebar {
-  border-right-color: rgb(238, 238, 238) !important;
-  border-right-width: 2px;
-  border-right-style: solid;
-  padding-right: 0px;
-  top: 50px;
+    border-right-color: rgb(238, 238, 238) !important;
+    border-right-width: 2px;
+    border-right-style: solid;
+    top: 50px;
 }
 
 #header {
-  border-bottom-color: rgb(238, 238, 238) !important;
-  border-bottom-width: 2px;
-  border-bottom-style: solid;
-  padding-left: 20px;
+    border-bottom-color: rgb(238, 238, 238) !important;
+    border-bottom-width: 2px;
+    border-bottom-style: solid;
+    padding-left: 20px;
 }
 .main {
-  padding-left: 20px;
+    padding-left: 20px;
 }
 #sidebar.drawer .aimaas {
-  padding-left: 3em;
+    padding-left: 3em;
 }
-#sidebar .external-link div {}
 #sidebar a {
-  border-bottom: 1px solid #eeeeee !important;
-  border-radius: 0 !important;
+    border-bottom: 1px solid #eeeeee !important;
+    border-radius: 0 !important;
 }
 #sidebar a:hover {
-  background-color: #e7eaf2 !important;
+    background-color: #e7eaf2 !important;
 }
 
 #sidebar a[data-current="true"] {
-  background-color: #1f4693 !important;
-  color: #fff !important;
-  white-space: normal;
-  font-size: 14px !important;
-  line-height: 1.1;
-  padding: 5px;
-  border-radius: 5px;
-  font-weight: bold;
+    background-color: #6277a1 !important;
+    color: #fff !important;
+    white-space: normal;
+    font-size: 14px !important;
+    line-height: 1.1;
+    /* padding: 5px; */
+    /* font-weight: bold; */
+    border-radius: 2px;
 }
 
 #footer {
-  background-color: white;
-  border-top-color: rgb(238, 238, 238) !important;
-  border-top-width: 2px;
-  border-top-style: solid;
+    background-color: white;
+    border-top-color: rgb(238, 238, 238) !important;
+    border-top-width: 2px;
+    border-top-style: solid;
 }
 
 #sidebar a[aria-current="page"] img {
-  fill: currentColor;
+    fill: currentColor;
 }
 
 .bg-trusteeBtn {
-  background-color: var(--trusteeBtn) !important;
-  color: var(--on-trusteeBtn) !important;
-  border-radius: 4px !important;
+    background-color: var(--trusteeBtn) !important;
+    color: var(--on-trusteeBtn) !important;
+    border-radius: 4px !important;
 }
 .btn-card {
-  height: 150px !important;
-  width: 150px !important;
-  background-color: #f6f6f6 !important;
+    height: 150px !important;
+    width: 150px !important;
+    background-color: #f6f6f6 !important;
 }

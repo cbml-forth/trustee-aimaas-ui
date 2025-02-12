@@ -1,12 +1,5 @@
 import { Handlers, PageProps, RouteContext } from "$fresh/server.ts";
-import {
-    Domain,
-    ProsumerWorkflowData,
-    ProsumerWorkflowSSIData,
-    SSISearchCriterion,
-    SSISearchResponse,
-    User,
-} from "@/utils/types.ts";
+import { Domain, ProsumerWorkflowData, SSISearchCriterion, User } from "@/utils/types.ts";
 import { dl_domains, do_ssi_search } from "@/utils/backend.ts";
 import { sessionIdOrSignin } from "@/utils/http.ts";
 import { Session } from "@5t111111/fresh-session";
@@ -143,6 +136,7 @@ export default function Step1Page(props: PageProps<Data>) {
             user={props.data.user}
             criteria={props.data.criteria}
             process_name={props.data.process_name}
+            disabled={false}
         />
     );
 }

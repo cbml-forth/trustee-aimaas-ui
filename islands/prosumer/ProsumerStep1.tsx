@@ -32,6 +32,7 @@ function SingleFilter(props: {
     domains: Domain[];
     update_filter: (fv: FilterValue) => void;
     remove_filter: (idf: string) => void;
+    disabled: boolean;
 }) {
     const my_id = props.filterValue.id;
     // console.log("REndering ", my_id);
@@ -106,18 +107,22 @@ function SingleFilter(props: {
     const onBlur = function () {
         error.value = textValue.value == "";
     };
+    const attrs = {
+        disabled: props.disabled,
+    };
     return (
         <div id={my_id} class="row wrap center-align padding">
-            <BasicSelect {...domainProps} />
+            <BasicSelect {...domainProps} {...attrs} />
             <BasicSelect
                 options={attrOpts.value}
                 name={"attribute:" + my_id}
                 help_text={"Select an attribute for " + selectedDomain.value.name}
                 label="Attribute"
                 onChange={onChangeAttribute}
+                {...attrs}
             />
 
-            <BasicSelect options={relations} name={"rel:" + my_id} />
+            <BasicSelect options={relations} name={"rel:" + my_id} {...attrs} />
 
             <div class={classNames({ "field label border small": 1, "invalid": error.value })}>
                 <input
@@ -126,19 +131,20 @@ function SingleFilter(props: {
                     value={textValue.value}
                     onInput={onChangeValue}
                     onBlur={onBlur}
+                    {...attrs}
                 />
                 <label>Value</label>
                 {error.value && <span class="error">Please provide a value</span>}
             </div>
 
-            {!only_one &&
+            {!only_one && !props.disabled &&
                 (
                     <button type="button" class="square bg-trusteeBtn" onClick={onRemove}>
                         <i>remove</i>
                     </button>
                 )}
 
-            {valid.value &&
+            {valid.value && !props.disabled &&
                 (
                     <button type="button" class="square bg-trusteeBtn" onClick={onAdd}>
                         <i>add</i>
@@ -177,6 +183,7 @@ export default function ProsumerStep1(props: {
     user: User;
     criteria: SSISearchCriterion[];
     process_name: string;
+    disabled: boolean;
 }) {
     console.log("STEP1");
     // const first = new_filter_ctor(props.domains[0]);
@@ -230,6 +237,7 @@ export default function ProsumerStep1(props: {
                     domains={props.domains}
                     update_filter={update_filter}
                     remove_filter={remove_filter}
+                    disabled={props.disabled ?? false}
                 />
             );
         })
@@ -242,7 +250,8 @@ export default function ProsumerStep1(props: {
                     type="text"
                     value={process_name}
                     onChange={(e) => {
-                        process_name.value = e.target.value;
+                        const target = e.currentTarget as HTMLInputElement;
+                        process_name.value = target.value;
                     }}
                 />
                 <label>Process name</label>

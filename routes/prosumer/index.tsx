@@ -1,10 +1,11 @@
 import WorkflowWelcome from "@/components/WorkflowWelcome.tsx";
 import { defineRoute } from "$fresh/server.ts";
 import { sessionIdOrSignin } from "@/utils/http.ts";
-import { crypto } from "jsr:@std/crypto";
 import { list_all, user_profile } from "@/utils/db.ts";
 import { prosumer_key } from "@/utils/misc.ts";
 import { ProsumerWorkflowData, User } from "@/utils/types.ts";
+import { ulid } from "jsr:@std/ulid";
+
 export default defineRoute(async (req, ctx) => {
     const res = await sessionIdOrSignin(req, ctx);
     if (res instanceof Response) {
@@ -14,7 +15,8 @@ export default defineRoute(async (req, ctx) => {
     const user: User = await user_profile(session_id);
     const list = await list_all<ProsumerWorkflowData>(prosumer_key(user));
 
-    const prosumer_id: string = crypto.randomUUID();
+    console.log("PROSUMERS", list);
+    const prosumer_id: string = ulid();
     const props = {
         headerText: "Use AI models provided to TRUSTEE, fuse them, and extract results from computations",
         titleText: "TRUSTEE Model Prosumer Workflow",
