@@ -22,6 +22,19 @@ export interface User {
     tokens: { id_token: string; access_token: string; expires_in?: number; expires_at?: number };
 }
 
+export interface ModelSearchAttributeCriterion {
+    attribute: DomainAttr;
+    value: string;
+}
+export interface ModelSearchCriterion {
+    domain: Domain;
+    attributes: ModelSearchAttributeCriterion[];
+}
+
+export interface ModelSearchResponseItem extends Record<string, unknown> {
+    id: number;
+}
+
 export interface SSISearchCriterion {
     domain: Domain;
     attribute: DomainAttr;
@@ -51,4 +64,12 @@ export interface ProsumerWorkflowData {
     readonly id: string; // "prosumer id"
     name: string;
     ssi: ProsumerWorkflowSSIData; // this is for "step 1"
+}
+
+export interface ConsumerWorkflowData {
+    readonly id: string; // "consumer id"
+    step1_search: ModelSearchCriterion; // this is for "step 1"
+    step1_results: ModelSearchResponseItem[];
+    selected_model_id?: number; // if it was selected then we have redirected to STM
+    agreements_signed?: boolean; // if this is not undefined then we have get the response from the STM
 }

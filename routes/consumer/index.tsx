@@ -1,12 +1,15 @@
 import WorkflowWelcome from "@/components/WorkflowWelcome.tsx";
 import { defineRoute } from "$fresh/server.ts";
 import { sessionIdOrSignin } from "@/utils/http.ts";
+import { ulid } from "jsr:@std/ulid";
 
 export default defineRoute(async (req, ctx) => {
     const res = await sessionIdOrSignin(req, ctx);
     if (res instanceof Response) {
         return res;
     }
+
+    const consumer_id: string = ulid();
     const workflowItems = [
         {
             imgURL: "select_filters_workflow.svg",
@@ -44,7 +47,7 @@ export default defineRoute(async (req, ctx) => {
     const props = {
         headerText: "Search for AI models provided to TRUSTEE, stemming from several past processes",
         titleText: "TRUSTEE Model Consumer Workflow",
-        pageURL: "/consumer/step1",
+        pageURL: `/consumer/${consumer_id}/step1`,
         items: workflowItems,
     };
 

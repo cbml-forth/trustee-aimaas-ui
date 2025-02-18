@@ -1,6 +1,8 @@
 import {
     Domain,
     DomainAttr,
+    ModelSearchCriterion,
+    ModelSearchResponseItem,
     ProsumerWorkflowData,
     ProsumerWorkflowSSIData,
     SSISearchCriterion,
@@ -159,4 +161,36 @@ async function do_ssi_poll(user: User, prosumer_id: string, process_id: string) 
         w.ssi.results = res.datasets_ids;
     }
     await db_store(prosumer_key(user, prosumer_id), w);
+}
+
+export async function do_dl_model_search(
+    user: User,
+    criteria: ModelSearchCriterion[],
+): Promise<ModelSearchResponseItem[] | null> {
+    // const timestamp = Math.round(Date.now() * 1000);
+
+    const id_token = user.tokens.id_token;
+    print(`DL model search with token ${id_token}`);
+
+    const url = new URL(DL_API + "/AIMaaS/models");
+
+    for (const c of criteria) {
+        url.searchParams.append("domain_id", c.domain.id.toString());
+        for (const a of c.attributes) {
+            url.searchParams.append(a.attribute.name, a.value);
+        }
+    }
+
+    print("DL SEARCH", url.href);
+    const req = await fetch(url.href, {
+        headers: { "Authorization": `Bearer ${id_token}` },
+        method: "GET",
+    });
+    if (!req.ok) {
+        print("DL ERROR", await req.json());
+        return [];
+    }
+    const res: ModelSearchResponseItem[] = await req.json() as ModelSearchResponseItem[];
+    // print(res);
+    return res;
 }

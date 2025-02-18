@@ -116,7 +116,6 @@ function SingleFilter(props: {
             <BasicSelect
                 options={attrOpts.value}
                 name={"attribute:" + my_id}
-                help_text={"Select an attribute for " + selectedDomain.value.name}
                 label="Attribute"
                 onChange={onChangeAttribute}
                 {...attrs}
@@ -124,7 +123,10 @@ function SingleFilter(props: {
 
             <BasicSelect options={relations} name={"rel:" + my_id} {...attrs} />
 
-            <div class={classNames({ "field label border small": 1, "invalid": error.value })}>
+            <div
+                style={{ "flex-grow": "1" }}
+                class={classNames({ "field label border small": 1, "invalid": error.value })}
+            >
                 <input
                     name={"value:" + my_id}
                     type="text"
@@ -140,7 +142,7 @@ function SingleFilter(props: {
             {!only_one && !props.disabled &&
                 (
                     <button type="button" class="square bg-trusteeBtn" onClick={onRemove}>
-                        <i>remove</i>
+                        <i>close</i>
                     </button>
                 )}
 

@@ -6,10 +6,10 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
 import * as $_middleware from "./routes/_middleware.tsx";
-import * as $consumer_steps_layout from "./routes/consumer/(steps)/_layout.tsx";
-import * as $consumer_steps_step1 from "./routes/consumer/(steps)/step1.tsx";
-import * as $consumer_steps_step2 from "./routes/consumer/(steps)/step2.tsx";
-import * as $consumer_steps_step3 from "./routes/consumer/(steps)/step3.tsx";
+import * as $consumer_consumer_id_layout from "./routes/consumer/[consumer_id]/_layout.tsx";
+import * as $consumer_consumer_id_step1 from "./routes/consumer/[consumer_id]/step1.tsx";
+import * as $consumer_consumer_id_step2 from "./routes/consumer/[consumer_id]/step2.tsx";
+import * as $consumer_consumer_id_step3 from "./routes/consumer/[consumer_id]/step3.tsx";
 import * as $consumer_index from "./routes/consumer/index.tsx";
 import * as $form from "./routes/form.tsx";
 import * as $index from "./routes/index.tsx";
@@ -26,6 +26,7 @@ import * as $test from "./routes/test.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $DropMenuField from "./islands/DropMenuField.tsx";
 import * as $Sidebar from "./islands/Sidebar.tsx";
+import * as $consumer_ConsumerStep1 from "./islands/consumer/ConsumerStep1.tsx";
 import * as $prosumer_ProsumerStep1 from "./islands/prosumer/ProsumerStep1.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
@@ -35,10 +36,10 @@ const manifest = {
         "./routes/_app.tsx": $_app,
         "./routes/_layout.tsx": $_layout,
         "./routes/_middleware.tsx": $_middleware,
-        "./routes/consumer/(steps)/_layout.tsx": $consumer_steps_layout,
-        "./routes/consumer/(steps)/step1.tsx": $consumer_steps_step1,
-        "./routes/consumer/(steps)/step2.tsx": $consumer_steps_step2,
-        "./routes/consumer/(steps)/step3.tsx": $consumer_steps_step3,
+        "./routes/consumer/[consumer_id]/_layout.tsx": $consumer_consumer_id_layout,
+        "./routes/consumer/[consumer_id]/step1.tsx": $consumer_consumer_id_step1,
+        "./routes/consumer/[consumer_id]/step2.tsx": $consumer_consumer_id_step2,
+        "./routes/consumer/[consumer_id]/step3.tsx": $consumer_consumer_id_step3,
         "./routes/consumer/index.tsx": $consumer_index,
         "./routes/form.tsx": $form,
         "./routes/index.tsx": $index,
@@ -57,6 +58,7 @@ const manifest = {
         "./islands/Counter.tsx": $Counter,
         "./islands/DropMenuField.tsx": $DropMenuField,
         "./islands/Sidebar.tsx": $Sidebar,
+        "./islands/consumer/ConsumerStep1.tsx": $consumer_ConsumerStep1,
         "./islands/prosumer/ProsumerStep1.tsx": $prosumer_ProsumerStep1,
     },
     baseUrl: import.meta.url,
