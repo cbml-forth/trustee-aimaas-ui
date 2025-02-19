@@ -1,49 +1,57 @@
 type WorkflowItemProps = {
-  imgURL: string;
-  text: string;
+    imgURL: string;
+    text: string;
+    url?: string;
 };
 
 type WorkflowProps = {
-  headerText: string;
-  titleText: string;
-  pageURL: string;
-  items: WorkflowItemProps[];
+    headerText: string;
+    titleText: string;
+    pageURL: string;
+    items: WorkflowItemProps[];
 };
 
 function WorkflowItem(props: WorkflowItemProps) {
-  return (
-    <div
-      className="vertical middle-align center-align"
-      style={{ maxWidth: "150px" }}
-    >
-      <img
-        style={{ maxWidth: "80px", width: "auto", height: "auto" }}
-        src={"/img/" + props.imgURL}
-      />
-      <p style={{ fontSize: "14px" }}>{props.text}</p>
-    </div>
-  );
+    console.log("ITEM", props);
+    let content = (
+        <img
+            style={{ maxWidth: "80px", width: "auto", height: "auto" }}
+            src={"/img/" + props.imgURL}
+        />
+    );
+    if (props.url) {
+        content = <a href={props.url}>{content}</a>;
+    }
+    return (
+        <div
+            className="vertical middle-align center-align"
+            style={{ maxWidth: "150px" }}
+        >
+            {content}
+            <p style={{ fontSize: "14px" }}>{props.text}</p>
+        </div>
+    );
 }
 
 export default function WorkflowWelcome(props: WorkflowProps) {
-  return (
-    <div className="middle-align center-align vertical">
-      <h4 className="text-primary">{props.titleText}</h4>
-      <div class="middle-align row wrap">
-        {props.items.map((item, index) => (
-          <WorkflowItem
-            key={index}
-            {...item}
-          />
-        ))}
-      </div>
-      <a href={props.pageURL}>
-        <button class="button small-round upper elevate bg-trusteeBtn">
-          Start Here
-        </button>
-      </a>
-    </div>
-  );
+    return (
+        <div className="middle-align center-align vertical">
+            <h4 className="text-primary">{props.titleText}</h4>
+            <div class="middle-align row wrap">
+                {props.items.map((item, index) => (
+                    <WorkflowItem
+                        key={index}
+                        {...item}
+                    />
+                ))}
+            </div>
+            <a href={props.pageURL}>
+                <button class="button small-round upper elevate bg-trusteeBtn">
+                    Start Here
+                </button>
+            </a>
+        </div>
+    );
 }
 
 /*

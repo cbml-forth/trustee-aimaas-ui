@@ -1,8 +1,9 @@
 // Copyright 2023 the Deno authors. All rights reserved. MIT license.
 import { HTTPStatus } from "jsr:@oneday/http-status";
-import { RouteContext } from "$fresh/server.ts";
+import { FreshContext, RouteContext } from "$fresh/server.ts";
 import { Session } from "@5t111111/fresh-session";
 import { user_profile } from "@/utils/db.ts";
+import { User } from "@/utils/types.ts";
 
 /**
  * @param location A relative (to the request URL) or absolute URL.
@@ -21,21 +22,43 @@ export function redirect(
     });
 }
 
-export async function sessionIdOrSignin(
-    req: Request,
-    ctx: RouteContext<unknown, { session: Session }>,
-): Promise<string | Response> {
-    const sessionId = ctx.state.session.get<string>("session_id");
-    const isSignedIn = sessionId !== undefined;
-    // const accessToken = isSignedIn ? await getSessionAccessToken(oauth2Client, sessionId) : null;
+export function redirect_to_login(req: Request) {
     const path = URL.parse(req.url)?.pathname;
-    const u = URL.parse(req.url);
-    console.log("SESSION ID:", sessionId, "URL", u?.pathname, "SIGNED?", isSignedIn);
-    const user = await user_profile(sessionId);
-    console.log("USERRR", user);
-    if (!sessionId || !user || (user.tokens.expires_at ?? 0) < Date.now()) {
-        return redirect("/login?success_url=" + path);
+    return redirect("/login?success_url=" + path);
+}
+
+export type SessionState = {
+    session: Session;
+};
+export type SessionFreshContext = FreshContext<SessionState, void>;
+export type SessionRouteContext = RouteContext<void, SessionState>;
+
+// export async function sessionIdOrSignin(
+//     req: Request,
+//     session: Session,
+// ): Promise<string | Response> {
+//     const sessionId = session.get("session_id");
+//     if (!sessionId) {
+//         return redirect_to_login(req);
+//     }
+//     const user = await user_profile(sessionId);
+//     // console.log("USERRR", user);
+//     if ((user?.tokens?.expires_at ?? 0) < Date.now()) {
+//         return redirect_to_login(req);
+//     }
+
+//     return sessionId;
+// }
+
+export async function get_user(
+    _req: Request,
+    session: Session,
+): Promise<User | null> {
+    const sessionId = session.get<string>("session_id");
+    if (!sessionId) {
+        return null;
     }
 
-    return sessionId;
+    const user: User = await user_profile(sessionId);
+    return user;
 }

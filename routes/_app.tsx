@@ -22,7 +22,7 @@ export default function App({ Component }: PageProps) {
                 </script>
                 <link rel="stylesheet" href="/styles-wine.css" />
             </head>
-            <body class="light" f-client-nav>
+            <body class="light">
                 <Header />
                 <main class="max">
                     <Sidebar />

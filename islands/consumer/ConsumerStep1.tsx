@@ -1,7 +1,6 @@
 import { Domain, DomainAttr, User } from "@/utils/types.ts";
-import { BasicSelect, SelectOption, SelectProps } from "@/components/Select.tsx";
-import { batch, Signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
-import classNames from "@/utils/classnames.js";
+import { BasicSelect } from "@/components/Select.tsx";
+import { batch, useComputed, useSignal } from "@preact/signals";
 import { ModelSearchCriterion } from "@/utils/types.ts";
 interface FilterValue {
     id: string;
@@ -79,7 +78,7 @@ function SingleFilter(props: {
 export default function ConsumerStep1(props: {
     domains: Domain[];
     user: User;
-    criteria: ModelSearchCriterion | null;
+    criteria?: ModelSearchCriterion | null;
     disabled: boolean;
 }) {
     console.log("STEP1");
@@ -155,7 +154,7 @@ export default function ConsumerStep1(props: {
     });
     const domainOpts = props.domains.map((d: Domain) => ({
         id: d.id,
-        name: d.name,
+        name: d.description,
         value: "" + d.id,
         selected: d.id == dom.value.id,
     }));
@@ -163,11 +162,17 @@ export default function ConsumerStep1(props: {
     const onDomainChange = function (x: string) {
         console.log("X", x);
         dom.value = props.domains.find((d) => d.id + "" == x) || first;
-        query.value = `domain = ${dom.value.name}`;
+        const q = [`domain = ${dom.value.name}`];
+        for (const [k, v] of filters.value.entries()) {
+            const a = dom.value.attributes.find((a) => a.id == k)?.name;
+            if (a) q.push(`${a} = ${v}`);
+        }
+        query.value = q.join(" and ");
+        saveEnabled.value = true;
     };
 
     return (
-        <form method="POST">
+        <form method="POST" f-client-nav={false}>
             <h6 class="left-align">Domain</h6>
             <BasicSelect
                 options={domainOpts}
@@ -182,13 +187,29 @@ export default function ConsumerStep1(props: {
                 {...dd.value}
             </div>
             <div class="field border label textarea">
-                <textarea class="small-text italic" disabled={true}>{query}</textarea>
-                <label>Query</label>
-                <span class="helper">Generated query</span>
+                <textarea
+                    class="small-text italic"
+                    disabled={true}
+                    style={{
+                        "font-size": ".75rem",
+                        "line-height": "normal",
+                    }}
+                >
+                    {query}
+                </textarea>
+                <label>Generated Query</label>
             </div>
-            <div class="right-align top-margin">
+            <div class="right-align top-margin row">
+                <a href="/consumer/">
+                    <button
+                        class="button ripple small-round upper elevate bg-trusteeBtn"
+                        type="button"
+                    >
+                        <i>chevron_left</i>List
+                    </button>
+                </a>
                 <button
-                    class="button small-round upper elevate bg-trusteeBtn"
+                    class="button ripple small-round upper elevate bg-trusteeBtn"
                     type="submit"
                     name="action"
                     value="search"
@@ -196,7 +217,7 @@ export default function ConsumerStep1(props: {
                     Submit
                 </button>
                 <button
-                    class="button small-round upper elevate bg-trusteeBtn"
+                    class="button ripple small-round upper elevate bg-trusteeBtn"
                     type="submit"
                     name="action"
                     value="save"
@@ -205,7 +226,7 @@ export default function ConsumerStep1(props: {
                     Save
                 </button>
                 <button
-                    class="button small-round upper elevate bg-trusteeBtn"
+                    class="button ripple small-round upper elevate bg-trusteeBtn"
                     type="button"
                     onClick={reset}
                 >

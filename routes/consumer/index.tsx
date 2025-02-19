@@ -1,15 +1,20 @@
 import WorkflowWelcome from "@/components/WorkflowWelcome.tsx";
 import { defineRoute } from "$fresh/server.ts";
-import { sessionIdOrSignin } from "@/utils/http.ts";
-import { ulid } from "jsr:@std/ulid";
+import { get_user, redirect_to_login, SessionRouteContext } from "@/utils/http.ts";
+import { decodeTime, ulid } from "jsr:@std/ulid";
+import { list_all } from "@/utils/db.ts";
+import { ConsumerWorkflowData } from "@/utils/types.ts";
+import { consumer_key } from "@/utils/misc.ts";
 
-export default defineRoute(async (req, ctx) => {
-    const res = await sessionIdOrSignin(req, ctx);
-    if (res instanceof Response) {
-        return res;
+export default defineRoute(async (req, ctx: SessionRouteContext) => {
+    const user = await get_user(req, ctx.state.session);
+    if (!user) {
+        return redirect_to_login(req);
     }
 
     const consumer_id: string = ulid();
+    const list = await list_all<ConsumerWorkflowData>(consumer_key(user));
+    list.sort((a, b) => a.id > b.id ? -1 : 1);
     const workflowItems = [
         {
             imgURL: "select_filters_workflow.svg",
@@ -51,5 +56,32 @@ export default defineRoute(async (req, ctx) => {
         items: workflowItems,
     };
 
-    return <WorkflowWelcome {...props}></WorkflowWelcome>;
+    return (
+        <div class="vertical">
+            <WorkflowWelcome {...props}></WorkflowWelcome>
+            <div class="padding align-left">
+                <h5 class="align-left">Or check the status of previous flows:</h5>
+                <article>
+                    {list.map((w, index) => {
+                        return (
+                            <>
+                                {index > 0 && <hr />}
+                                <a class="row large-padding surface-container" href={"/consumer/" + w.id + "/step1"}>
+                                    <i>home</i>
+                                    <div class="max">
+                                        <h6 class="small">{w.id}</h6>
+                                        <div>
+                                            {w.selected_model_id && w.agreements_signed == false &&
+                                                `Selected model: ${w.selected_model_id}. Waiting for agreements signing..`}
+                                        </div>
+                                    </div>
+                                    <label>Created: {new Date(decodeTime(w.id)).toLocaleString()}</label>
+                                </a>
+                            </>
+                        );
+                    })}
+                </article>
+            </div>
+        </div>
+    );
 });

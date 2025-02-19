@@ -1,18 +1,16 @@
 import WorkflowWelcome from "@/components/WorkflowWelcome.tsx";
 import { defineRoute } from "$fresh/server.ts";
-import { sessionIdOrSignin } from "@/utils/http.ts";
-import { list_all, user_profile } from "@/utils/db.ts";
+import { get_user, redirect_to_login, SessionRouteContext } from "@/utils/http.ts";
+import { list_all } from "@/utils/db.ts";
 import { prosumer_key } from "@/utils/misc.ts";
 import { ProsumerWorkflowData, User } from "@/utils/types.ts";
-import { ulid } from "jsr:@std/ulid";
+import { decodeTime, ulid } from "jsr:@std/ulid";
 
-export default defineRoute(async (req, ctx) => {
-    const res = await sessionIdOrSignin(req, ctx);
-    if (res instanceof Response) {
-        return res;
+export default defineRoute(async (req, ctx: SessionRouteContext) => {
+    const user: User | null = await get_user(req, ctx.state.session);
+    if (!user) {
+        return redirect_to_login(req);
     }
-    const session_id = res as string;
-    const user: User = await user_profile(session_id);
     const list = await list_all<ProsumerWorkflowData>(prosumer_key(user));
 
     console.log("PROSUMERS", list);
@@ -77,7 +75,7 @@ export default defineRoute(async (req, ctx) => {
                                         <h6 class="small">{w.name || w.id}</h6>
                                         <div></div>
                                     </div>
-                                    <label>+15 min</label>
+                                    <label>Created: {new Date(decodeTime(w.id)).toLocaleString()}</label>
                                 </a>
                             </>
                         );

@@ -1,15 +1,10 @@
-import { defineRoute, RouteContext } from "$fresh/server.ts";
-import { Session } from "@5t111111/fresh-session";
-import { sessionIdOrSignin } from "@/utils/http.ts";
+import { defineRoute } from "$fresh/server.ts";
+import { get_user, redirect_to_login, SessionRouteContext } from "@/utils/http.ts";
 
-interface State {
-    session: Session;
-}
-
-export default defineRoute(async (req: Request, ctx: RouteContext<void, State>) => {
-    const res = await sessionIdOrSignin(req, ctx);
-    if (res instanceof Response) {
-        return res;
+export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
+    const user = await get_user(req, ctx.state.session);
+    if (!user) {
+        return redirect_to_login(req);
     }
     return (
         <div className="page active middle-align center-align vertical">

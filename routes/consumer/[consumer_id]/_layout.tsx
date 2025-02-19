@@ -194,34 +194,89 @@
 // }
 
 import { defineLayout } from "$fresh/server.ts";
+import { get_user, redirect, redirect_to_login, SessionRouteContext } from "@/utils/http.ts";
+import { db_get } from "@/utils/db.ts";
+import { ConsumerWorkflowData, User } from "@/utils/types.ts";
+import { consumer_key } from "@/utils/misc.ts";
+import classNames from "@/utils/classnames.js";
 
-export default defineLayout(async (req, ctx) => {
+export default defineLayout(async (req, ctx: SessionRouteContext) => {
+    const consumer_id = ctx.params["consumer_id"];
+    const user: User | null = await get_user(req, ctx.state.session);
+    if (!user) {
+        return redirect_to_login(req);
+    }
+
+    const w = await db_get<ConsumerWorkflowData>(consumer_key(user, consumer_id));
+    const paths = new URL(req.url).pathname.split("/");
+    const step = paths[paths.length - 1];
+
+    const step2_enabled = w?.step1_results != undefined;
+    const step3_enabled = step2_enabled && w?.selected_model_id != undefined;
+    const step4_enabled = step3_enabled && !!w.agreements_signed;
+
+    const access_control: Map<string, boolean> = new Map([
+        ["step1", true],
+        ["step2", step2_enabled],
+        ["step3", step3_enabled],
+        ["step4", step4_enabled],
+    ]);
+    const hrefs: Map<string, string> = new Map(
+        access_control.entries().map(([s, e]) => [
+            s,
+            e ? s : "",
+        ]),
+    );
+
+    if (!access_control.get(step)) {
+        return redirect("/consumer");
+    }
     return (
-        <div class="large-padding" f-client-nav={false}>
+        <div class="large-padding">
             <nav class="large-padding wrap">
-                <div class="center-align">
+                <a class="center-align vertical" href={hrefs.get("step1")}>
                     <img
-                        class="circle medium secondary border small-padding"
+                        class={classNames({
+                            "circle medium border small-padding": 1,
+                            "secondary": step == "step1",
+                        })}
                         src="/img/used_filters_blue.svg"
                     />
-                    <div class="small-margin">Model Search Filters</div>
-                </div>
+                    <div class="small-margin small-text">Model Search Filters</div>
+                </a>
                 <hr class="max" />
-                <div class="center-align">
+                <a class="center-align vertical" href={hrefs.get("step2")}>
                     <img
-                        class="circle medium border small-padding"
-                        src="/img/datasets.svg"
+                        class={classNames({
+                            "circle medium border small-padding": 1,
+                            "secondary": step == "step2",
+                        })}
+                        src="/img/my_results_blue.svg"
                     />
-                    <div class="small-margin">Select datasets</div>
-                </div>
+                    <div class="small-margin small-text">Search results</div>
+                </a>
                 <hr class="max" />
-                <div class="center-align">
+                <a class="center-align vertical" href={hrefs.get("step3")}>
                     <img
-                        class="circle medium border small-padding"
-                        src="/img/used_filters_blue.svg"
+                        class={classNames({
+                            "circle medium border small-padding": 1,
+                            "secondary": step == "step3",
+                        })}
+                        src="/img/my_agreements_blue.svg"
                     />
-                    <div class="small-margin">Select computation</div>
-                </div>
+                    <div class="small-margin small-text">Sign agreements</div>
+                </a>
+                <hr class="max" />
+                <a class="center-align vertical" href={hrefs.get("step4")}>
+                    <img
+                        class={classNames({
+                            "circle medium border small-padding": 1,
+                            "secondary": step == "step4",
+                        })}
+                        src="/img/use_data_blue.svg"
+                    />
+                    <div class="small-margin small-text">Access Model</div>
+                </a>
             </nav>
             <ctx.Component />
         </div>

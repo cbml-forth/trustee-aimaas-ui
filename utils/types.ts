@@ -20,6 +20,7 @@ export interface User {
     name: string;
     email: string;
     tokens: { id_token: string; access_token: string; expires_in?: number; expires_at?: number };
+    session_id: string;
 }
 
 export interface ModelSearchAttributeCriterion {
@@ -69,7 +70,7 @@ export interface ProsumerWorkflowData {
 export interface ConsumerWorkflowData {
     readonly id: string; // "consumer id"
     step1_search: ModelSearchCriterion; // this is for "step 1"
-    step1_results: ModelSearchResponseItem[];
+    step1_results?: ModelSearchResponseItem[];
     selected_model_id?: number; // if it was selected then we have redirected to STM
     agreements_signed?: boolean; // if this is not undefined then we have get the response from the STM
 }

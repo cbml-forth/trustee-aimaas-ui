@@ -1,8 +1,7 @@
 import * as oauth from "openid-client";
 import { getRequiredEnv } from "@/utils/misc.ts";
-import { defineRoute, RouteContext } from "$fresh/server.ts";
-import { redirect } from "@/utils/http.ts";
-import { Session } from "@5t111111/fresh-session";
+import { defineRoute } from "$fresh/server.ts";
+import { redirect, SessionRouteContext } from "@/utils/http.ts";
 
 const issuer = new URL(getRequiredEnv("OAUTH_SERVER"));
 
@@ -14,10 +13,7 @@ const oauth_config = await oauth.discovery(
     { execute: [oauth.allowInsecureRequests] },
 );
 
-interface State {
-    session: Session;
-}
-export default defineRoute(async (req: Request, ctx: RouteContext<any, State>) => {
+export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
     const url = new URL(req.url);
     const next_url = url.searchParams.get("success_url");
     ctx.state.session.flash("next", next_url ? next_url : "/");
@@ -58,6 +54,6 @@ export default defineRoute(async (req: Request, ctx: RouteContext<any, State>) =
     const redirectTo: URL = oauth.buildAuthorizationUrl(oauth_config, parameters);
 
     // now redirect the user to redirectTo.href
-    console.log("redirecting to", redirectTo.href);
+    console.log("OIDC redirecting to", redirectTo.href);
     return redirect(redirectTo.href);
 });

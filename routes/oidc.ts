@@ -1,10 +1,11 @@
 import * as oauth from "openid-client";
 import { getRequiredEnv } from "@/utils/misc.ts";
 import { defineRoute, RouteContext } from "$fresh/server.ts";
-import { redirect } from "@/utils/http.ts";
+import { redirect, SessionRouteContext } from "@/utils/http.ts";
 import { Session } from "@5t111111/fresh-session";
 import { set_user_session_data } from "@/utils/db.ts";
 import { User } from "@/utils/types.ts";
+import { assert } from "$std/assert/assert.ts";
 
 const issuer = new URL(getRequiredEnv("OAUTH_SERVER"));
 
@@ -16,14 +17,11 @@ const oauth_config = await oauth.discovery(
     { execute: [oauth.allowInsecureRequests] },
 );
 
-interface State {
-    session: Session;
-}
-export default defineRoute(async (req: Request, ctx: RouteContext<any, State>) => {
+export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
     const code_verifier = ctx.state.session.get<string>("oauth_code_verifier") || "";
     const state = ctx.state.session.get<string>("oauth_state");
     console.log(code_verifier, state);
-    const tokens: oauth.TokenEndpointResponse = await oauth.authorizationCodeGrant(
+    const tokens = await oauth.authorizationCodeGrant(
         oauth_config,
         new URL(req.url),
         {
@@ -41,7 +39,7 @@ export default defineRoute(async (req: Request, ctx: RouteContext<any, State>) =
         "GET",
     );
     const user_profile = await userInfoRes.json();
-    console.log("RETRIEVED USER PROFILE:", user_profile);
+    console.log("OIDC RETRIEVED USER PROFILE:", user_profile);
 
     const session_id = crypto.randomUUID();
 
@@ -60,12 +58,13 @@ export default defineRoute(async (req: Request, ctx: RouteContext<any, State>) =
             expires_in: expires_in,
             expires_at: expires_at,
         },
+        session_id,
     };
     await set_user_session_data(session_id, "user", u);
     ctx.state.session.set<string>("session_id", session_id);
 
     const next_url = ctx.state.session.get<string>("next");
 
-    console.log("OIDC SESSION:", ctx.state.session.getSessionObject().data);
+    // console.log("OIDC SESSION:", ctx.state.session.getSessionObject().data);
     return redirect(next_url ? next_url : "/");
 });

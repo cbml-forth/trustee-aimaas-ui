@@ -10,6 +10,7 @@ import * as $consumer_consumer_id_layout from "./routes/consumer/[consumer_id]/_
 import * as $consumer_consumer_id_step1 from "./routes/consumer/[consumer_id]/step1.tsx";
 import * as $consumer_consumer_id_step2 from "./routes/consumer/[consumer_id]/step2.tsx";
 import * as $consumer_consumer_id_step3 from "./routes/consumer/[consumer_id]/step3.tsx";
+import * as $consumer_consumer_id_step4 from "./routes/consumer/[consumer_id]/step4.tsx";
 import * as $consumer_index from "./routes/consumer/index.tsx";
 import * as $form from "./routes/form.tsx";
 import * as $index from "./routes/index.tsx";
@@ -40,6 +41,7 @@ const manifest = {
         "./routes/consumer/[consumer_id]/step1.tsx": $consumer_consumer_id_step1,
         "./routes/consumer/[consumer_id]/step2.tsx": $consumer_consumer_id_step2,
         "./routes/consumer/[consumer_id]/step3.tsx": $consumer_consumer_id_step3,
+        "./routes/consumer/[consumer_id]/step4.tsx": $consumer_consumer_id_step4,
         "./routes/consumer/index.tsx": $consumer_index,
         "./routes/form.tsx": $form,
         "./routes/index.tsx": $index,

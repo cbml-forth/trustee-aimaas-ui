@@ -1,10 +1,8 @@
-import { Handlers, PageProps, RouteContext } from "$fresh/server.ts";
+import { Handlers, PageProps } from "$fresh/server.ts";
 import { Domain, ProsumerWorkflowData, SSISearchCriterion, User } from "@/utils/types.ts";
 import { dl_domains, do_ssi_search } from "@/utils/backend.ts";
-import { sessionIdOrSignin } from "@/utils/http.ts";
-import { Session } from "@5t111111/fresh-session";
-
-import ProsumerStep1, { FilterValue } from "@/islands/prosumer/ProsumerStep1.tsx";
+import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
+import ProsumerStep1 from "@/islands/prosumer/ProsumerStep1.tsx";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
 
 import { redirect } from "@/utils/http.ts";
@@ -12,10 +10,6 @@ import { prosumer_key } from "@/utils/misc.ts";
 
 const DL_API = Deno.env.get("DL_API_SERVER");
 console.log(DL_API);
-
-interface State {
-    session: Session;
-}
 
 interface Data {
     domains: Domain[];
@@ -44,14 +38,14 @@ async function get_domains(sessionId: string): Promise<Map<string, Domain>> {
     return new Map(domains?.map((d) => [d.name, d]));
 }
 
-export const handler: Handlers<unknown, State> = {
+export const handler: Handlers<unknown, SessionState> = {
     async POST(req, ctx) {
-        console.log("SESSION:", ctx.state.session.getSessionObject().data);
-        const res = await sessionIdOrSignin(req, ctx);
-        if (res instanceof Response) {
-            return res;
+        const user = await get_user(req, ctx.state.session);
+        if (!user) {
+            return redirect_to_login(req);
         }
-        const sessionId = res as string;
+
+        const sessionId = user.session_id;
         const domains = await get_domains(sessionId);
 
         const data: FormData = await req.formData();
@@ -74,16 +68,15 @@ export const handler: Handlers<unknown, State> = {
             }
         });
         console.log(filters);
-        const user: User = await user_profile(sessionId);
 
-        const criteria: SSISearchCriterion[] = filters.map(([d, a, v]) => {
+        const criteria = [...filters.map(([d, a, v]) => {
             return {
                 domain: domains.get(d),
                 attribute: domains.get(d)?.attributes.filter((attr) => attr.name == a),
                 value: v,
                 operator: "equal",
             };
-        });
+        })];
         console.log("CRITERIA", criteria);
 
         const w: ProsumerWorkflowData = {
@@ -109,14 +102,13 @@ export const handler: Handlers<unknown, State> = {
         return redirect("step1");
     },
     async GET(req, ctx) {
-        console.log("SESSION:", ctx.state.session.getSessionObject().data);
-        const res = await sessionIdOrSignin(req, ctx);
-        if (res instanceof Response) {
-            return res;
+        const user = await get_user(req, ctx.state.session);
+        if (!user) {
+            return redirect_to_login(req);
         }
-        const sessionId = res as string;
+
+        const sessionId = user.session_id;
         const domains = await get_domains(sessionId);
-        const user: User = await user_profile(sessionId);
 
         const prosumer_id = ctx.params["prosumer_id"];
         const prosumer_data = await db_get<ProsumerWorkflowData>(prosumer_key(user, prosumer_id));

@@ -1,13 +1,15 @@
 import WorkflowWelcome from "@/components/WorkflowWelcome.tsx";
 import { defineRoute } from "$fresh/server.ts";
-import { sessionIdOrSignin } from "@/utils/http.ts";
+import { get_user, redirect_to_login, SessionRouteContext } from "@/utils/http.ts";
 import { crypto } from "jsr:@std/crypto";
 
-export default defineRoute(async (req, ctx) => {
-    const res = await sessionIdOrSignin(req, ctx);
-    if (res instanceof Response) {
-        return res;
+export default defineRoute(async (req, ctx: SessionRouteContext) => {
+    console.log(ctx.state);
+    const user = await get_user(req, ctx.state.session);
+    if (!user) {
+        return redirect_to_login(req);
     }
+
     const provider_id = crypto.randomUUID();
     const props = {
         headerText: "Provide self-developed pre-trained AI Models to TRUSTEE for future use and sharing",
