@@ -226,7 +226,7 @@ export default function ConsumerStep1(props: {
                     Save
                 </button>
                 <button
-                    class="button ripple small-round upper elevate bg-trusteeBtn"
+                    class="button ripple small-round upper elevate bg-trusteeFail"
                     type="button"
                     onClick={reset}
                 >

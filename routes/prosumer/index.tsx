@@ -62,25 +62,35 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
     return (
         <div class="vertical">
             <WorkflowWelcome {...props}></WorkflowWelcome>
-            <div class="padding align-left">
-                <h5 class="align-left">Or check the status of previous flows:</h5>
-                <article>
+            <div class="padding elevate" style={{ "margin-top": "4rem" }}>
+                <h5 class="left-align extra-text text-primary">Previous prosumer flows: {list.length}</h5>
+                <ul class="list no-elevate surface-container-lowest">
                     {list.map((w, index) => {
                         return (
                             <>
-                                {index > 0 && <hr />}
-                                <a class="row large-padding surface-container" href={"/prosumer/" + w.id + "/step1"}>
-                                    <i>home</i>
+                                {index > 0 && <hr class="padding surface-container-lowest" />}
+                                <li class="row transparent">
+                                    <i>play_arrow</i>
                                     <div class="max">
-                                        <h6 class="small">{w.name || w.id}</h6>
-                                        <div></div>
+                                        <h6 class="small">{w.id}</h6>
+                                        <div>...status...</div>
                                     </div>
                                     <label>Created: {new Date(decodeTime(w.id)).toLocaleString()}</label>
-                                </a>
+                                    <a href={`/prosumer/${w.id}/step1`}>
+                                        <button className="ripple button bg-trusteeBtn">
+                                            Open
+                                        </button>
+                                    </a>
+                                    <a href={`/prosumer/${w.id}/step1`}>
+                                        <button className="ripple button bg-trusteeBtn">
+                                            Continue<i>chevron_right</i>
+                                        </button>
+                                    </a>
+                                </li>
                             </>
                         );
                     })}
-                </article>
+                </ul>
             </div>
         </div>
     );

@@ -245,7 +245,13 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
                     <div class="small-margin small-text">Model Search Filters</div>
                 </a>
                 <hr class="max" />
-                <a class="center-align vertical" href={hrefs.get("step2")}>
+                <a
+                    href={hrefs.get("step2")}
+                    class={classNames({
+                        // "wf-disabled": step2_enabled,
+                        "center-align vertical": 1,
+                    })}
+                >
                     <img
                         class={classNames({
                             "circle medium border small-padding": 1,
@@ -256,7 +262,13 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
                     <div class="small-margin small-text">Search results</div>
                 </a>
                 <hr class="max" />
-                <a class="center-align vertical" href={hrefs.get("step3")}>
+                <a
+                    class={classNames({
+                        // "wf-disabled": step3_enabled,
+                        "center-align vertical": 1,
+                    })}
+                    href={hrefs.get("step3")}
+                >
                     <img
                         class={classNames({
                             "circle medium border small-padding": 1,
@@ -267,7 +279,13 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
                     <div class="small-margin small-text">Sign agreements</div>
                 </a>
                 <hr class="max" />
-                <a class="center-align vertical" href={hrefs.get("step4")}>
+                <a
+                    class={classNames({
+                        // "wf-disabled": step4_enabled,
+                        "center-align vertical": 1,
+                    })}
+                    href={hrefs.get("step4")}
+                >
                     <img
                         class={classNames({
                             "circle medium border small-padding": 1,

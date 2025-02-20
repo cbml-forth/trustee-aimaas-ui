@@ -6,7 +6,7 @@ import { consumer_key } from "@/utils/misc.ts";
 import { ConsumerWorkflowData, User } from "@/utils/types.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { redirect_to_login, SessionState } from "@/utils/http.ts";
-import { do_dl_model_download } from "@/utils/backend.ts";
+import { atr_log, do_dl_model_download } from "@/utils/backend.ts";
 
 interface Data {
     selected_model_id: number;
@@ -40,6 +40,9 @@ export const handler: Handlers<Data, SessionState> = {
         if (data?.selected_model_id == undefined) {
             return redirect("step2");
         }
+
+        // Record in ATR the action of the user to download the model:
+        await atr_log(user.id, data.step1_search.domain.name, "DataLake", "GetModelFile");
 
         const response = await do_dl_model_download(user, data.selected_model_id);
         if (!response.ok) {

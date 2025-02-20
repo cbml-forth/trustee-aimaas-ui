@@ -61,6 +61,9 @@ export async function db_get<T = unknown>(key: string[]): Promise<T | null> {
     const { value } = await kv.get(key);
     return value as T | null;
 }
+export async function db_del(key: string[]): Promise<void> {
+    await kv.delete(key);
+}
 
 export async function list_all<T = unknown>(prefix_key: string[]): Promise<T[]> {
     const entries = kv.list({ prefix: prefix_key });

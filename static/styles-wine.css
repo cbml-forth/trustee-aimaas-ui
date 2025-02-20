@@ -176,3 +176,14 @@ body {
     width: 150px !important;
     background-color: #f6f6f6 !important;
 }
+.bg-trusteeFail {
+    --overlay-multiplier: var(--trusteeFail-overlay-multiplier);
+    background-color: var(--trusteeFail) !important;
+    color: var(--on-trusteeFail) !important;
+    border-radius: 4px !important;
+}
+
+nav .wf-disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}

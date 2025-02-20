@@ -273,7 +273,7 @@ export default function ProsumerStep1(props: {
                 <button class="button small-round upper elevate bg-trusteeBtn" type="submit" name="action" value="save">
                     Save
                 </button>
-                <button class="button small-round upper elevate bg-trusteeBtn" type="button" onClick={reset}>
+                <button class="button small-round upper elevate bg-trusteeFail" type="button" onClick={reset}>
                     Clear
                 </button>
             </div>

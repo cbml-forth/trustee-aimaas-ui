@@ -63,9 +63,13 @@ export default function Step3Page(props: PageProps<Data>) {
 
     return (
         <form method="POST" f-client-nav={false}>
-            <h6 class="left-align">Agreements Signing status</h6>
+            {agreements_signed !== undefined && (
+                <h6 class="left-align">
+                    Agreements for model {selected_model_id} {agreements_signed ? "signed" : "not signed"}
+                </h6>
+            )}
             {!agreements_signed && (
-                <h6 class="left-align medium-text">
+                <h6 class="left-align">
                     You have not yet signed the aggreements for model {selected_model_id}
                 </h6>
             )}
@@ -99,9 +103,6 @@ export default function Step3Page(props: PageProps<Data>) {
                             </button>
                         </>
                     )}
-                {agreements_signed && (
-                    <span>Agreements signed: {agreements_signed ? "True" : "False"} for {selected_model_id}</span>
-                )}
             </div>
         </form>
     );
