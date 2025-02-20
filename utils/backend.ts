@@ -92,7 +92,7 @@ export async function atr_log(
         body: JSON.stringify(data),
         headers: {
             "Content-Type": "application/json",
-            "atr-api-key": Deno.env.get("ATR_API_KEY"),
+            "atr-api-key": Deno.env.get("ATR_API_KEY") || "",
         },
     });
     if (!response.ok) {

@@ -1,11 +1,9 @@
 import * as oauth from "openid-client";
 import { getRequiredEnv } from "@/utils/misc.ts";
-import { defineRoute, RouteContext } from "$fresh/server.ts";
+import { defineRoute } from "$fresh/server.ts";
 import { redirect, SessionRouteContext } from "@/utils/http.ts";
-import { Session } from "@5t111111/fresh-session";
 import { set_user_session_data } from "@/utils/db.ts";
 import { User } from "@/utils/types.ts";
-import { assert } from "$std/assert/assert.ts";
 
 const issuer = new URL(getRequiredEnv("OAUTH_SERVER"));
 
@@ -19,7 +17,7 @@ const oauth_config = await oauth.discovery(
 
 export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
     const code_verifier = ctx.state.session.get<string>("oauth_code_verifier") || "";
-    const state = ctx.state.session.get<string>("oauth_state");
+    const state = ctx.state.session.get<string>("oauth_state") as string;
     console.log(code_verifier, state);
     const tokens = await oauth.authorizationCodeGrant(
         oauth_config,
@@ -30,7 +28,12 @@ export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
         },
     );
 
-    console.log("Token Endpoint Response", tokens.claims());
+    const claims = tokens.claims();
+    console.log("Token Endpoint Response", tokens);
+    if (!claims || !claims.exp || !tokens.id_token) {
+        console.error("Got undefined claims from AM!");
+        return null;
+    }
 
     const userInfoRes: Response = await oauth.fetchProtectedResource(
         oauth_config,
@@ -45,7 +48,7 @@ export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
 
     const user_name = user_profile.name ?? user_profile.firstname + " " + user_profile.lastname;
 
-    const expires_at = tokens.claims().exp * 1000;
+    const expires_at = claims.exp * 1000;
     const now = Date.now();
     const expires_in = expires_at - now;
     const u: User = {

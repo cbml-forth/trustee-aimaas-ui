@@ -71,9 +71,10 @@ function SingleFilter(props: {
         const domAttrs = selectedDomain.value.attributes;
         selectedAttribute.value = domAttrs.find((a) => a.name == x) || domAttrs[0];
     };
-    const onChangeValue = (e) => {
+    const onChangeValue = (e: Event) => {
+        const target = e.currentTarget as HTMLInputElement;
         batch(() => {
-            textValue.value = e.target?.value || "";
+            textValue.value = target.value || "";
             error.value = textValue.value == "";
         });
     };

@@ -1,5 +1,5 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { Domain, ProsumerWorkflowData, SSISearchCriterion, User } from "@/utils/types.ts";
+import { Domain, DomainAttr, ProsumerWorkflowData, SSISearchCriterion, User } from "@/utils/types.ts";
 import { dl_domains, do_ssi_search } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import ProsumerStep1 from "@/islands/prosumer/ProsumerStep1.tsx";
@@ -53,31 +53,21 @@ export const handler: Handlers<unknown, SessionState> = {
         const prosumer_id = ctx.params["prosumer_id"];
 
         const process_name = data.get("process_name")?.toString() || "";
-        const filters: string[][] = [];
+        const filters: SSISearchCriterion[] = [];
         const sep = ":";
         new Set(data.keys().filter((v) => v.indexOf(sep) >= 0).map((s) => s.split(sep)[1])).forEach((fid) => {
             const d = data.get(`domain${sep}${fid}`)?.toString();
             const a = data.get(`attribute${sep}${fid}`)?.toString();
             const v = data.get(`value${sep}${fid}`)?.toString();
-            if (!!v && !!a && !!d) {
-                filters.push([
-                    d,
-                    a,
-                    v,
-                ]);
-            }
+            if (!d || !a || !v) return;
+            const dom = domains.get(d);
+            if (!dom) return;
+            const attr = dom.attributes.find((attr) => attr.name == a);
+            if (!attr) return;
+            filters.push({ domain: dom, attribute: attr, operator: "equal", value: v });
         });
-        console.log(filters);
 
-        const criteria = [...filters.map(([d, a, v]) => {
-            return {
-                domain: domains.get(d),
-                attribute: domains.get(d)?.attributes.filter((attr) => attr.name == a),
-                value: v,
-                operator: "equal",
-            };
-        })];
-        console.log("CRITERIA", criteria);
+        console.log("CRITERIA", filters);
 
         const w: ProsumerWorkflowData = {
             id: prosumer_id,
@@ -85,14 +75,14 @@ export const handler: Handlers<unknown, SessionState> = {
             ssi: {
                 status: "NOT STARTED",
                 process_id: "",
-                criteria,
+                criteria: filters,
             },
         };
 
         const perform_ssi = data.get("action")?.toString() === "search";
 
         if (perform_ssi) {
-            const ssi_response = await do_ssi_search(user, criteria);
+            const ssi_response = await do_ssi_search(user, filters);
             if (ssi_response) {
                 w.ssi.status = ssi_response.status;
                 w.ssi.process_id = ssi_response.process_id || "";

@@ -1,5 +1,6 @@
 import { useSignal, useSignalEffect } from "@preact/signals";
 import classNames from "@/utils/classnames.js";
+import { IS_BROWSER } from "$fresh/runtime.ts";
 
 const dashboard = "https://dashboard.trustee-1.ics.forth.gr";
 
@@ -155,14 +156,18 @@ function SidebarItem(
 }
 
 export default function Sidebar() {
-    const isClosed = useSignal(localStorage.getItem("menu") ? localStorage.getItem("menu") == "closed" : false);
+    const isClosed = useSignal(
+        IS_BROWSER && localStorage.getItem("menu") ? localStorage.getItem("menu") == "closed" : false,
+    );
     const toggleOpenClose = () => {
         isClosed.value = !isClosed.value;
     };
 
     useSignalEffect(() => {
         console.log(`Menu is closed: ${isClosed.value}`);
-        localStorage.setItem("menu", isClosed.value ? "closed" : "open");
+        if (IS_BROWSER) {
+            localStorage.setItem("menu", isClosed.value ? "closed" : "open");
+        }
     });
 
     const sidebarObjects = sidebarItems.map((x, index) => {

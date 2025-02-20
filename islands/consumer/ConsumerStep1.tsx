@@ -28,8 +28,9 @@ function SingleFilter(props: {
     const selectedAttribute = useSignal<DomainAttr>(props.filterValue.attr);
     const textValue = useSignal<string>(props.filterValue.value);
 
-    const onChangeValue = (e) => {
-        textValue.value = e.target?.value || "";
+    const onChangeValue = (e: Event) => {
+        const target = e.target as HTMLInputElement;
+        textValue.value = target.value || "";
         update_filter();
     };
 

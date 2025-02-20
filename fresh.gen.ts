@@ -12,7 +12,6 @@ import * as $consumer_consumer_id_step2 from "./routes/consumer/[consumer_id]/st
 import * as $consumer_consumer_id_step3 from "./routes/consumer/[consumer_id]/step3.tsx";
 import * as $consumer_consumer_id_step4 from "./routes/consumer/[consumer_id]/step4.tsx";
 import * as $consumer_index from "./routes/consumer/index.tsx";
-import * as $form from "./routes/form.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $login from "./routes/login.ts";
 import * as $oidc from "./routes/oidc.ts";
@@ -22,7 +21,6 @@ import * as $prosumer_prosumer_id_step1 from "./routes/prosumer/[prosumer_id]/st
 import * as $prosumer_index from "./routes/prosumer/index.tsx";
 import * as $provider_provider_id_step1 from "./routes/provider/[provider_id]/step1.tsx";
 import * as $provider_index from "./routes/provider/index.tsx";
-import * as $signin from "./routes/signin.tsx";
 import * as $test from "./routes/test.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $DropMenuField from "./islands/DropMenuField.tsx";
@@ -43,7 +41,6 @@ const manifest = {
         "./routes/consumer/[consumer_id]/step3.tsx": $consumer_consumer_id_step3,
         "./routes/consumer/[consumer_id]/step4.tsx": $consumer_consumer_id_step4,
         "./routes/consumer/index.tsx": $consumer_index,
-        "./routes/form.tsx": $form,
         "./routes/index.tsx": $index,
         "./routes/login.ts": $login,
         "./routes/oidc.ts": $oidc,
@@ -53,7 +50,6 @@ const manifest = {
         "./routes/prosumer/index.tsx": $prosumer_index,
         "./routes/provider/[provider_id]/step1.tsx": $provider_provider_id_step1,
         "./routes/provider/index.tsx": $provider_index,
-        "./routes/signin.tsx": $signin,
         "./routes/test.tsx": $test,
     },
     islands: {
