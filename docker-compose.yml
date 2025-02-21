@@ -1,0 +1,32 @@
+
+services:
+  server:
+    env_file: ".env"
+    image: aimaas_ui_fresh:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    pull_policy: build
+    volumes:
+      - aimaas_db:/data
+    environment:
+      DL_API_SERVER: ${DL_API_SERVER}
+      FL_API_SERVER: ${FL_API_SERVER}
+      SSI_API_SERVER: ${SSI_API_SERVER}
+      OAUTH_CLIENT_ID: ${OAUTH_CLIENT_ID}
+      OAUTH_CLIENT_SECRET: ${OAUTH_CLIENT_SECRET}
+      OAUTH_REDIRECT_URI: https://${VIRTUAL_HOST_AIMAAS_UI}/oidc
+      OAUTH_SERVER: ${OAUTH_SERVER}
+      ATR_API_KEY: ${ATR_API_KEY}
+      KR_API_KEY: ${KR_API_KEY}
+      DENO_KV_PATH: /data/aimas_kv.sqlite
+      AIMAAS_SESSION_EXPIRE_HOURS: 12
+
+    container_name: aimaas_ui_fresh
+    ports:
+      - "${VIRTUAL_PORT_AIMAAS_UI}:80"
+    expose:
+      - ${VIRTUAL_PORT_AIMAAS_UI}
+
+volumes:
+  aimaas_db:
