@@ -1,7 +1,6 @@
 
 services:
   server:
-    env_file: ".env"
     image: aimaas_ui_fresh:latest
     build:
       context: .
