@@ -9,6 +9,8 @@ services:
     volumes:
       - aimaas_db:/data
     environment:
+      AIMAAS_UI_URI: ${AIMAAS_UI_URI}
+      STM_URI: ${STM_URI}
       DL_API_SERVER: ${DL_API_SERVER}
       FL_API_SERVER: ${FL_API_SERVER}
       SSI_API_SERVER: ${SSI_API_SERVER}
