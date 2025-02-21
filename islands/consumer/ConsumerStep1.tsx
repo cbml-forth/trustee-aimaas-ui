@@ -81,6 +81,7 @@ export default function ConsumerStep1(props: {
     user: User;
     criteria?: ModelSearchCriterion | null;
     disabled: boolean;
+    next?: string;
 }) {
     console.log("STEP1");
 
@@ -209,30 +210,45 @@ export default function ConsumerStep1(props: {
                         <i>chevron_left</i>List
                     </button>
                 </a>
-                <button
-                    class="button ripple small-round upper elevate bg-trusteeBtn"
-                    type="submit"
-                    name="action"
-                    value="search"
-                >
-                    Submit
-                </button>
-                <button
-                    class="button ripple small-round upper elevate bg-trusteeBtn"
-                    type="submit"
-                    name="action"
-                    value="save"
-                    disabled={!saveEnabled.value}
-                >
-                    Save
-                </button>
-                <button
-                    class="button ripple small-round upper elevate bg-trusteeFail"
-                    type="button"
-                    onClick={reset}
-                >
-                    Clear
-                </button>
+                {!props.disabled && (
+                    <>
+                        <button
+                            class="button ripple small-round upper elevate bg-trusteeBtn"
+                            type="submit"
+                            name="action"
+                            value="search"
+                        >
+                            Submit
+                        </button>
+                        <button
+                            class="button ripple small-round upper elevate bg-trusteeBtn"
+                            type="submit"
+                            name="action"
+                            value="save"
+                            disabled={!saveEnabled.value}
+                        >
+                            Save
+                        </button>
+                        <button
+                            class="button ripple small-round upper elevate bg-trusteeFail"
+                            type="button"
+                            onClick={reset}
+                        >
+                            Clear
+                        </button>
+                    </>
+                )}
+                {!!props.next &&
+                    (
+                        <a href={props.next}>
+                            <button
+                                class="button ripple small-round upper elevate bg-trusteeBtn"
+                                type="button"
+                            >
+                                Next<i>chevron_right</i>
+                            </button>
+                        </a>
+                    )}
             </div>
         </form>
     );

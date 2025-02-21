@@ -24,6 +24,7 @@ interface Data {
     user: User;
     disabled: boolean;
     criteria?: ModelSearchCriterion;
+    next?: string;
 }
 
 async function get_domains(user: User): Promise<Map<number, Domain>> {
@@ -117,6 +118,7 @@ export const handler: Handlers<Data, SessionState> = {
             user,
             disabled: disabled,
             criteria: data?.step1_search,
+            next: `/consumer/${consumer_id}/step2`,
         });
     },
 };
@@ -128,6 +130,7 @@ export default function Step1Page(props: PageProps<Data>) {
             user={props.data.user}
             criteria={props.data.criteria}
             disabled={props.data.disabled}
+            next={props.data.next}
         />
     );
 }
