@@ -1,19 +1,9 @@
 import * as oauth from "openid-client";
-import { getRequiredEnv } from "@/utils/misc.ts";
+import { getRequiredEnv, oauth_config } from "@/utils/misc.ts";
 import { defineRoute } from "$fresh/server.ts";
 import { redirect, SessionRouteContext } from "@/utils/http.ts";
 import { set_user_session_data } from "@/utils/db.ts";
 import { User } from "@/utils/types.ts";
-
-const issuer = new URL(getRequiredEnv("OAUTH_SERVER"));
-
-const oauth_config = await oauth.discovery(
-    issuer,
-    getRequiredEnv("OAUTH_CLIENT_ID"),
-    undefined,
-    oauth.ClientSecretBasic(getRequiredEnv("OAUTH_CLIENT_SECRET")),
-    { execute: [oauth.allowInsecureRequests] },
-);
 
 export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
     const code_verifier = ctx.state.session.get<string>("oauth_code_verifier") || "";
