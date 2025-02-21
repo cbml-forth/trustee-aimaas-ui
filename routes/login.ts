@@ -13,6 +13,8 @@ const oauth_config = await oauth.discovery(
     { execute: [oauth.allowInsecureRequests] },
 );
 
+console.log("AM Server Metadata", oauth_config.serverMetadata());
+
 export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
     const url = new URL(req.url);
     const next_url = url.searchParams.get("success_url");

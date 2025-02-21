@@ -73,4 +73,5 @@ export interface ConsumerWorkflowData {
     step1_results?: ModelSearchResponseItem[];
     selected_model_id?: number; // if it was selected then we have redirected to STM
     agreements_signed?: boolean; // if this is not undefined then we have get the response from the STM
+    model_downloaded?: boolean;
 }

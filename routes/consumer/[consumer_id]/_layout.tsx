@@ -214,12 +214,14 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
     const step2_enabled = w?.step1_results != undefined;
     const step3_enabled = step2_enabled && w?.selected_model_id != undefined;
     const step4_enabled = step3_enabled && !!w.agreements_signed;
+    const step5_enabled = step4_enabled && !!w.model_downloaded;
 
     const access_control: Map<string, boolean> = new Map([
         ["step1", true],
         ["step2", step2_enabled],
         ["step3", step3_enabled],
         ["step4", step4_enabled],
+        ["step5", step5_enabled],
     ]);
     const hrefs: Map<string, string> = new Map(
         access_control.entries().map(([s, e]) => [
@@ -294,6 +296,23 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
                         src="/img/use_data_blue.svg"
                     />
                     <div class="small-margin small-text">Access Model</div>
+                </a>
+                <hr class="max" />
+                <a
+                    class={classNames({
+                        // "wf-disabled": step4_enabled,
+                        "center-align vertical": 1,
+                    })}
+                    href={hrefs.get("step5")}
+                >
+                    <img
+                        class={classNames({
+                            "circle medium border small-padding": 1,
+                            "secondary": step == "step5",
+                        })}
+                        src="/img/results_workflow.svg"
+                    />
+                    <div class="small-margin small-text">Perform XAI locally</div>
                 </a>
             </nav>
             <ctx.Component />

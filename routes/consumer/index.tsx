@@ -72,7 +72,7 @@ export const handler: Handlers<Data, SessionState> = {
             }, */
             {
                 imgURL: "results_workflow.svg",
-                text: "Perform Explainability Functions and retrieve Model",
+                text: "Retrieve Model and Perform Explainability Functions",
             },
         ];
         const props = {
@@ -88,6 +88,9 @@ export const handler: Handlers<Data, SessionState> = {
 
 export default function ConsumerIndexPage({ data }: PageProps<Data>) {
     const nextStep = function (w: ConsumerWorkflowData) {
+        if (w.model_downloaded === true) {
+            return "step5";
+        }
         if (w.agreements_signed != undefined && w.agreements_signed === true) {
             return "step4";
         }
@@ -100,7 +103,7 @@ export default function ConsumerIndexPage({ data }: PageProps<Data>) {
         return "step1";
     };
     const openUrl = function (w: ConsumerWorkflowData) {
-        return `/consumer/${w.id}/${nextStep(w)}`;
+        return `/consumer/${w.id}`;
     };
     const status = function (w: ConsumerWorkflowData) {
         const url = nextStep(w);
@@ -127,6 +130,12 @@ export default function ConsumerIndexPage({ data }: PageProps<Data>) {
                 return (
                     <p>
                         Agreements signed, you can download the model
+                    </p>
+                );
+            case "step5":
+                return (
+                    <p>
+                        You can run XAI operations locally
                     </p>
                 );
         }

@@ -1,4 +1,4 @@
-import { db_get } from "@/utils/db.ts";
+import { db_get, db_store } from "@/utils/db.ts";
 
 import { get_user, redirect } from "@/utils/http.ts";
 import { consumer_key } from "@/utils/misc.ts";
@@ -48,6 +48,8 @@ export const handler: Handlers<Data, SessionState> = {
         if (!response.ok) {
             return ctx.render({ selected_model_id: data.selected_model_id, error: true });
         }
+        data.model_downloaded = true;
+        await db_store(consumer_key(user, consumer_id), data);
         const filename = `model-${data.selected_model_id}.obj`;
         return new Response(response.body, {
             status: response.status,
