@@ -1,4 +1,4 @@
-import { db_get } from "@/utils/db.ts";
+import { db_get, db_store } from "@/utils/db.ts";
 
 import { get_user, redirect, redirect_to_login, SessionState } from "@/utils/http.ts";
 import { consumer_key } from "@/utils/misc.ts";
@@ -35,7 +35,13 @@ export const handler: Handlers<unknown, SessionState> = {
         if (!data) {
             return redirect("/consumer"); // XXX: Add error message!
         }
-
+        const action: string | null = ctx.url.searchParams.get("action");
+        if (
+            action?.startsWith("signed:") // after `:` is "nonce"
+        ) {
+            data.agreements_signed = true;
+            await db_store(consumer_key(user, consumer_id), data);
+        }
         return redirect(openUrl(data));
     },
 };

@@ -142,7 +142,7 @@ function SingleFilter(props: {
 
             {!only_one && !props.disabled &&
                 (
-                    <button type="button" class="square bg-trusteeBtn" onClick={onRemove}>
+                    <button type="button" class="square bg-trusteeFail" onClick={onRemove}>
                         <i>close</i>
                     </button>
                 )}

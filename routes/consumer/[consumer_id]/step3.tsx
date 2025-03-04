@@ -52,10 +52,13 @@ export const handler: Handlers<Data, SessionState> = {
             data.agreements_signed = false;
 
             const selected_model_id = data.selected_model_id;
+            const nonce = Date.now(); // use this as a "nonce", i.e. an arbitrary number that can be used just once
 
-            const continue_uri = encodeURIComponent(new URL(MY_URI + `consumer/${consumer_id}`).toString());
+            const continue_uri = encodeURIComponent(
+                new URL(MY_URI + `consumer/${consumer_id}?action=signed:${nonce}`).toString(),
+            );
             const stm_url = new URL(STM_URI);
-            stm_url.hash = `#aiAgreementCreation?model_id=${selected_model_id}&aimaas_ui_redirect=${continue_uri}`;
+            stm_url.hash = `#/aiAgreementCreation?model_id=${selected_model_id}&aimaas_ui_redirect=${continue_uri}`;
             redirect_uri = stm_url.toString();
         } else {
             data.agreements_signed = true;

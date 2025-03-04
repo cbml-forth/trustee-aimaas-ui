@@ -23,8 +23,8 @@ export function redirect(
 }
 
 export function redirect_to_login(req: Request) {
-    const path = URL.parse(req.url)?.pathname;
-    return redirect("/login?success_url=" + path);
+    // const path = URL.parse(req.url)?.pathname;
+    return redirect("/login?success_url=" + req.url);
 }
 
 export type SessionState = {

@@ -1,18 +1,10 @@
-# Fresh project
+# AIMaaS-UI
 
-Your new Fresh project is ready to go. You can follow the Fresh "Getting
-Started" guide here: https://fresh.deno.dev/docs/getting-started
+AI Model as a Service (AIMaaS) aims to simplify the onboarding process for various AI models, empowering TRUSTEE to enhance and expand its current AI
+infrastructure hosted in the cloud. AIMaaS-UI features a similar graphical interface as the DA, but for AI purposes (training or inference). It allows the graphical input of specific computations to be executed (for example, considered aggregation for models, considered model providers...) and the graphical output of the obtained aggregated result
 
-### Usage
 
-Make sure to install Deno: https://deno.land/manual/getting_started/installation
 
-Then start the project:
 
-```
-deno task start
-```
-
-This will watch the project directory and restart as necessary.
 
 See an interesting example: https://github.com/morinokami/fresh-hacker

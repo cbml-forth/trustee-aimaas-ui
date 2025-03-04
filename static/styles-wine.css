@@ -144,7 +144,7 @@ body {
     background-color: #e7eaf2 !important;
 }
 
-#sidebar a[data-current="true"] {
+#sidebar a.aimaas[data-ancestor="true"], #sidebar a.aimaas[data-current="true"] {
     background-color: #6277a1 !important;
     color: #fff !important;
     white-space: normal;
