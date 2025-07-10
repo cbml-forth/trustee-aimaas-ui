@@ -6,6 +6,7 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
 import * as $_middleware from "./routes/_middleware.tsx";
+import * as $agreementsSigned_index from "./routes/agreementsSigned/index.ts";
 import * as $consumer_consumer_id_layout from "./routes/consumer/[consumer_id]/_layout.tsx";
 import * as $consumer_consumer_id_index from "./routes/consumer/[consumer_id]/index.ts";
 import * as $consumer_consumer_id_step1 from "./routes/consumer/[consumer_id]/step1.tsx";
@@ -20,6 +21,7 @@ import * as $oidc from "./routes/oidc.ts";
 import * as $profile from "./routes/profile.tsx";
 import * as $prosumer_prosumer_id_layout from "./routes/prosumer/[prosumer_id]/_layout.tsx";
 import * as $prosumer_prosumer_id_step1 from "./routes/prosumer/[prosumer_id]/step1.tsx";
+import * as $prosumer_prosumer_id_step2 from "./routes/prosumer/[prosumer_id]/step2.tsx";
 import * as $prosumer_index from "./routes/prosumer/index.tsx";
 import * as $provider_provider_id_step1 from "./routes/provider/[provider_id]/step1.tsx";
 import * as $provider_index from "./routes/provider/index.tsx";
@@ -35,6 +37,7 @@ const manifest = {
         "./routes/_app.tsx": $_app,
         "./routes/_layout.tsx": $_layout,
         "./routes/_middleware.tsx": $_middleware,
+        "./routes/agreementsSigned/index.ts": $agreementsSigned_index,
         "./routes/consumer/[consumer_id]/_layout.tsx": $consumer_consumer_id_layout,
         "./routes/consumer/[consumer_id]/index.ts": $consumer_consumer_id_index,
         "./routes/consumer/[consumer_id]/step1.tsx": $consumer_consumer_id_step1,
@@ -49,6 +52,7 @@ const manifest = {
         "./routes/profile.tsx": $profile,
         "./routes/prosumer/[prosumer_id]/_layout.tsx": $prosumer_prosumer_id_layout,
         "./routes/prosumer/[prosumer_id]/step1.tsx": $prosumer_prosumer_id_step1,
+        "./routes/prosumer/[prosumer_id]/step2.tsx": $prosumer_prosumer_id_step2,
         "./routes/prosumer/index.tsx": $prosumer_index,
         "./routes/provider/[provider_id]/step1.tsx": $provider_provider_id_step1,
         "./routes/provider/index.tsx": $provider_index,

@@ -31,7 +31,7 @@ const sidebarItems = [
     },
     {
         id: 4,
-        title: "AIaaS",
+        title: "AIMaaS",
         imgURL: "/img/artificial_intelligence",
         identation: false,
         redirectTo: "/",

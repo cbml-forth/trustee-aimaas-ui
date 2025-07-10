@@ -9,7 +9,7 @@ const nextStep = function (w: ConsumerWorkflowData) {
     if (w.model_downloaded === true) {
         return "step5";
     }
-    if (w.agreements_signed != undefined && w.agreements_signed === true) {
+    if (w.agreements_signed === true) {
         return "step4";
     }
     if (w.selected_model_id != undefined) {

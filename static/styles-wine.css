@@ -144,7 +144,8 @@ body {
     background-color: #e7eaf2 !important;
 }
 
-#sidebar a.aimaas[data-ancestor="true"], #sidebar a.aimaas[data-current="true"] {
+/* https://fresh.deno.dev/docs/examples/active-links */
+#sidebar a.aimaas[aria-current="page"], #sidebar a.aimaas[aria-current="true"] {
     background-color: #6277a1 !important;
     color: #fff !important;
     white-space: normal;

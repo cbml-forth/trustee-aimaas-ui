@@ -13,6 +13,60 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
     }
     const list = await list_all<ProsumerWorkflowData>(prosumer_key(user));
 
+    const nextStep = function (w: ProsumerWorkflowData) {
+        if (w.model_downloaded === true) {
+            return "step5";
+        }
+        if (w.agreements_signed != undefined && w.agreements_signed === true) {
+            return "step4";
+        }
+        if (w.selected_model_id != undefined) {
+            return "step3";
+        }
+        if (w.step1_results != undefined) {
+            return "step2";
+        }
+        return "step1";
+    };
+    const openUrl = function (w: ProsumerWorkflowData) {
+        return `/prosumer/${w.id}`;
+    };
+    const status = function (w: ProsumerWorkflowData) {
+        const url = nextStep(w);
+        switch (url) {
+            case "step1":
+                return (
+                    <p>
+                        You can submit or update search filters
+                    </p>
+                );
+            case "step2":
+                return (
+                    <p>
+                        Model search results available
+                    </p>
+                );
+            case "step3":
+                return (
+                    <p>
+                        You can proceed to sign agreements
+                    </p>
+                );
+            case "step4":
+                return (
+                    <p>
+                        Agreements signed, you can download the model
+                    </p>
+                );
+            case "step5":
+                return (
+                    <p>
+                        You can run XAI operations locally
+                    </p>
+                );
+        }
+    };
+
     console.log("PROSUMERS", list);
     const prosumer_id: string = ulid();
     const props = {
@@ -75,7 +129,7 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
                                         <h6 class="small">{w.id}</h6>
                                         <div>...status...</div>
                                     </div>
-                                    <label>Created: {new Date(decodeTime(w.id)).toLocaleString()}</label>
+                                    {/* <label>Created: {new Date(decodeTime(w.id)).toLocaleString()}</label> */}
                                     <a href={`/prosumer/${w.id}/step1`}>
                                         <button className="ripple button bg-trusteeBtn">
                                             Open

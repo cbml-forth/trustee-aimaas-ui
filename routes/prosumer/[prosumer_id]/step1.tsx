@@ -1,6 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Domain, DomainAttr, ProsumerWorkflowData, SSISearchCriterion, User } from "@/utils/types.ts";
-import { dl_domains, do_ssi_search } from "@/utils/backend.ts";
+import { dl_domains, do_fl_submit, do_ssi_search } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import ProsumerStep1 from "@/islands/prosumer/ProsumerStep1.tsx";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
@@ -82,6 +82,7 @@ export const handler: Handlers<unknown, SessionState> = {
         const perform_ssi = data.get("action")?.toString() === "search";
 
         if (perform_ssi) {
+            console.log("PERFORMING SSI", filters);
             const ssi_response = await do_ssi_search(user, filters);
             if (ssi_response) {
                 w.ssi.status = ssi_response.status;
@@ -89,6 +90,23 @@ export const handler: Handlers<unknown, SessionState> = {
             }
         }
         await db_store(prosumer_key(user, prosumer_id), w);
+
+        /*
+          "data-provider-IDs": ["8", "9"],
+          "model-consumer-endpoint": "https://trustee-test-hedf-mc.cybersec.digital.tecnalia.dev",
+          "computation": "Simple Averaging",
+          "process-ID": "test-MultiFL-018",
+          "number-of-rounds": 2
+  */
+        // FIXME: test!
+        // await do_fl_submit(user, {
+        //     dataProviderIDs: ["8", "9"],
+        //     modelConsumerEndpoint: "https://trustee-test-hedf-mc.cybersec.digital.tecnalia.dev",
+        //     computation: "Simple Averaging",
+        //     processID: process_name,
+        //     numberOfRounds: 2,
+        // });
+
         return redirect("step1");
     },
     async GET(req, ctx) {

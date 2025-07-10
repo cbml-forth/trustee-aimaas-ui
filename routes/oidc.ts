@@ -55,6 +55,8 @@ export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
     };
     await set_user_session_data(session_id, "user", u);
     ctx.state.session.set<string>("session_id", session_id);
+    ctx.state.session.getSessionObject().expire = new Date(expires_at).toISOString();
+    console.log("SESSION WILL EXPIRE AT", ctx.state.session.getSessionObject().expire);
 
     const next_url = ctx.state.session.get<string>("next");
 

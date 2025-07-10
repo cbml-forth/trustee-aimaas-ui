@@ -1,6 +1,7 @@
 import {
     Domain,
     DomainAttr,
+    FLStartAggregationRequest,
     ModelSearchCriterion,
     ModelSearchResponseItem,
     ProsumerWorkflowData,
@@ -140,6 +141,7 @@ export async function do_ssi_search(
     }
     const res = await req.json() as SSISearchResponse;
     // print(res);
+    print("SSI SEARCH", res);
     return res;
 }
 
@@ -161,6 +163,37 @@ async function do_ssi_poll(user: User, prosumer_id: string, process_id: string) 
         w.ssi.results = res.datasets_ids;
     }
     await db_store(prosumer_key(user, prosumer_id), w);
+}
+
+// FL Prosumer Workflow: Submit request to FL module:
+export async function do_fl_submit(
+    user: User,
+    flReq: FLStartAggregationRequest,
+): Promise<boolean> {
+    const q = {
+        "data-provider-IDs": flReq.dataProviderIDs,
+        "model-consumer-endpoint": flReq.modelConsumerEndpoint,
+        "computation": flReq.computation,
+        "process-ID": flReq.processID,
+        "number-of-rounds": flReq.numberOfRounds,
+    };
+    const id_token = user.tokens.id_token;
+    print(`FLStartAggregation with token ${id_token} and body:\n`, q);
+
+    const req = await fetch(FL_API_SERVER + "/start-aggregation", {
+        body: JSON.stringify(q),
+        headers: { "Authorization": `Bearer ${id_token}`, "Content-Type": "application/json" },
+        method: "POST",
+    });
+    if (!req.ok) {
+        const err = await req.text();
+        print("FL module ERROR:", err);
+        return false;
+    }
+    const res = await req.json();
+    print("FL module response", res);
+
+    return true;
 }
 
 export async function do_dl_model_search(

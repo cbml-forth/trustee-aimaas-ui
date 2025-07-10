@@ -57,8 +57,9 @@ export const handler: Handlers<Data, SessionState> = {
             const continue_uri = encodeURIComponent(
                 new URL(MY_URI + `consumer/${consumer_id}?action=signed:${nonce}`).toString(),
             );
+            const stm_process_id = `consumer:${consumer_id}`;
             const stm_url = new URL(STM_URI);
-            stm_url.hash = `#/aiAgreementCreation?model_id=${selected_model_id}&aimaas_ui_redirect=${continue_uri}`;
+            stm_url.hash = `#/signAiAgreements?model_id=${selected_model_id}&process_id=${stm_process_id}`;
             redirect_uri = stm_url.toString();
         } else {
             data.agreements_signed = true;
