@@ -14,16 +14,16 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
     const list = await list_all<ProsumerWorkflowData>(prosumer_key(user));
 
     const nextStep = function (w: ProsumerWorkflowData) {
-        if (w.model_downloaded === true) {
-            return "step5";
-        }
-        if (w.agreements_signed != undefined && w.agreements_signed === true) {
-            return "step4";
-        }
-        if (w.selected_model_id != undefined) {
+        // if (w.model_downloaded === true) {
+        //     return "step5";
+        // }
+        // if (w.agreements_signed != undefined && w.agreements_signed === true) {
+        //     return "step4";
+        // }
+        if (w.fl_process != undefined) {
             return "step3";
         }
-        if (w.step1_results != undefined) {
+        if (w.ssi.results != undefined) {
             return "step2";
         }
         return "step1";
@@ -43,27 +43,27 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
             case "step2":
                 return (
                     <p>
-                        Model search results available
+                        You can select AI models
                     </p>
                 );
             case "step3":
                 return (
                     <p>
-                        You can proceed to sign agreements
+                        You can select FL Computation
                     </p>
                 );
-            case "step4":
-                return (
-                    <p>
-                        Agreements signed, you can download the model
-                    </p>
-                );
-            case "step5":
-                return (
-                    <p>
-                        You can run XAI operations locally
-                    </p>
-                );
+                // case "step4":
+                //     return (
+                //         <p>
+                //             Agreements signed, you can download the model
+                //         </p>
+                //     );
+                // case "step5":
+                //     return (
+                //         <p>
+                //             You can run XAI operations locally
+                //         </p>
+                //     );
         }
     };
 
@@ -80,7 +80,7 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
             },
             {
                 imgURL: "select_datasets_workflow.svg",
-                text: "View a list of coresponding AI models that match your search criteria",
+                text: "View a list of corresponding AI models that match your search criteria",
             },
             {
                 imgURL: "fusion_workflow.svg",
@@ -94,18 +94,18 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
                 imgURL: "select_computation_workflow.svg",
                 text: "Select the computation to be performed on the selected models",
             },
-            {
-                imgURL: "safedoc_workflow.svg",
-                text: "Perform a Privacy Impact Assessment",
-            },
-            {
-                imgURL: "gdpr_workflow.svg",
-                text: "Perform a GDPR compliance check",
-            },
-            {
-                imgURL: "contract_workflow.svg",
-                text: "Sign the necessary agreements",
-            },
+            // {
+            //     imgURL: "safedoc_workflow.svg",
+            //     text: "Perform a Privacy Impact Assessment",
+            // },
+            // {
+            //     imgURL: "gdpr_workflow.svg",
+            //     text: "Perform a GDPR compliance check",
+            // },
+            // {
+            //     imgURL: "contract_workflow.svg",
+            //     text: "Sign the necessary agreements",
+            // },
             {
                 imgURL: "results_workflow.svg",
                 text: "View Computation Results",
@@ -127,15 +127,15 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
                                     <i>play_arrow</i>
                                     <div class="max">
                                         <h6 class="small">{w.id}</h6>
-                                        <div>...status...</div>
+                                        <div>{status(w)}</div>
                                     </div>
-                                    {/* <label>Created: {new Date(decodeTime(w.id)).toLocaleString()}</label> */}
+                                    <label>Created: {new Date(decodeTime(w.id)).toLocaleDateString()}</label>
                                     <a href={`/prosumer/${w.id}/step1`}>
                                         <button className="ripple button bg-trusteeBtn">
                                             Open
                                         </button>
                                     </a>
-                                    <a href={`/prosumer/${w.id}/step1`}>
+                                    <a href={`/prosumer/${w.id}/${nextStep(w)}`}>
                                         <button className="ripple button bg-trusteeBtn">
                                             Continue<i>chevron_right</i>
                                         </button>

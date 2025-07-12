@@ -9,6 +9,7 @@ import {
     SSISearchCriterion,
     SSISearchPollResponse,
     SSISearchResponse,
+    SSISearchStatus,
     User,
 } from "@/utils/types.ts";
 import { db_get, db_store } from "@/utils/db.ts";
@@ -145,7 +146,7 @@ export async function do_ssi_search(
     return res;
 }
 
-async function do_ssi_poll(user: User, prosumer_id: string, process_id: string) {
+export async function do_ssi_poll(user: User, prosumer_id: string, process_id: string): Promise<SSISearchStatus> {
     const id_token = user.tokens.id_token;
     print(`SSI poll ${process_id} with token ${id_token}`);
 
@@ -154,15 +155,17 @@ async function do_ssi_poll(user: User, prosumer_id: string, process_id: string) 
     });
     if (!req.ok) {
         print("SSI ERROR", await req.json());
-        return;
+        return "ERROR";
     }
     const res = await req.json() as SSISearchPollResponse;
+    print("SSI POLL returned:", res);
     const w: ProsumerWorkflowData = await db_get(prosumer_key(user, prosumer_id)) as ProsumerWorkflowData;
     w.ssi.status = res.status;
     if (res.status == "FINISHED") {
-        w.ssi.results = res.datasets_ids;
+        w.ssi.results = res.datasets_id || [];
     }
     await db_store(prosumer_key(user, prosumer_id), w);
+    return res.status;
 }
 
 // FL Prosumer Workflow: Submit request to FL module:

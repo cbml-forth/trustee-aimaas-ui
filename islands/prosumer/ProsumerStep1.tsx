@@ -188,7 +188,7 @@ export default function ProsumerStep1(props: {
     process_name: string;
     disabled: boolean;
 }) {
-    console.log("STEP1");
+    console.log("STEP1 disabled?", props.disabled);
     // const first = new_filter_ctor(props.domains[0]);
     // const d = useSignal<Record<string, FilterValue>>({ [first.id]: first });
     const initial_filters = props.criteria
@@ -246,7 +246,7 @@ export default function ProsumerStep1(props: {
         })
     );
     return (
-        <form method="POST">
+        <form method="POST" disabled={props.disabled ?? false}>
             <div class="field label large">
                 <input
                     name="process_name"
@@ -263,20 +263,29 @@ export default function ProsumerStep1(props: {
                 {...dd.value}
             </div>
             <div class="right-align">
-                <button
-                    class="button small-round upper elevate bg-trusteeBtn"
-                    type="submit"
-                    name="action"
-                    value="search"
-                >
-                    Submit
-                </button>
-                <button class="button small-round upper elevate bg-trusteeBtn" type="submit" name="action" value="save">
-                    Save
-                </button>
-                <button class="button small-round upper elevate bg-trusteeFail" type="button" onClick={reset}>
-                    Clear
-                </button>
+                {!props.disabled && (
+                    <>
+                        <button
+                            class="button small-round upper elevate bg-trusteeBtn"
+                            type="submit"
+                            name="action"
+                            value="search"
+                        >
+                            Submit
+                        </button>
+                        <button
+                            class="button small-round upper elevate bg-trusteeBtn"
+                            type="submit"
+                            name="action"
+                            value="save"
+                        >
+                            Save
+                        </button>
+                        <button class="button small-round upper elevate bg-trusteeFail" type="button" onClick={reset}>
+                            Clear
+                        </button>
+                    </>
+                )}
             </div>
         </form>
     );

@@ -49,7 +49,7 @@ export interface SSISearchResponse {
 }
 export interface SSISearchPollResponse {
     status: SSISearchStatus;
-    datasets_ids?: string[];
+    datasets_id?: string[];
 }
 
 export type ProcessStatus = "NOT STARTED" | "IN PROGRESS" | "FINISHED" | "BLOCKED" | "FAILED";
@@ -61,10 +61,24 @@ export interface ProsumerWorkflowSSIData {
     results?: string[]; // Results, "datasets ids"
 }
 
+export interface ProsumerWorkflowFLData {
+    process_id: string;
+    status: string;
+    current_round: number;
+    number_of_rounds: number;
+    models: string[];
+    computation: string;
+    solver: string;
+    denoiser: string;
+    num_of_iterations: number;
+}
+
 export interface ProsumerWorkflowData {
     readonly id: string; // "prosumer id"
     name: string;
     ssi: ProsumerWorkflowSSIData; // this is for "step 1"
+    models_selected: string[]; // step2 when completed fills this
+    fl_process?: ProsumerWorkflowFLData; // step3 fills the fl parameters and starts FL process
 }
 
 export interface ConsumerWorkflowData {

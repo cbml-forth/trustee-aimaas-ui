@@ -22,6 +22,7 @@ import * as $profile from "./routes/profile.tsx";
 import * as $prosumer_prosumer_id_layout from "./routes/prosumer/[prosumer_id]/_layout.tsx";
 import * as $prosumer_prosumer_id_step1 from "./routes/prosumer/[prosumer_id]/step1.tsx";
 import * as $prosumer_prosumer_id_step2 from "./routes/prosumer/[prosumer_id]/step2.tsx";
+import * as $prosumer_prosumer_id_step3 from "./routes/prosumer/[prosumer_id]/step3.tsx";
 import * as $prosumer_index from "./routes/prosumer/index.tsx";
 import * as $provider_provider_id_step1 from "./routes/provider/[provider_id]/step1.tsx";
 import * as $provider_index from "./routes/provider/index.tsx";
@@ -29,6 +30,8 @@ import * as $test from "./routes/test.tsx";
 import * as $Sidebar from "./islands/Sidebar.tsx";
 import * as $consumer_ConsumerStep1 from "./islands/consumer/ConsumerStep1.tsx";
 import * as $prosumer_ProsumerStep1 from "./islands/prosumer/ProsumerStep1.tsx";
+import * as $prosumer_ProsumerStep2 from "./islands/prosumer/ProsumerStep2.tsx";
+import * as $prosumer_ProsumerStep3 from "./islands/prosumer/ProsumerStep3.tsx";
 import type { Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -53,6 +56,7 @@ const manifest = {
         "./routes/prosumer/[prosumer_id]/_layout.tsx": $prosumer_prosumer_id_layout,
         "./routes/prosumer/[prosumer_id]/step1.tsx": $prosumer_prosumer_id_step1,
         "./routes/prosumer/[prosumer_id]/step2.tsx": $prosumer_prosumer_id_step2,
+        "./routes/prosumer/[prosumer_id]/step3.tsx": $prosumer_prosumer_id_step3,
         "./routes/prosumer/index.tsx": $prosumer_index,
         "./routes/provider/[provider_id]/step1.tsx": $provider_provider_id_step1,
         "./routes/provider/index.tsx": $provider_index,
@@ -62,6 +66,8 @@ const manifest = {
         "./islands/Sidebar.tsx": $Sidebar,
         "./islands/consumer/ConsumerStep1.tsx": $consumer_ConsumerStep1,
         "./islands/prosumer/ProsumerStep1.tsx": $prosumer_ProsumerStep1,
+        "./islands/prosumer/ProsumerStep2.tsx": $prosumer_ProsumerStep2,
+        "./islands/prosumer/ProsumerStep3.tsx": $prosumer_ProsumerStep3,
     },
     baseUrl: import.meta.url,
 } satisfies Manifest;

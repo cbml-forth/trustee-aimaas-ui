@@ -16,6 +16,7 @@ interface Data {
     user: User;
     criteria: SSISearchCriterion[];
     process_name: string;
+    disabled: boolean;
 }
 
 async function user_profile(sessionId: string): Promise<User> {
@@ -37,6 +38,9 @@ async function get_domains(sessionId: string): Promise<Map<string, Domain>> {
     // return domains;
     return new Map(domains?.map((d) => [d.name, d]));
 }
+
+// STEP1: We show the domains and the attributes and allow the user to filter
+// and search on SSI for relevant models. When SSI responds, we go to STEP2.
 
 export const handler: Handlers<unknown, SessionState> = {
     async POST(req, ctx) {
@@ -77,6 +81,7 @@ export const handler: Handlers<unknown, SessionState> = {
                 process_id: "",
                 criteria: filters,
             },
+            models_selected: [],
         };
 
         const perform_ssi = data.get("action")?.toString() === "search";
@@ -107,7 +112,7 @@ export const handler: Handlers<unknown, SessionState> = {
         //     numberOfRounds: 2,
         // });
 
-        return redirect("step1");
+        return redirect("step2");
     },
     async GET(req, ctx) {
         const user = await get_user(req, ctx.state.session);
@@ -125,6 +130,7 @@ export const handler: Handlers<unknown, SessionState> = {
             user,
             criteria: prosumer_data?.ssi?.criteria,
             process_name: prosumer_data?.name || "",
+            disabled: (prosumer_data?.ssi && prosumer_data.ssi.criteria.length > 0) || false,
         });
     },
 };
@@ -136,7 +142,7 @@ export default function Step1Page(props: PageProps<Data>) {
             user={props.data.user}
             criteria={props.data.criteria}
             process_name={props.data.process_name}
-            disabled={false}
+            disabled={props.data.disabled}
         />
     );
 }

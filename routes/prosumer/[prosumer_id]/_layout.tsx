@@ -38,7 +38,7 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
                         })}
                         src="/img/datasets.svg"
                     />
-                    <div class="small-margin">Select datasets</div>
+                    <div class="small-margin">Select Models</div>
                 </div>
                 <hr class="max" />
                 <div class="center-align">
