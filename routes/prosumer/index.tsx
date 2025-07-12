@@ -12,14 +12,16 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
         return redirect_to_login(req);
     }
     const list = await list_all<ProsumerWorkflowData>(prosumer_key(user));
+    list.sort((a, b) => decodeTime(a.id) > decodeTime(b.id) ? -1 : 1);
 
     const nextStep = function (w: ProsumerWorkflowData) {
+        // console.log("ROUTING ", w);
         // if (w.model_downloaded === true) {
         //     return "step5";
         // }
-        // if (w.agreements_signed != undefined && w.agreements_signed === true) {
-        //     return "step4";
-        // }
+        if (w.fl_process != undefined && ["NOT STARTED", "STARTED", "IN EXECUTION"].includes(w.fl_process.status)) {
+            return "step4";
+        }
         if (w.fl_process != undefined) {
             return "step3";
         }
@@ -52,12 +54,12 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
                         You can select FL Computation
                     </p>
                 );
-                // case "step4":
-                //     return (
-                //         <p>
-                //             Agreements signed, you can download the model
-                //         </p>
-                //     );
+            case "step4":
+                return (
+                    <p>
+                        See results of the FL process
+                    </p>
+                );
                 // case "step5":
                 //     return (
                 //         <p>
@@ -80,19 +82,15 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
             },
             {
                 imgURL: "select_datasets_workflow.svg",
-                text: "View a list of corresponding AI models that match your search criteria",
-            },
-            {
-                imgURL: "fusion_workflow.svg",
                 text: "Select from the AI model list the one to be used",
-            },
-            {
-                imgURL: "select_datasets_workflow.svg",
-                text: "View a list of the computations that can be applied to the selected models",
             },
             {
                 imgURL: "select_computation_workflow.svg",
                 text: "Select the computation to be performed on the selected models",
+            },
+            {
+                imgURL: "fusion_workflow.svg",
+                text: "Perform FL Aggregation",
             },
             // {
             //     imgURL: "safedoc_workflow.svg",
@@ -129,7 +127,7 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
                                         <h6 class="small">{w.id}</h6>
                                         <div>{status(w)}</div>
                                     </div>
-                                    <label>Created: {new Date(decodeTime(w.id)).toLocaleDateString()}</label>
+                                    <label>Created: {new Date(decodeTime(w.id)).toLocaleString()}</label>
                                     <a href={`/prosumer/${w.id}/step1`}>
                                         <button className="ripple button bg-trusteeBtn">
                                             Open

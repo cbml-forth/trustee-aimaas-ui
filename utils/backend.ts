@@ -199,6 +199,23 @@ export async function do_fl_submit(
     return true;
 }
 
+export async function do_fl_poll(
+    user: User,
+    process_name: string,
+): Promise<string> {
+    const id_token = user.tokens.id_token;
+    const req = await fetch(FL_API_SERVER + "/status/" + process_name, {
+        headers: { "Authorization": `Bearer ${id_token}`, "Content-Type": "application/json" },
+    });
+    if (!req.ok) {
+        print("FL ERROR", await req.json());
+        return "ERROR";
+    }
+    const res = await req.json();
+    print("FL POLL returned:", res);
+    return res.status;
+}
+
 export async function do_dl_model_search(
     user: User,
     criteria: ModelSearchCriterion[],
