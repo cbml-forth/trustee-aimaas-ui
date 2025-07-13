@@ -19,13 +19,16 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
     const step2_enabled = w?.ssi != undefined;
     const step3_enabled = step2_enabled && w?.models_selected.length > 0;
     const step4_enabled = step3_enabled &&
-        ["NOT STARTED", "STARTED", "IN EXECUTION"].includes(w?.fl_process?.status || "-");
+        ["NOT STARTED", "STARTED", "IN EXECUTION", "COMPLETED"].includes(w?.fl_process?.status || "-");
+    const step5_enabled = step4_enabled &&
+        ["COMPLETED"].includes(w?.fl_process?.status || "-");
 
     const access_control: Map<string, boolean> = new Map([
         ["step1", true],
         ["step2", step2_enabled],
         ["step3", step3_enabled],
         ["step4", step4_enabled],
+        ["step5", step5_enabled],
     ]);
     const hrefs: Map<string, string> = new Map(
         access_control.entries().map(([s, e]) => [
@@ -83,6 +86,17 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
                         src="/img/fusion_workflow.svg"
                     />
                     <div class="small-margin">FL Status</div>
+                </a>
+                <hr class="max" />
+                <a class="center-align vertical" href={hrefs.get("step5")}>
+                    <img
+                        class={classNames({
+                            "circle medium border small-padding": 1,
+                            "secondary": step == "step5",
+                        })}
+                        src="/img/fusion_workflow.svg"
+                    />
+                    <div class="small-margin">FL Process Completion</div>
                 </a>
             </nav>
             <ctx.Component />

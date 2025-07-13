@@ -24,6 +24,7 @@ import * as $prosumer_prosumer_id_step1 from "./routes/prosumer/[prosumer_id]/st
 import * as $prosumer_prosumer_id_step2 from "./routes/prosumer/[prosumer_id]/step2.tsx";
 import * as $prosumer_prosumer_id_step3 from "./routes/prosumer/[prosumer_id]/step3.tsx";
 import * as $prosumer_prosumer_id_step4 from "./routes/prosumer/[prosumer_id]/step4.tsx";
+import * as $prosumer_prosumer_id_step5 from "./routes/prosumer/[prosumer_id]/step5.tsx";
 import * as $prosumer_index from "./routes/prosumer/index.tsx";
 import * as $provider_provider_id_step1 from "./routes/provider/[provider_id]/step1.tsx";
 import * as $provider_index from "./routes/provider/index.tsx";
@@ -59,6 +60,7 @@ const manifest = {
         "./routes/prosumer/[prosumer_id]/step2.tsx": $prosumer_prosumer_id_step2,
         "./routes/prosumer/[prosumer_id]/step3.tsx": $prosumer_prosumer_id_step3,
         "./routes/prosumer/[prosumer_id]/step4.tsx": $prosumer_prosumer_id_step4,
+        "./routes/prosumer/[prosumer_id]/step5.tsx": $prosumer_prosumer_id_step5,
         "./routes/prosumer/index.tsx": $prosumer_index,
         "./routes/provider/[provider_id]/step1.tsx": $provider_provider_id_step1,
         "./routes/provider/index.tsx": $provider_index,

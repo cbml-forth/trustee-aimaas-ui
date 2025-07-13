@@ -80,7 +80,7 @@ export const handler: Handlers<unknown, SessionState> = {
         w.fl_process = fl_data;
         await db_store(prosumer_key(user, prosumer_id), w);
 
-        return redirect("step2");
+        return redirect("step4");
     },
     async GET(req, ctx) {
         const user = await get_user(req, ctx.state.session);

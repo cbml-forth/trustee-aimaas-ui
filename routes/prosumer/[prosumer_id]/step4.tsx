@@ -93,6 +93,7 @@ export const handler: Handlers<unknown, SessionState> = {
         if (!prosumer_data) {
             return redirect("step1");
         }
+        console.log("step4", prosumer_data);
         if (prosumer_data.models_selected.length === 0) {
             return redirect("step2");
         }

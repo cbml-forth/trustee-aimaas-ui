@@ -19,7 +19,16 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
         // if (w.model_downloaded === true) {
         //     return "step5";
         // }
-        if (w.fl_process != undefined && ["NOT STARTED", "STARTED", "IN EXECUTION"].includes(w.fl_process.status)) {
+        if (
+            w.fl_process != undefined &&
+            ["COMPLETED"].includes(w.fl_process.status)
+        ) {
+            return "step5";
+        }
+        if (
+            w.fl_process != undefined &&
+            ["NOT STARTED", "STARTED", "IN EXECUTION", "COMPLETED"].includes(w.fl_process.status)
+        ) {
             return "step4";
         }
         if (w.fl_process != undefined) {
@@ -111,6 +120,10 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
         ],
     };
 
+    const canBeDeleted = function (w: ProsumerWorkflowData): boolean {
+        return ["COMPLETED"].includes(w.fl_process?.status || "-");
+    };
+
     return (
         <div class="vertical">
             <WorkflowWelcome {...props}></WorkflowWelcome>
@@ -138,6 +151,16 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
                                             Continue<i>chevron_right</i>
                                         </button>
                                     </a>
+                                    {canBeDeleted(w) &&
+                                        (
+                                            <form action={`/prosumer`} method="POST">
+                                                <input type="hidden" name="id" value={w.id} />
+                                                <input type="hidden" name="_method" value="DELETE" />
+                                                <button className="ripple button bg-trusteeFail" type="submit">
+                                                    <i>delete</i>
+                                                </button>
+                                            </form>
+                                        )}
                                 </li>
                             </>
                         );
