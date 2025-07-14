@@ -60,5 +60,8 @@ export async function get_user(
     }
 
     const user: User = await user_profile(sessionId);
+    if ((user?.tokens?.expires_at ?? 0) < Date.now()) {
+        return null;
+    }
     return user;
 }
