@@ -44,6 +44,7 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
     };
     const status = function (w: ProsumerWorkflowData) {
         const url = nextStep(w);
+        console.log("next URL for", w.id, "is", url);
         switch (url) {
             case "step1":
                 return (
@@ -64,6 +65,12 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
                     </p>
                 );
             case "step4":
+                return (
+                    <p>
+                        See progress of the FL process
+                    </p>
+                );
+            case "step5":
                 return (
                     <p>
                         See results of the FL process

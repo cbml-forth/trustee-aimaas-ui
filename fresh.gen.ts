@@ -29,7 +29,9 @@ import * as $prosumer_index from "./routes/prosumer/index.tsx";
 import * as $provider_provider_id_step1 from "./routes/provider/[provider_id]/step1.tsx";
 import * as $provider_index from "./routes/provider/index.tsx";
 import * as $test from "./routes/test.tsx";
+import * as $token from "./routes/token.tsx";
 import * as $Sidebar from "./islands/Sidebar.tsx";
+import * as $Token from "./islands/Token.tsx";
 import * as $consumer_ConsumerStep1 from "./islands/consumer/ConsumerStep1.tsx";
 import * as $prosumer_ProsumerStep1 from "./islands/prosumer/ProsumerStep1.tsx";
 import * as $prosumer_ProsumerStep2 from "./islands/prosumer/ProsumerStep2.tsx";
@@ -65,9 +67,11 @@ const manifest = {
         "./routes/provider/[provider_id]/step1.tsx": $provider_provider_id_step1,
         "./routes/provider/index.tsx": $provider_index,
         "./routes/test.tsx": $test,
+        "./routes/token.tsx": $token,
     },
     islands: {
         "./islands/Sidebar.tsx": $Sidebar,
+        "./islands/Token.tsx": $Token,
         "./islands/consumer/ConsumerStep1.tsx": $consumer_ConsumerStep1,
         "./islands/prosumer/ProsumerStep1.tsx": $prosumer_ProsumerStep1,
         "./islands/prosumer/ProsumerStep2.tsx": $prosumer_ProsumerStep2,
