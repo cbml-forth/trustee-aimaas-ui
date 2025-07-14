@@ -40,7 +40,12 @@ export default function Step5Page(_props: PageProps<Data>) {
 
             <p class="left-align">
                 After downloading the model you can run Explainable AI operations on your premises using the Docker
-                image available <a>here</a>.
+                image available from the link below:
+            </p>
+            <p>
+                <a href="/xai_docker/xai.tar" download={"xai_docker_image.tar"}>
+                    <button>XAI Docker Image</button>
+                </a>
             </p>
         </div>
     );

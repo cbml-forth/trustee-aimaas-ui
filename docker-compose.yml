@@ -8,6 +8,7 @@ services:
     pull_policy: build
     volumes:
       - aimaas_db:/data
+      - aimaas_xai_files:/app/static/xai_docker
     environment:
       AIMAAS_UI_URI: ${AIMAAS_UI_URI}
       STM_URI: ${STM_URI}
@@ -33,3 +34,4 @@ services:
 
 volumes:
   aimaas_db:
+  aimaas_xai_files:
