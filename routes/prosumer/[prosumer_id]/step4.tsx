@@ -7,11 +7,13 @@ import { db_get, db_store, set_user_session_data, user_session_data } from "@/ut
 import { redirect } from "@/utils/http.ts";
 import { prosumer_key } from "@/utils/misc.ts";
 import ProsumerStep3 from "@/islands/prosumer/ProsumerStep3.tsx";
+import AutoReload from "@/islands/AutoReload.tsx";
 
 interface Data {
     process_name: string;
     disabled: boolean;
     fl_process: ProsumerWorkflowFLData;
+    running: boolean;
 }
 
 async function user_profile(sessionId: string): Promise<User> {
@@ -114,10 +116,16 @@ export const handler: Handlers<unknown, SessionState> = {
             process_name: prosumer_data?.name || "",
             fl_process: prosumer_data.fl_process,
             disabled: false,
+            running: fl_process_data.status !== "COMPLETED",
         });
     },
 };
 
 export default function Step4Page(props: PageProps<Data>) {
-    return <h5>FL Process {props.data.fl_process.process_id} Status: {props.data.fl_process.status}</h5>;
+    return (
+        <>
+            {props.data.running && <AutoReload timeout={10000} />}
+            <h6>FL Process {props.data.fl_process.process_id} Status: {props.data.fl_process.status}</h6>
+        </>
+    );
 }

@@ -46,13 +46,20 @@ export default function ShowToken(props: { user: User }) {
                 <code id="token">{user.tokens.id_token}</code>
             </pre>
             <p></p>
-            <button
-                class="button ripple small-round upper elevate bg-trusteeBtn"
-                type="button"
-                onClick={(_e) => clipboardNewToken(_e)}
-            >
-                Copy to clipboard
-            </button>
+            <div class="right-align top-margin row">
+                <button
+                    class="button ripple small-round upper elevate bg-trusteeBtn"
+                    type="button"
+                    onClick={(_e) => clipboardNewToken(_e)}
+                >
+                    Copy to clipboard
+                </button>
+                <a href={"https://jwt.ms/"} target={"_blank"}>
+                    <button className="button ripple small-round upper elevate bg-trusteeBtn">
+                        Decode it here <i>chevron_right</i>
+                    </button>
+                </a>
+            </div>
         </div>
     );
 }

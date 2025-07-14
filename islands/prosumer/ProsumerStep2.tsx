@@ -1,4 +1,5 @@
 import { ProsumerWorkflowFLData } from "@/utils/types.ts";
+import AutoReload from "@/islands/AutoReload.tsx";
 
 export default function ProsumerStep2(props: {
     ssi_status: string;
@@ -74,6 +75,8 @@ export default function ProsumerStep2(props: {
         <form method="POST" disabled={props.disabled}>
             <p class="">
                 <h3>Search for Models - Status: {props.ssi_status}</h3>
+                {!ssi_finished && !ssi_failed && <AutoReload timeout={5000} />}
+
                 {ssi_failed && <div class="alert">FAILED!</div>}
 
                 {ssi_finished && (
@@ -106,7 +109,7 @@ export default function ProsumerStep2(props: {
                                     name="action"
                                     value="do_fl"
                                 >
-                                    Submit
+                                    Next<i>chevron_right</i>
                                 </button>
                             </>
                         )}

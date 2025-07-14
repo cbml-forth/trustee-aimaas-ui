@@ -81,6 +81,18 @@ export const handler: Handlers<unknown, SessionState> = {
 
         return redirect("step4");
     },
+    /**
+     * Handle GET requests for the step4 page.
+     *
+     * The user is redirected to the step1 page if they are not logged in.
+     * The user is redirected to the step2 page if they have not selected any models.
+     * The user is redirected to the step3 page if they have not started the FL process.
+     * The user is redirected to the step4 page if the FL process has not been completed.
+     * Otherwise, the user is shown the results of the FL process.
+     * @param req The incoming HTTP request.
+     * @param ctx The context of the request.
+     * @returns The rendered page.
+     */
     async GET(req, ctx) {
         const user = await get_user(req, ctx.state.session);
         if (!user) {

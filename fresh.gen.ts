@@ -30,6 +30,7 @@ import * as $provider_provider_id_step1 from "./routes/provider/[provider_id]/st
 import * as $provider_index from "./routes/provider/index.tsx";
 import * as $test from "./routes/test.tsx";
 import * as $token from "./routes/token.tsx";
+import * as $AutoReload from "./islands/AutoReload.tsx";
 import * as $Sidebar from "./islands/Sidebar.tsx";
 import * as $Token from "./islands/Token.tsx";
 import * as $consumer_ConsumerStep1 from "./islands/consumer/ConsumerStep1.tsx";
@@ -70,6 +71,7 @@ const manifest = {
         "./routes/token.tsx": $token,
     },
     islands: {
+        "./islands/AutoReload.tsx": $AutoReload,
         "./islands/Sidebar.tsx": $Sidebar,
         "./islands/Token.tsx": $Token,
         "./islands/consumer/ConsumerStep1.tsx": $consumer_ConsumerStep1,
