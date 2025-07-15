@@ -266,3 +266,23 @@ export async function do_dl_model_download(
     });
     return response;
 }
+
+export async function do_dl_hedf_result_download(
+    user: User,
+    process_id: string,
+): Promise<Response> {
+    // const timestamp = Math.round(Date.now() * 1000);
+
+    const id_token = user.tokens.id_token;
+    print(`FL model search with token ${id_token}`);
+
+    const url = new URL(DL_API + "/hedf/ProcessResults");
+    url.searchParams.set("process_id", process_id);
+
+    print("HEDF (FL) DOWNLOAD", url.href);
+    const response = await fetch(url.href, {
+        headers: { "Authorization": `Bearer ${id_token}` },
+        method: "GET",
+    });
+    return response;
+}

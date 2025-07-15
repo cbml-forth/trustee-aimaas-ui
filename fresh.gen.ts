@@ -20,6 +20,7 @@ import * as $login from "./routes/login.ts";
 import * as $oidc from "./routes/oidc.ts";
 import * as $profile from "./routes/profile.tsx";
 import * as $prosumer_prosumer_id_layout from "./routes/prosumer/[prosumer_id]/_layout.tsx";
+import * as $prosumer_prosumer_id_results from "./routes/prosumer/[prosumer_id]/results.ts";
 import * as $prosumer_prosumer_id_step1 from "./routes/prosumer/[prosumer_id]/step1.tsx";
 import * as $prosumer_prosumer_id_step2 from "./routes/prosumer/[prosumer_id]/step2.tsx";
 import * as $prosumer_prosumer_id_step3 from "./routes/prosumer/[prosumer_id]/step3.tsx";
@@ -59,6 +60,7 @@ const manifest = {
         "./routes/oidc.ts": $oidc,
         "./routes/profile.tsx": $profile,
         "./routes/prosumer/[prosumer_id]/_layout.tsx": $prosumer_prosumer_id_layout,
+        "./routes/prosumer/[prosumer_id]/results.ts": $prosumer_prosumer_id_results,
         "./routes/prosumer/[prosumer_id]/step1.tsx": $prosumer_prosumer_id_step1,
         "./routes/prosumer/[prosumer_id]/step2.tsx": $prosumer_prosumer_id_step2,
         "./routes/prosumer/[prosumer_id]/step3.tsx": $prosumer_prosumer_id_step3,

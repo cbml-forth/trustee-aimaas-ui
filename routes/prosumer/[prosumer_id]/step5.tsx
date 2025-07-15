@@ -115,8 +115,7 @@ export const handler: Handlers<unknown, SessionState> = {
             return redirect("step4");
         }
 
-        const download_link =
-            `http://trustee-1.ics.forth.gr:3800/hedf/ProcessResult?process_id=${prosumer_data.fl_process.process_id}&hedfprocess_round=1`;
+        const download_link = `/prosumer/${prosumer_id}/results`;
         return ctx.render({
             process_name: prosumer_data?.name || "",
             fl_process: prosumer_data.fl_process,
