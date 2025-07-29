@@ -35,31 +35,22 @@ function copyToClibpoard(event, elementId: string) {
     }
 }
 
-export default function ShowToken(props: { user: User }) {
-    const user = props.user;
-    const expires_at = new Date(user.tokens.expires_at || 0);
+export default function DockerCmd(props: { dockerCmd: string }) {
     return (
         <div class="padding">
-            <h5>Token for {user.email}</h5>
-            <h6>Expires on: {expires_at.toLocaleDateString()} {expires_at.toLocaleTimeString()}</h6>
-            <pre style={{ "margin-top": "4rem", "max-width": "600px", "overflow-wrap": "break-word" }}>
-                <code id="token">{user.tokens.id_token}</code>
-            </pre>
-            <p></p>
-            <div class="right-align top-margin row">
-                <button
-                    class="button ripple small-round upper elevate bg-trusteeBtn"
-                    type="button"
-                    onClick={(_e) => copyToClibpoard(_e, "token")}
-                >
-                    Copy to clipboard
-                </button>
-                <a href={"https://jwt.ms/"} target={"_blank"}>
-                    <button className="button ripple small-round upper elevate bg-trusteeBtn">
-                        Decode it here <i>chevron_right</i>
-                    </button>
-                </a>
-            </div>
+            <textarea
+                id="token"
+                style={{ "display": "none" }}
+            >
+                {props.dockerCmd}
+            </textarea>
+
+            <button
+                type="button"
+                onClick={(_e) => copyToClibpoard(_e, "token")}
+            >
+                Copy Docker command to clipboard
+            </button>
         </div>
     );
 }

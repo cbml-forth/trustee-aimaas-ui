@@ -35,6 +35,7 @@ import * as $AutoReload from "./islands/AutoReload.tsx";
 import * as $Sidebar from "./islands/Sidebar.tsx";
 import * as $Token from "./islands/Token.tsx";
 import * as $consumer_ConsumerStep1 from "./islands/consumer/ConsumerStep1.tsx";
+import * as $prosumer_DockerCmd from "./islands/prosumer/DockerCmd.tsx";
 import * as $prosumer_ProsumerStep1 from "./islands/prosumer/ProsumerStep1.tsx";
 import * as $prosumer_ProsumerStep2 from "./islands/prosumer/ProsumerStep2.tsx";
 import * as $prosumer_ProsumerStep3 from "./islands/prosumer/ProsumerStep3.tsx";
@@ -77,6 +78,7 @@ const manifest = {
         "./islands/Sidebar.tsx": $Sidebar,
         "./islands/Token.tsx": $Token,
         "./islands/consumer/ConsumerStep1.tsx": $consumer_ConsumerStep1,
+        "./islands/prosumer/DockerCmd.tsx": $prosumer_DockerCmd,
         "./islands/prosumer/ProsumerStep1.tsx": $prosumer_ProsumerStep1,
         "./islands/prosumer/ProsumerStep2.tsx": $prosumer_ProsumerStep2,
         "./islands/prosumer/ProsumerStep3.tsx": $prosumer_ProsumerStep3,

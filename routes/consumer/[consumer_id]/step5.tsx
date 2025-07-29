@@ -6,10 +6,12 @@ import { consumer_key } from "@/utils/misc.ts";
 import { ConsumerWorkflowData, User } from "@/utils/types.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { redirect_to_login, SessionState } from "@/utils/http.ts";
+import DockerCmd from "@/islands/prosumer/DockerCmd.tsx";
 
 interface Data {
     selected_model_id: number;
     error: boolean;
+    user: User;
 }
 export const handler: Handlers<Data, SessionState> = {
     async GET(req, ctx) {
@@ -29,24 +31,59 @@ export const handler: Handlers<Data, SessionState> = {
         return ctx.render({
             selected_model_id: data.selected_model_id,
             error: false,
+            user,
         });
     },
 };
 
-export default function Step5Page(_props: PageProps<Data>) {
+export default function Step5Page(props: PageProps<Data>) {
+    const docker_image_file = "trustee-xai-tool.tar.gz";
+    const docker_cmd =
+        `docker run -d -p 8000:8501 -e TRUSTEE_DL_TOKEN=${props.data.user.tokens.id_token} trustee-xai-tool:latest`;
     return (
-        <div class=" padding">
-            <h5 class="extra-text">Run XAI Functions</h5>
+        <div class="padding">
+            <h5 class="extra-text">Perform XAI - Deployment Instructions</h5>
+            <div class="space"></div>
+            <h6>Step 1: Download the Docker Image</h6>
 
             <p class="left-align">
-                After downloading the model you can run Explainable AI operations on your premises using the Docker
-                image available from the link below:
+                If you have not done so already, click the "XAI Docker Image" button below to download the docker image
+                as a compressed file:
             </p>
             <p>
                 <a href="/xai_docker/xai.tar" download={"xai_docker_image.tar"}>
-                    <button>XAI Docker Image</button>
+                    <button>
+                        XAI Docker Image <i class="small">download</i>
+                    </button>
                 </a>
             </p>
+
+            <div class="space"></div>
+            <h6>Step 2: Load the downloaded image</h6>
+
+            <p class="left-align">
+                If you have not done so already, launch the command below to load the docker image into your docker
+                environment:
+            </p>
+            <div class="padding primary-container">
+                <pre>docker load -i {docker_image_file}</pre>
+            </div>
+
+            <div class="space"></div>
+            <h6>Step 3: Start the tool</h6>
+            <p>Click the button below to copy the Docker command to run the tool:</p>
+
+            <DockerCmd dockerCmd={docker_cmd} />
+
+            <div class="space"></div>
+            <h6>Step 4: Access the dashboard</h6>
+
+            Open your browser and navigate to{" "}
+            <a href="http://localhost:8000">
+                <button>
+                    http://localhost:8000 <i class="small">link</i>
+                </button>
+            </a>
         </div>
     );
 }
