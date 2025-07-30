@@ -50,6 +50,7 @@ export default function DockerCmd(props: { dockerCmd: string }) {
                 onClick={(_e) => copyToClibpoard(_e, "token")}
             >
                 Copy Docker command to clipboard
+                <i class="small">content_copy</i>
             </button>
         </div>
     );

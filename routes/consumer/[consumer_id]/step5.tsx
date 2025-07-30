@@ -38,13 +38,14 @@ export const handler: Handlers<Data, SessionState> = {
 
 export default function Step5Page(props: PageProps<Data>) {
     const docker_image_file = "trustee-xai-tool.tar.gz";
+    const container_name = "trustee-xai-tool";
     const docker_cmd =
-        `docker run -d -p 8000:8501 -e TRUSTEE_DL_TOKEN=${props.data.user.tokens.id_token} trustee-xai-tool:latest`;
+        `docker run -d --name ${container_name} --rm -p 8000:8501 -e TRUSTEE_DL_TOKEN=${props.data.user.tokens.id_token} trustee-xai-tool:latest`;
     return (
         <div class="padding">
             <h5 class="extra-text">Perform XAI - Deployment Instructions</h5>
             <div class="space"></div>
-            <h6>Step 1: Download the Docker Image</h6>
+            <h6>Step 1 (optional): Download the Docker Image</h6>
 
             <p class="left-align">
                 If you have not done so already, click the "XAI Docker Image" button below to download the docker image
@@ -59,7 +60,7 @@ export default function Step5Page(props: PageProps<Data>) {
             </p>
 
             <div class="space"></div>
-            <h6>Step 2: Load the downloaded image</h6>
+            <h6>Step 2 (optional): Load the downloaded image</h6>
 
             <p class="left-align">
                 If you have not done so already, launch the command below to load the docker image into your docker
@@ -79,9 +80,9 @@ export default function Step5Page(props: PageProps<Data>) {
             <h6>Step 4: Access the dashboard</h6>
 
             Open your browser and navigate to{" "}
-            <a href="http://localhost:8000">
+            <a href="http://localhost:8000" target={"_blank"}>
                 <button>
-                    http://localhost:8000 <i class="small">link</i>
+                    http://localhost:8000 <i class="small">open_in_browser</i>
                 </button>
             </a>
         </div>
