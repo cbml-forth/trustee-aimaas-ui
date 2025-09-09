@@ -19,7 +19,12 @@ export interface User {
     id: string;
     name: string;
     email: string;
-    tokens: { id_token: string; access_token: string; expires_in?: number; expires_at?: number };
+    tokens: {
+        id_token: string;
+        access_token: string;
+        expires_in?: number;
+        expires_at?: number;
+    };
     session_id: string;
 }
 
@@ -52,7 +57,12 @@ export interface SSISearchPollResponse {
     datasets_id?: string[];
 }
 
-export type ProcessStatus = "NOT STARTED" | "IN PROGRESS" | "FINISHED" | "BLOCKED" | "FAILED";
+export type ProcessStatus =
+    | "NOT STARTED"
+    | "IN PROGRESS"
+    | "FINISHED"
+    | "BLOCKED"
+    | "FAILED";
 
 export interface ProsumerWorkflowSSIData {
     process_id: string;
@@ -119,4 +129,20 @@ export interface FLStartAggregationRequest {
     computation: string; // json: "computation"
     processID: string; // json: "process-ID"
     numberOfRounds: number; // json: "number-of-rounds"
+}
+
+export interface ProviderWorkflowData {
+    readonly id: string; // "provider id"
+    name?: string;
+    model_description?: string; // step1: model description
+    domain_id?: number; // step1: domain id
+    credential_id?: string; // step1: credential id
+    model_provider_id?: string; // step1: model provider id (user's sub)
+    source_url?: string; // step1: source url
+    ecosystem?: string; // step1: ecosystem (Trustee, Gaiax, Copernicus, IDS)
+    trustworthiness_assessment?: string; // step2: trustworthiness assessment status
+    privacy_impact_assessment?: string; // step3: privacy impact assessment status
+    gdpr_compliance_check?: string; // step4: gdpr compliance status
+    agreements_signed?: boolean; // step5: agreements signed status
+    model_uploaded?: boolean; // step6: model and files uploaded
 }

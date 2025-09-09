@@ -14,6 +14,7 @@ import {
 } from "@/utils/types.ts";
 import { db_get, db_store } from "@/utils/db.ts";
 import { prosumer_key } from "@/utils/misc.ts";
+import { ulid } from "jsr:@std/ulid/ulid";
 
 const ATR_API = Deno.env.get("ATR_API_SERVER");
 const DL_API = Deno.env.get("DL_API_SERVER") || "http://localhost:3800";
@@ -113,8 +114,10 @@ export async function do_ssi_search(
     criteria: SSISearchCriterion[],
 ): Promise<SSISearchResponse | null> {
     const timestamp = Math.round(Date.now() * 1000);
+    const process_id = ulid();
     const q = {
-        type: "datasets-search",
+        process_id: process_id,
+        type: "models-search",
         query: {
             "logical_operation": "and",
             "filters": criteria.map((c) => {
@@ -131,13 +134,15 @@ export async function do_ssi_search(
     const id_token = user.tokens.id_token;
     print(`SSI search with token ${id_token}`, q);
 
+    await atr_log(user.email, "AIMAAS", "SSI", "Search");
+
     const req = await fetch(SSI_API_SERVER + "/api/v1/verifier/search", {
         body: JSON.stringify(q),
         headers: { "Authorization": `Bearer ${id_token}`, "Content-Type": "application/json" },
         method: "POST",
     });
     if (!req.ok) {
-        print("SSI ERROR", await req.json());
+        print("SSI ERROR", req.statusText, await req.text());
         return null;
     }
     const res = await req.json() as SSISearchResponse;
@@ -154,7 +159,7 @@ export async function do_ssi_poll(user: User, prosumer_id: string, process_id: s
         headers: { "Authorization": `Bearer ${id_token}`, "Content-Type": "application/json" },
     });
     if (!req.ok) {
-        print("SSI ERROR", await req.json());
+        print("SSI ERROR", req.status, await req.text());
         return "ERROR";
     }
     const res = await req.json() as SSISearchPollResponse;
