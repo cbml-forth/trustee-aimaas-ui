@@ -8,7 +8,7 @@ import { User } from "@/utils/types.ts";
 export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
     const code_verifier = ctx.state.session.get<string>("oauth_code_verifier") || "";
     const state = ctx.state.session.get<string>("oauth_state") as string;
-    console.log(code_verifier, state);
+    console.log(`OIDC: code_verifier: ${code_verifier}, state: ${state}, url: ${req.url}`); //, code_verifier, state);
     const tokens = await oauth.authorizationCodeGrant(
         oauth_config,
         new URL(req.url),
