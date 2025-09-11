@@ -132,6 +132,7 @@ export interface FLStartAggregationRequest {
 }
 
 export interface ProviderWorkflowData {
+    model_id?: number;
     readonly id: string; // "provider id"
     name?: string;
     model_description?: string; // step1: model description
@@ -140,9 +141,17 @@ export interface ProviderWorkflowData {
     model_provider_id?: string; // step1: model provider id (user's sub)
     source_url?: string; // step1: source url
     ecosystem?: string; // step1: ecosystem (Trustee, Gaiax, Copernicus, IDS)
-    trustworthiness_assessment?: string; // step2: trustworthiness assessment status
-    privacy_impact_assessment?: string; // step3: privacy impact assessment status
-    gdpr_compliance_check?: string; // step4: gdpr compliance status
-    agreements_signed?: boolean; // step5: agreements signed status
+    agreements_created?: boolean; // step5: agreements signed status
     model_uploaded?: boolean; // step6: model and files uploaded
+}
+
+export interface ProviderModelData {
+    id?: number;
+    domain_id: number;
+    credential_id: string;
+    model_provider_id: string;
+    source_url: string;
+    source: string;
+    format: string;
+    trained: boolean;
 }

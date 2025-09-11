@@ -38,19 +38,19 @@ const sidebarItems = [
         isSelected: true,
         nested: [
             {
-                id: 4.1,
-                title: "ML Prosumer",
-                imgURL: "/img/artificial_intelligence",
-                identation: true,
-                redirectTo: "/prosumer",
-                isSelected: false,
-            },
-            {
                 id: 4.2,
                 title: "ML Provider",
                 imgURL: "/img/artificial_intelligence",
                 identation: true,
                 redirectTo: "/provider",
+                isSelected: false,
+            },
+            {
+                id: 4.1,
+                title: "ML Prosumer",
+                imgURL: "/img/artificial_intelligence",
+                identation: true,
+                redirectTo: "/prosumer",
                 isSelected: false,
             },
             {

@@ -6,6 +6,7 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
 import * as $_middleware from "./routes/_middleware.tsx";
+import * as $agreementsCreated_index from "./routes/agreementsCreated/index.ts";
 import * as $agreementsSigned_index from "./routes/agreementsSigned/index.ts";
 import * as $consumer_consumer_id_layout from "./routes/consumer/[consumer_id]/_layout.tsx";
 import * as $consumer_consumer_id_index from "./routes/consumer/[consumer_id]/index.ts";
@@ -27,7 +28,15 @@ import * as $prosumer_prosumer_id_step3 from "./routes/prosumer/[prosumer_id]/st
 import * as $prosumer_prosumer_id_step4 from "./routes/prosumer/[prosumer_id]/step4.tsx";
 import * as $prosumer_prosumer_id_step5 from "./routes/prosumer/[prosumer_id]/step5.tsx";
 import * as $prosumer_index from "./routes/prosumer/index.tsx";
+import * as $provider_provider_id_layout from "./routes/provider/[provider_id]/_layout.tsx";
+import * as $provider_provider_id_index from "./routes/provider/[provider_id]/index.ts";
 import * as $provider_provider_id_step1 from "./routes/provider/[provider_id]/step1.tsx";
+import * as $provider_provider_id_step2 from "./routes/provider/[provider_id]/step2.tsx";
+import * as $provider_provider_id_step3 from "./routes/provider/[provider_id]/step3.tsx";
+import * as $provider_provider_id_step4 from "./routes/provider/[provider_id]/step4.tsx";
+import * as $provider_provider_id_step5 from "./routes/provider/[provider_id]/step5.tsx";
+import * as $provider_provider_id_step6 from "./routes/provider/[provider_id]/step6.tsx";
+import * as $provider_provider_id_step7 from "./routes/provider/[provider_id]/step7.tsx";
 import * as $provider_index from "./routes/provider/index.tsx";
 import * as $test from "./routes/test.tsx";
 import * as $token from "./routes/token.tsx";
@@ -47,6 +56,7 @@ const manifest = {
         "./routes/_app.tsx": $_app,
         "./routes/_layout.tsx": $_layout,
         "./routes/_middleware.tsx": $_middleware,
+        "./routes/agreementsCreated/index.ts": $agreementsCreated_index,
         "./routes/agreementsSigned/index.ts": $agreementsSigned_index,
         "./routes/consumer/[consumer_id]/_layout.tsx": $consumer_consumer_id_layout,
         "./routes/consumer/[consumer_id]/index.ts": $consumer_consumer_id_index,
@@ -68,7 +78,15 @@ const manifest = {
         "./routes/prosumer/[prosumer_id]/step4.tsx": $prosumer_prosumer_id_step4,
         "./routes/prosumer/[prosumer_id]/step5.tsx": $prosumer_prosumer_id_step5,
         "./routes/prosumer/index.tsx": $prosumer_index,
+        "./routes/provider/[provider_id]/_layout.tsx": $provider_provider_id_layout,
+        "./routes/provider/[provider_id]/index.ts": $provider_provider_id_index,
         "./routes/provider/[provider_id]/step1.tsx": $provider_provider_id_step1,
+        "./routes/provider/[provider_id]/step2.tsx": $provider_provider_id_step2,
+        "./routes/provider/[provider_id]/step3.tsx": $provider_provider_id_step3,
+        "./routes/provider/[provider_id]/step4.tsx": $provider_provider_id_step4,
+        "./routes/provider/[provider_id]/step5.tsx": $provider_provider_id_step5,
+        "./routes/provider/[provider_id]/step6.tsx": $provider_provider_id_step6,
+        "./routes/provider/[provider_id]/step7.tsx": $provider_provider_id_step7,
         "./routes/provider/index.tsx": $provider_index,
         "./routes/test.tsx": $test,
         "./routes/token.tsx": $token,

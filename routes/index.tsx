@@ -17,19 +17,19 @@ export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
             </h4>
             <h5>AIMaaS</h5>
             <div className="middle-align center-align horizontal wrap">
-                <a href="/prosumer" class="tiny-padding">
-                    <article class="btn-card">
-                        <img class=" small" src="/img/artificial_intelligence.svg" />
-                        <div class="padding">
-                            <h6 class="large-text">Model Prosumer</h6>
-                        </div>
-                    </article>
-                </a>
                 <a href="/provider" class="tiny-padding">
                     <article class="btn-card">
                         <img class="small" src="/img/artificial_intelligence.svg" />
                         <div class="padding">
                             <h6 class="large-text">Model Provider</h6>
+                        </div>
+                    </article>
+                </a>
+                <a href="/prosumer" class="tiny-padding">
+                    <article class="btn-card">
+                        <img class=" small" src="/img/artificial_intelligence.svg" />
+                        <div class="padding">
+                            <h6 class="large-text">Model Prosumer</h6>
                         </div>
                     </article>
                 </a>

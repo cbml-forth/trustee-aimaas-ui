@@ -6,6 +6,7 @@ import {
     ModelSearchResponseItem,
     ProsumerWorkflowData,
     ProsumerWorkflowSSIData,
+    ProviderModelData,
     SSISearchCriterion,
     SSISearchPollResponse,
     SSISearchResponse,
@@ -288,6 +289,26 @@ export async function do_dl_hedf_result_download(
     const response = await fetch(url.href, {
         headers: { "Authorization": `Bearer ${id_token}` },
         method: "GET",
+    });
+    return response;
+}
+
+export async function do_dl_provider_model_update(
+    user: User,
+    data: ProviderModelData,
+): Promise<Response> {
+    // const timestamp = Math.round(Date.now() * 1000);
+
+    const id_token = user.tokens.id_token;
+    print(`FL model update with token ${id_token}`);
+
+    const url = new URL(DL_API + "/AIMaaS/flmodels");
+
+    print("Uploading to", url.href, "model:", data);
+    const response = await fetch(url.href, {
+        body: JSON.stringify(data),
+        headers: { "Authorization": `Bearer ${id_token}` },
+        method: "POST",
     });
     return response;
 }

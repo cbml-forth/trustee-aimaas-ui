@@ -12,7 +12,7 @@ type WorkflowProps = {
 };
 
 function WorkflowItem(props: WorkflowItemProps) {
-    console.log("ITEM", props);
+    // console.log("ITEM", props);
     let content = (
         <img
             style={{ maxWidth: "80px", width: "auto", height: "auto" }}
