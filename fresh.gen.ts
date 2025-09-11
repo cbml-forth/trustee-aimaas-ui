@@ -33,10 +33,6 @@ import * as $provider_provider_id_index from "./routes/provider/[provider_id]/in
 import * as $provider_provider_id_step1 from "./routes/provider/[provider_id]/step1.tsx";
 import * as $provider_provider_id_step2 from "./routes/provider/[provider_id]/step2.tsx";
 import * as $provider_provider_id_step3 from "./routes/provider/[provider_id]/step3.tsx";
-import * as $provider_provider_id_step4 from "./routes/provider/[provider_id]/step4.tsx";
-import * as $provider_provider_id_step5 from "./routes/provider/[provider_id]/step5.tsx";
-import * as $provider_provider_id_step6 from "./routes/provider/[provider_id]/step6.tsx";
-import * as $provider_provider_id_step7 from "./routes/provider/[provider_id]/step7.tsx";
 import * as $provider_index from "./routes/provider/index.tsx";
 import * as $test from "./routes/test.tsx";
 import * as $token from "./routes/token.tsx";
@@ -83,10 +79,6 @@ const manifest = {
         "./routes/provider/[provider_id]/step1.tsx": $provider_provider_id_step1,
         "./routes/provider/[provider_id]/step2.tsx": $provider_provider_id_step2,
         "./routes/provider/[provider_id]/step3.tsx": $provider_provider_id_step3,
-        "./routes/provider/[provider_id]/step4.tsx": $provider_provider_id_step4,
-        "./routes/provider/[provider_id]/step5.tsx": $provider_provider_id_step5,
-        "./routes/provider/[provider_id]/step6.tsx": $provider_provider_id_step6,
-        "./routes/provider/[provider_id]/step7.tsx": $provider_provider_id_step7,
         "./routes/provider/index.tsx": $provider_index,
         "./routes/test.tsx": $test,
         "./routes/token.tsx": $token,
