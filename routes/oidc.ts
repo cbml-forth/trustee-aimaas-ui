@@ -9,10 +9,10 @@ export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
     const code_verifier = ctx.state.session.get<string>("oauth_code_verifier") || "";
     const state = ctx.state.session.get<string>("oauth_state") as string;
     const my_url = new URL(req.url);
-    console.log(`OIDC: code_verifier: ${code_verifier}, state: ${state}, url: ${req.url}`); //, code_verifier, state);
     if (req.headers.has("X-Forwarded-Proto") && req.headers.get("X-Forwarded-Proto") === "https") {
         my_url.protocol = "https";
     }
+    console.log(`OIDC: code_verifier: ${code_verifier}, state: ${state}, url: ${my_url}`); //, code_verifier, state);
 
     const tokens = await oauth.authorizationCodeGrant(
         oauth_config,
