@@ -90,7 +90,7 @@ export default function ProviderIndexPage({ data }: PageProps<Data>) {
             case "step2":
                 return <p>You can sign the necessary agreements</p>;
             case "step3":
-                return <p>You can see the final report</p>;
+                return <p>You can see the final report for model {w.model_id}</p>;
         }
     };
 
