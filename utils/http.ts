@@ -24,7 +24,11 @@ export function redirect(
 
 export function redirect_to_login(req: Request) {
     // const path = URL.parse(req.url)?.pathname;
-    return redirect("/login?success_url=" + req.url);
+    const my_url = new URL(req.url);
+    if (req.headers.has("X-Forwarded-Proto") && req.headers.get("X-Forwarded-Proto") === "https") {
+        my_url.protocol = "https:";
+    }
+    return redirect("/login?success_url=" + encodeURIComponent(my_url.toString()));
 }
 
 export type SessionState = {
