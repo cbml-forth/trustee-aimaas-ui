@@ -61,7 +61,7 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
                         })}
                         src="/img/contract_workflow.svg"
                     />
-                    <div class="small-margin small-text">Sign Agreements</div>
+                    <div class="small-margin small-text">Create Agreements</div>
                 </a>
                 <hr class="max" />
                 <a
