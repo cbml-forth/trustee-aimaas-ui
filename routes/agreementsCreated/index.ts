@@ -22,9 +22,9 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
             console.log("agreementsCreated: No such provider id", provider_id);
             return redirect("/provider");
         }
-        if (data.agreements_signed !== true) {
+        if (data.agreements_created !== true) {
             // Mark as signed, if needed:
-            data.agreements_signed = true;
+            data.agreements_created = true;
             await db_store(provider_key(user, provider_id), data);
         }
 
