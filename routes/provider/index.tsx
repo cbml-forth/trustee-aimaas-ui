@@ -48,7 +48,7 @@ export const handler: Handlers<Data, SessionState> = {
             },
             {
                 imgURL: "contract_workflow.svg",
-                text: "Sign the necessary agreements",
+                text: "Create the necessary agreements",
             },
             {
                 imgURL: "select_computation_workflow.svg",
