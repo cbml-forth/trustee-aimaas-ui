@@ -91,11 +91,12 @@ export const handler: Handlers<Data, SessionState> = {
             w.ecosystem = ecosystem;
         }
 
-        let r = await do_dl_provider_model_update(
+        const r = await do_dl_provider_model_update(
             user,
             {
                 domain_id,
                 id: w.model_id,
+                process_id: `provider:${provider_id}`,
                 credential_id: w.credential_id || "",
                 model_provider_id: user.id, // user's "sub" from token
                 source_url: w.source_url || "",

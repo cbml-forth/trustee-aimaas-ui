@@ -147,6 +147,7 @@ export interface ProviderWorkflowData {
 
 export interface ProviderModelData {
     id?: number;
+    process_id: string;
     domain_id: number;
     credential_id: string;
     model_provider_id: string;
