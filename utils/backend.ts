@@ -293,10 +293,15 @@ export async function do_dl_hedf_result_download(
     return response;
 }
 
+// The following is for registering (or updating the record) of an FL model
+// i.e. a model used by the FL module for aggregation (a base model)
+// We make 2 calls to DL:
+// 1) to /flmodels to register the model as a FL model
+// 2) to /models to register the model as a "global" model just for STM to be able to find it
 export async function do_dl_provider_model_update(
     user: User,
     data: ProviderModelData,
-): Promise<Response> {
+): Promise<[[number, number]?, string?]> { // Return either the model ID or the error
     // const timestamp = Math.round(Date.now() * 1000);
 
     const id_token = user.tokens.id_token;
@@ -304,11 +309,55 @@ export async function do_dl_provider_model_update(
 
     const url = new URL(DL_API + "/AIMaaS/flmodels");
 
-    print("Uploading to", url.href, "model:", data);
-    const response = await fetch(url.href, {
+    print("Uploading FL Model to", url.href, "model:", data);
+    const response1 = await fetch(url.href, {
         body: JSON.stringify(data),
         headers: { "Authorization": `Bearer ${id_token}` },
         method: "POST",
     });
-    return response;
+    if (response1.status / 100 != 2) {
+        const error = await response1.text();
+        print("FL model update returned DL ERROR:", error);
+        return [undefined, error];
+    }
+    const r1 = await response1.json();
+
+    const global_model_data = {
+        domain_id: data.domain_id,
+        process_id: data.process_id,
+        round: 0,
+    };
+
+    const url2 = new URL(DL_API + "/AIMaaS/models");
+
+    // Now register it as a global model to make the STM happy to access it:
+
+    const isRegisteredAlready = data.global_model_id ?? 0 > 0;
+    const formData = new FormData();
+    formData.append("domain_id", data.domain_id.toString());
+    formData.append("process_id", data.process_id);
+    formData.append("round", global_model_data.round.toString());
+    formData.append("model_file", new Blob([JSON.stringify(global_model_data)]), "model.json");
+
+    print(
+        "Uploading Global model (global model id:",
+        data.global_model_id,
+        ") to",
+        url.href,
+        "model:",
+        formData,
+    );
+    const response2 = await fetch(url2.href, {
+        body: formData,
+        headers: { "Authorization": `Bearer ${id_token}` },
+        method: isRegisteredAlready ? "PUT" : "POST",
+    });
+    if (response2.status / 100 != 2) {
+        const error = (await response2.text()) || "";
+        print("FL (global) model update returned DL ERROR (status:", response2.status, "):", error);
+        return [undefined, error];
+    }
+    const r2 = await response2.json();
+
+    return [[r1.id, r2.id], undefined];
 }

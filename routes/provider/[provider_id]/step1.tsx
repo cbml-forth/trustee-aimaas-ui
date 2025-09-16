@@ -43,6 +43,7 @@ export const handler: Handlers<Data, SessionState> = {
         const data = await db_get<ProviderWorkflowData>(
             provider_key(user, provider_id),
         );
+
         return ctx.render({
             id: data?.model_id,
             domain_id: data?.domain_id,
@@ -91,11 +92,12 @@ export const handler: Handlers<Data, SessionState> = {
             w.ecosystem = ecosystem;
         }
 
-        const r = await do_dl_provider_model_update(
+        const [ids, error] = await do_dl_provider_model_update(
             user,
             {
                 domain_id,
                 id: w.model_id,
+                global_model_id: w.global_model_id,
                 process_id: `provider:${provider_id}`,
                 credential_id: w.credential_id || "",
                 model_provider_id: user.id, // user's "sub" from token
@@ -105,8 +107,7 @@ export const handler: Handlers<Data, SessionState> = {
                 trained: true,
             },
         );
-        if (!r.ok) {
-            const error = await r.text();
+        if (error || !ids) {
             const domains = await get_domains(user);
             return ctx.render({
                 id: w.model_id,
@@ -121,15 +122,16 @@ export const handler: Handlers<Data, SessionState> = {
                 error,
             });
         }
-        const d = await r.json();
-        w.model_id = d.id;
+        const [r1, r2] = ids;
+        // const d = await r1.json();
+        w.model_id = r1;
+        w.global_model_id = r2;
         await db_store(provider_key(user, provider_id), w);
         return redirect("step2");
     },
 };
 
 export default function ProviderStep1Page({ data }: PageProps<Data>) {
-    console.log("data", data);
     const domainOptions = data.domains.map((d: Domain) => ({
         id: d.id,
         name: d.description,

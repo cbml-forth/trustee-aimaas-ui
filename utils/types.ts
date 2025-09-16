@@ -133,6 +133,7 @@ export interface FLStartAggregationRequest {
 
 export interface ProviderWorkflowData {
     model_id?: number;
+    global_model_id?: number;
     readonly id: string; // "provider id"
     name?: string;
     model_description?: string; // step1: model description
@@ -147,6 +148,7 @@ export interface ProviderWorkflowData {
 
 export interface ProviderModelData {
     id?: number;
+    global_model_id?: number;
     process_id: string;
     domain_id: number;
     credential_id: string;

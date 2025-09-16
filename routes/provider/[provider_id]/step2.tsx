@@ -48,7 +48,7 @@ export const handler: Handlers<Data, SessionState> = {
         const w = await db_get<ProviderWorkflowData>(
             provider_key(user, provider_id),
         );
-        if (!w || !w.model_id) {
+        if (!w || !w.model_id || !w.global_model_id) {
             return redirect("step1");
         }
 
@@ -58,7 +58,7 @@ export const handler: Handlers<Data, SessionState> = {
         if (fd.get("action") == "stm") {
             w.agreements_created = false;
 
-            const model_id = w.model_id;
+            const model_id = w.global_model_id;
             const nonce = Date.now();
 
             const continue_uri = encodeURIComponent(
