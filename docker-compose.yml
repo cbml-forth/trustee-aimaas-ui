@@ -12,6 +12,7 @@ services:
     environment:
       AIMAAS_UI_URI: ${AIMAAS_UI_URI}
       STM_URI: ${STM_URI}
+      KG_API_SERVER: ${KG_API_SERVER}
       DL_API_SERVER: ${DL_API_SERVER}
       FL_API_SERVER: ${FL_API_SERVER}
       ATR_API_SERVER: ${ATR_API_SERVER}
