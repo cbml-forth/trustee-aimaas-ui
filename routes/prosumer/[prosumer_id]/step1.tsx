@@ -1,6 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Domain, DomainAttr, ProsumerWorkflowData, SSISearchCriterion, User } from "@/utils/types.ts";
-import { dl_domains, do_fl_submit, do_ssi_search } from "@/utils/backend.ts";
+import { dl_domains, do_fl_submit, do_kg_store_prosumer_data, do_ssi_search } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import ProsumerStep1 from "@/islands/prosumer/ProsumerStep1.tsx";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
@@ -88,6 +88,7 @@ export const handler: Handlers<unknown, SessionState> = {
 
         if (perform_ssi) {
             console.log("PERFORMING SSI", filters);
+            await do_kg_store_prosumer_data(user, w);
             const ssi_response = await do_ssi_search(user, filters);
             if (ssi_response) {
                 w.ssi.status = ssi_response.status;

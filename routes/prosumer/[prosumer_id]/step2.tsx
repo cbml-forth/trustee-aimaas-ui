@@ -1,6 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Domain, ProsumerWorkflowData, ProsumerWorkflowFLData, SSISearchCriterion, User } from "@/utils/types.ts";
-import { dl_domains, do_fl_submit, do_ssi_poll } from "@/utils/backend.ts";
+import { dl_domains, do_fl_submit, do_kg_store_prosumer_data, do_ssi_poll } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
 
@@ -100,6 +100,7 @@ export const handler: Handlers<unknown, SessionState> = {
             ssi_search_status = await do_ssi_poll(user, prosumer_id, prosumer_data.ssi?.process_id || "");
             if (ssi_search_status === "FINISHED") {
                 prosumer_data = await db_get(prosumer_key(user, prosumer_id)) as ProsumerWorkflowData;
+                await do_kg_store_prosumer_data(user, prosumer_data);
             }
         }
 

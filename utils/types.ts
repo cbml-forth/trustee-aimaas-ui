@@ -68,7 +68,7 @@ export interface ProsumerWorkflowSSIData {
     process_id: string;
     status: SSISearchStatus;
     criteria: SSISearchCriterion[];
-    results?: string[]; // Results, "datasets ids"
+    results?: string[]; // Results, "model ids"
 }
 
 export interface ProsumerWorkflowFLData {

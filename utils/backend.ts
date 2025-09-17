@@ -15,10 +15,11 @@ import {
 } from "@/utils/types.ts";
 import { db_get, db_store } from "@/utils/db.ts";
 import { prosumer_key } from "@/utils/misc.ts";
-import { ulid } from "jsr:@std/ulid/ulid";
+import { decodeTime, ulid } from "jsr:@std/ulid";
 
 const ATR_API = Deno.env.get("ATR_API_SERVER");
 const DL_API = Deno.env.get("DL_API_SERVER") || "http://localhost:3800";
+const KG_API = Deno.env.get("KG_API_SERVER") || "http://localhost:3800";
 const SSI_API_SERVER = Deno.env.get("SSI_API_SERVER") || "http://localhost:3500";
 const FL_API_SERVER = Deno.env.get("FL_API_SERVER") || "http://localhost:3701";
 
@@ -249,7 +250,7 @@ export async function do_dl_model_search(
         print("DL ERROR", await req.json());
         return [];
     }
-    const res: ModelSearchResponseItem[] = await req.json() as ModelSearchResponseItem[];
+    const res: ModelSearchResponseItem[] = await req.json() as ModelSearchResponseItem[]; // XXX: Filter out the FL models! (with process_id=provider:<id>)
     // print(res);
     return res;
 }
@@ -360,4 +361,51 @@ export async function do_dl_provider_model_update(
     const r2 = await response2.json();
 
     return [[r1.id, r2.id], undefined];
+}
+
+export async function do_kg_store_prosumer_data(user: User, w: ProsumerWorkflowData): Promise<[number?, string?]> {
+    const cacheHours = 24;
+
+    const dateCreated = new Date(decodeTime(w.id));
+    const dateExpires = new Date(dateCreated.getTime() + cacheHours * 60 * 60 * 1000);
+
+    const data: Record<string, any> = {
+        process_id: `prosumer:${w.id}`,
+        process_name: w.name ?? "",
+        process_status: w.ssi.status,
+        date_created: dateCreated.toISOString(),
+        user_id: user.id,
+        search_query_id: w.ssi.process_id,
+        search_query: {
+            logical_operation: "AND",
+            filters: w.ssi.criteria.map((c) => {
+                return {
+                    domain: c.domain.name.toLowerCase(),
+                    type: c.attribute.name,
+                    value: c.value,
+                    operation: c.operator,
+                };
+            }),
+        },
+    };
+    if (w.ssi.results) {
+        data.store_until_date = dateExpires.toISOString();
+        data.matched_models = w.ssi.results;
+    }
+    const id_token = user.tokens.id_token;
+
+    const url = new URL(KG_API + "/kg/models/storeModels");
+
+    print("Uploading Models Search to KG:", url.href, "data:", JSON.stringify(data));
+    const response1 = await fetch(url.href, {
+        body: JSON.stringify(data),
+        headers: { "Authorization": `Bearer ${id_token}`, "Content-Type": "application/json" },
+        method: "POST",
+    });
+    if (response1.status / 100 != 2) {
+        const error = await response1.text();
+        print("KG prosumer data store returned error:", error);
+        return [undefined, error];
+    }
+    return [1, undefined];
 }
