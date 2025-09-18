@@ -79,7 +79,21 @@ export default function ProsumerStep2(props: {
 
                 {ssi_failed && <div class="alert">FAILED!</div>}
 
-                {ssi_finished && (
+                {ssi_finished && props.ssi_results.length == 0 && (
+                    <>
+                        <div class="alert">No Models Found!</div>
+
+                        <button
+                            class="button ripple small-round upper elevate bg-trusteeBtn"
+                            type="submit"
+                            name="action"
+                            value="back"
+                        >
+                            Previous<i>chevron_left</i>
+                        </button>
+                    </>
+                )}
+                {ssi_finished && props.ssi_results.length > 0 && (
                     <>
                         <p>
                             Select from the following Model Providers to construct the FL Group:

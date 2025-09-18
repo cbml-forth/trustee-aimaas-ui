@@ -67,6 +67,10 @@ export const handler: Handlers<unknown, SessionState> = {
         //   action: "do_fl"
         // }
 
+        if (data.get("action") == "back") {
+            return redirect("step1");
+        }
+
         const sep = ":";
         const models = Array.from(
             data.keys().filter((v) => v.startsWith("fl_model")).map((s) => s.split(sep)[1]),

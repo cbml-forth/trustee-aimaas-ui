@@ -7,13 +7,7 @@ import {
     SSISearchCriterionOperator,
     User,
 } from "@/utils/types.ts";
-import {
-    dl_domains,
-    do_fl_submit,
-    do_kg_get_prosumer_data,
-    do_kg_store_prosumer_data,
-    do_ssi_search,
-} from "@/utils/backend.ts";
+import { dl_domains, do_fl_submit, do_kg_get_prosumer_data, do_ssi_search } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import ProsumerStep1 from "@/islands/prosumer/ProsumerStep1.tsx";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
@@ -98,6 +92,12 @@ export const handler: Handlers<unknown, SessionState> = {
             models_selected: [],
             kg_results: [],
         };
+        const perform_ssi = data.get("action")?.toString() === "search";
+        const perform_save = data.get("action")?.toString() === "save";
+        if (perform_save) {
+            await db_store(prosumer_key(user, prosumer_id), w);
+            return redirect("step1");
+        }
 
         const [kg_results, _] = await do_kg_get_prosumer_data(user, w);
         console.log("KG RESULTS", kg_results);
@@ -108,8 +108,6 @@ export const handler: Handlers<unknown, SessionState> = {
             await db_store(prosumer_key(user, prosumer_id), w);
             return redirect("step2");
         }
-
-        const perform_ssi = data.get("action")?.toString() === "search";
 
         if (perform_ssi) {
             console.log("PERFORMING SSI", filters);
