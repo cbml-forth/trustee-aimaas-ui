@@ -4,7 +4,6 @@ import { batch, Signal, useComputed, useSignal, useSignalEffect } from "@preact/
 import classNames from "@/utils/classnames.js";
 import { assert } from "$std/assert/assert.ts";
 import { SSISearchCriterion } from "@/utils/types.ts";
-import { OperationProcessingError } from "../../../../../../Library/Caches/deno/npm/registry.npmjs.org/oauth4webapi/3.1.4/build/index.d.ts";
 interface FilterValue {
     id: string;
     dom: Domain;
