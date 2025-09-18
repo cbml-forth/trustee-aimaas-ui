@@ -1,5 +1,12 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { Domain, DomainAttr, ProsumerWorkflowData, SSISearchCriterion, User } from "@/utils/types.ts";
+import {
+    Domain,
+    DomainAttr,
+    ProsumerWorkflowData,
+    SSISearchCriterion,
+    SSISearchCriterionOperator,
+    User,
+} from "@/utils/types.ts";
 import {
     dl_domains,
     do_fl_submit,
@@ -69,7 +76,7 @@ export const handler: Handlers<unknown, SessionState> = {
             const d = data.get(`domain${sep}${fid}`)?.toString();
             const a = data.get(`attribute${sep}${fid}`)?.toString();
             const v = data.get(`value${sep}${fid}`)?.toString();
-            const op = data.get(`rel${sep}${fid}`)?.toString();
+            const op = data.get(`rel${sep}${fid}`)?.toString() as SSISearchCriterionOperator;
             if (!d || !a || !v || !op) return;
             const dom = domains.get(d);
             if (!dom) return;
