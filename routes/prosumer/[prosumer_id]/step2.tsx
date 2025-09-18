@@ -74,7 +74,7 @@ export const handler: Handlers<unknown, SessionState> = {
         // console.log("MODELS", models);
 
         const w: ProsumerWorkflowData = await db_get(prosumer_key(user, prosumer_id)) as ProsumerWorkflowData;
-        w.models_selected = ["8", "9"]; // XXX should be models;
+        w.models_selected = models;
         await db_store(prosumer_key(user, prosumer_id), w);
 
         return redirect("step3");

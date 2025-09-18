@@ -3,7 +3,7 @@ import { defineRoute } from "$fresh/server.ts";
 import { get_user, redirect_to_login, SessionRouteContext } from "@/utils/http.ts";
 import { list_all } from "@/utils/db.ts";
 import { prosumer_key } from "@/utils/misc.ts";
-import { ProsumerWorkflowData, User } from "@/utils/types.ts";
+import { ProsumerWorkflowData, ssi_criteria_to_ast, User } from "@/utils/types.ts";
 import { decodeTime, ulid } from "jsr:@std/ulid";
 
 export default defineRoute(async (req, ctx: SessionRouteContext) => {
@@ -144,8 +144,11 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
                                 <li class="row transparent">
                                     <i>play_arrow</i>
                                     <div class="max">
-                                        <h6 class="small">{w.id}</h6>
-                                        <div>{status(w)}</div>
+                                        <h6 class="small">{w.id} {w.name != "" && " - " + w.name}</h6>
+                                        <div class="small-text">
+                                            <div>{ssi_criteria_to_ast(w.ssi.criteria)}</div>
+                                            <div>{status(w)}</div>
+                                        </div>
                                     </div>
                                     <label>Created: {new Date(decodeTime(w.id)).toLocaleString()}</label>
                                     <a href={`/prosumer/${w.id}/step1`}>

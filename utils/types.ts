@@ -41,10 +41,11 @@ export interface ModelSearchResponseItem extends Record<string, unknown> {
     id: number;
 }
 
+export type SSISearchCriterionOperator = "equal" | "notequal" | "contains";
 export interface SSISearchCriterion {
     domain: Domain;
     attribute: DomainAttr;
-    operator: "equal";
+    operator: SSISearchCriterionOperator;
     value: string;
 }
 export type SSISearchStatus = "NOT STARTED" | "ACCEPTED" | "FINISHED" | "ERROR";
@@ -89,6 +90,7 @@ export interface ProsumerWorkflowData {
     ssi: ProsumerWorkflowSSIData; // this is for "step 1"
     models_selected: string[]; // step2 when completed fills this
     fl_process?: ProsumerWorkflowFLData; // step3 fills the fl parameters and starts FL process
+    kg_results: string[];
 }
 
 export interface ConsumerWorkflowData {
@@ -157,4 +159,40 @@ export interface ProviderModelData {
     source: string;
     format: string;
     trained: boolean;
+}
+
+export function ssi_criteria_to_ast(crits: SSISearchCriterion[], logical_operator?: string | undefined): string {
+    if (logical_operator === undefined) {
+        logical_operator = "and";
+    }
+
+    const filters = crits.map((c) => {
+        const domain = c.domain.name.toLowerCase();
+        const type = c.attribute.name;
+        const value = c.value;
+        let operation;
+        switch (c.operator.toLowerCase()) { // Enum: ["equal", "notequal", "contains"] See https://github.com/Trustee-Horizon/SSIHE-API
+            case "equal":
+            case "equals":
+                operation = "=";
+                break;
+            case "notequal":
+            case "not equal":
+                operation = "!=";
+                break;
+            case "contains":
+                operation = "≈";
+                break;
+            case "greater_than":
+                operation = ">";
+                break;
+            case "less_than":
+                operation = "<";
+                break;
+            default:
+                operation = c.operator.toLowerCase();
+        }
+        return `(${domain}.${type} ${operation} '${value}')`;
+    });
+    return filters.sort().join(` ${logical_operator.toLowerCase()} `);
 }

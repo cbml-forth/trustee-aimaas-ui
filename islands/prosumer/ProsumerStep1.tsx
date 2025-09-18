@@ -1,14 +1,16 @@
-import { Domain, DomainAttr, User } from "@/utils/types.ts";
+import { Domain, DomainAttr, SSISearchCriterionOperator, User } from "@/utils/types.ts";
 import { BasicSelect, SelectOption, SelectProps } from "@/components/Select.tsx";
 import { batch, Signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import classNames from "@/utils/classnames.js";
 import { assert } from "$std/assert/assert.ts";
 import { SSISearchCriterion } from "@/utils/types.ts";
+import { OperationProcessingError } from "../../../../../../Library/Caches/deno/npm/registry.npmjs.org/oauth4webapi/3.1.4/build/index.d.ts";
 interface FilterValue {
     id: string;
     dom: Domain;
     attr: DomainAttr;
     value: string;
+    operator: SSISearchCriterionOperator;
     valid: boolean;
 }
 
@@ -23,6 +25,7 @@ function new_filter_ctor(dom: Domain): FilterValue {
         dom: dom,
         attr: dom.attributes[0],
         value: "",
+        operator: "equal",
         valid: false,
     };
 }
@@ -39,10 +42,13 @@ function SingleFilter(props: {
     const { domains } = props;
     const selectedDomain = useSignal<Domain>(props.filterValue.dom);
     const selectedAttribute = useSignal<DomainAttr>(props.filterValue.attr);
+    const selectedOperator = useSignal<SSISearchCriterionOperator>(props.filterValue.operator);
     const textValue = useSignal<string>(props.filterValue.value);
     const valid = useComputed<boolean>(() => textValue.value != "");
     const only_one = props.filtersCount == 1;
     const error = useSignal<boolean>(false);
+
+    const relations = [{ id: 1, name: "EQUAL" }, { id: 2, name: "NOT EQUAL" }, { id: 3, name: "CONTAINS" }];
 
     const domainOpts: Signal<SelectOption[]> = useComputed(() =>
         domains.map((d: Domain) => {
@@ -63,6 +69,16 @@ function SingleFilter(props: {
             };
         })
     );
+    const operatorOpts: Signal<SelectOption[]> = useComputed(() =>
+        relations.map((r) => {
+            return {
+                id: r.id,
+                name: r.name,
+                value: r.name,
+                selected: r.name == selectedOperator.value,
+            };
+        })
+    );
 
     const onChangeDomain = (x: string) => {
         selectedDomain.value = domains.find((d) => d.name == x) || domains[0];
@@ -70,6 +86,9 @@ function SingleFilter(props: {
     const onChangeAttribute = (x: string) => {
         const domAttrs = selectedDomain.value.attributes;
         selectedAttribute.value = domAttrs.find((a) => a.name == x) || domAttrs[0];
+    };
+    const onChangeOperator = (x: SSISearchCriterionOperator) => {
+        selectedOperator.value = x;
     };
     const onChangeValue = (e: Event) => {
         const target = e.currentTarget as HTMLInputElement;
@@ -94,11 +113,11 @@ function SingleFilter(props: {
             dom: selectedDomain.value,
             attr: selectedAttribute.value,
             valid: true,
+            operator: selectedOperator.value,
             value: textValue.value,
         };
         props.update_filter(vf);
     };
-    const relations = [{ id: 1, name: "EQUAL" }];
     const onAdd = () => {
         update_filter();
     };
@@ -122,7 +141,7 @@ function SingleFilter(props: {
                 {...attrs}
             />
 
-            <BasicSelect options={relations} name={"rel:" + my_id} {...attrs} />
+            <BasicSelect options={operatorOpts.value} name={"rel:" + my_id} onChange={onChangeOperator} {...attrs} />
 
             <div
                 style={{ "flex-grow": "1" }}
@@ -168,6 +187,7 @@ function test_vf(domains: Domain[]): FilterValue[] {
         id: new_id(),
         dom: auto,
         attr: name_attr,
+        operator: "equal",
         value: "automotive1_superresolution",
         valid: true,
     };
@@ -175,6 +195,7 @@ function test_vf(domains: Domain[]): FilterValue[] {
         id: new_id(),
         dom: auto,
         attr: at_attr,
+        operator: "equal",
         value: "superresolution",
         valid: true,
     };
@@ -197,6 +218,7 @@ export default function ProsumerStep1(props: {
                 id: new_id(),
                 dom: c.domain,
                 attr: c.attribute,
+                operator: c.operator,
                 value: c.value,
                 valid: true,
             };

@@ -1,6 +1,12 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Domain, DomainAttr, ProsumerWorkflowData, SSISearchCriterion, User } from "@/utils/types.ts";
-import { dl_domains, do_fl_submit, do_kg_store_prosumer_data, do_ssi_search } from "@/utils/backend.ts";
+import {
+    dl_domains,
+    do_fl_submit,
+    do_kg_get_prosumer_data,
+    do_kg_store_prosumer_data,
+    do_ssi_search,
+} from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import ProsumerStep1 from "@/islands/prosumer/ProsumerStep1.tsx";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
@@ -63,12 +69,13 @@ export const handler: Handlers<unknown, SessionState> = {
             const d = data.get(`domain${sep}${fid}`)?.toString();
             const a = data.get(`attribute${sep}${fid}`)?.toString();
             const v = data.get(`value${sep}${fid}`)?.toString();
-            if (!d || !a || !v) return;
+            const op = data.get(`rel${sep}${fid}`)?.toString();
+            if (!d || !a || !v || !op) return;
             const dom = domains.get(d);
             if (!dom) return;
             const attr = dom.attributes.find((attr) => attr.name == a);
             if (!attr) return;
-            filters.push({ domain: dom, attribute: attr, operator: "equal", value: v });
+            filters.push({ domain: dom, attribute: attr, operator: op, value: v });
         });
 
         console.log("CRITERIA", filters);
@@ -82,13 +89,23 @@ export const handler: Handlers<unknown, SessionState> = {
                 criteria: filters,
             },
             models_selected: [],
+            kg_results: [],
         };
+
+        const [kg_results, _] = await do_kg_get_prosumer_data(user, w);
+        console.log("KG RESULTS", kg_results);
+        if (kg_results && kg_results.length > 0) {
+            w.kg_results = kg_results;
+            w.ssi.status = "FINISHED";
+            w.ssi.results = kg_results;
+            await db_store(prosumer_key(user, prosumer_id), w);
+            return redirect("step2");
+        }
 
         const perform_ssi = data.get("action")?.toString() === "search";
 
         if (perform_ssi) {
             console.log("PERFORMING SSI", filters);
-            await do_kg_store_prosumer_data(user, w);
             const ssi_response = await do_ssi_search(user, filters);
             if (ssi_response) {
                 w.ssi.status = ssi_response.status;
@@ -131,7 +148,8 @@ export const handler: Handlers<unknown, SessionState> = {
             user,
             criteria: prosumer_data?.ssi?.criteria,
             process_name: prosumer_data?.name || "",
-            disabled: (prosumer_data?.ssi && prosumer_data.ssi.criteria.length > 0) || false,
+            // disabled: (prosumer_data?.ssi && prosumer_data.ssi.criteria.length > 0) || false,
+            disabled: (prosumer_data?.fl_process ?? false),
         });
     },
 };

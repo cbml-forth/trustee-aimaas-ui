@@ -7,6 +7,7 @@ import {
     ProsumerWorkflowData,
     ProsumerWorkflowSSIData,
     ProviderModelData,
+    ssi_criteria_to_ast,
     SSISearchCriterion,
     SSISearchPollResponse,
     SSISearchResponse,
@@ -377,7 +378,7 @@ export async function do_kg_store_prosumer_data(user: User, w: ProsumerWorkflowD
         user_id: user.id,
         search_query_id: w.ssi.process_id,
         search_query: {
-            logical_operation: "AND",
+            logical_operator: "AND",
             filters: w.ssi.criteria.map((c) => {
                 return {
                     domain: c.domain.name.toLowerCase(),
@@ -408,4 +409,114 @@ export async function do_kg_store_prosumer_data(user: User, w: ProsumerWorkflowD
         return [undefined, error];
     }
     return [1, undefined];
+}
+
+function kg_results_to_ast(query: Record<string, any>): string {
+    //  {
+    // "filters": [
+    //     {
+    //     "filters": [
+    //         {
+    //         "domain": "nlp",
+    //         "operation": "equals",
+    //         "type": "task",
+    //         "value": "text_generation"
+    //         },
+    //         {
+    //         "domain": "size",
+    //         "operation": "less_than",
+    //         "type": "parameters",
+    //         "value": "1B"
+    //         }
+    //     ],
+    //     "logical_operator": "AND"
+    //     },
+    //     {
+    //     "filters": [
+    //         {
+    //         "domain": "nlp",
+    //         "operation": "equals",
+    //         "type": "task",
+    //         "value": "summarization"
+    //         },
+    //         {
+    //         "domain": "performance",
+    //         "operation": "greater_than",
+    //         "type": "rouge_score",
+    //         "value": "0.75"
+    //         }
+    //     ],
+    //     "logical_operator": "AND"
+    //     }
+    // ],
+    // "logical_operator": "OR"
+    // }
+
+    if ("logical_operator" in query && "filters" in query) {
+        const logical_operator = query.logical_operator.toLowerCase();
+        const filters = query.filters;
+        return filters.map(kg_results_to_ast).sort().join(` ${logical_operator} `);
+    }
+    if ("domain" in query && "type" in query && "value" in query && "operation" in query) {
+        const domain = query.domain.toLowerCase();
+        const type = query.type;
+        const value = query.value;
+        let operation;
+        switch (query.operation.toLowerCase()) { // Enum: ["equal", "notequal", "contains"] See https://github.com/Trustee-Horizon/SSIHE-API
+            case "equal":
+            case "equals":
+                operation = "=";
+                break;
+            case "notequal":
+                operation = "!=";
+                break;
+            case "contains":
+                operation = "≈";
+                break;
+            case "greater_than":
+                operation = ">";
+                break;
+            case "less_than":
+                operation = "<";
+                break;
+
+            default:
+                operation = query.operation.toLowerCase();
+        }
+        return `(${domain}.${type} ${operation} '${value}')`;
+    }
+    return "";
+}
+export async function do_kg_get_prosumer_data(user: User, w: ProsumerWorkflowData): Promise<[string[]?, string?]> {
+    const id_token = user.tokens.id_token;
+
+    const url = new URL(KG_API + "/kg/models/getModels");
+
+    const query = ssi_criteria_to_ast(w.ssi.criteria);
+    print("KG: Searching Models in KG:", url.href, "for:", query);
+    const response = await fetch(url.href, {
+        headers: { "Authorization": `Bearer ${id_token}`, "Accept": "application/json" },
+        method: "GET",
+    });
+    if (response.status / 100 != 2) {
+        const error = await response.text();
+        print("KG prosumer get models returned error:", error);
+        return [undefined, error];
+    }
+    const tt = new Set<string>();
+    const results = await response.json();
+    for (const i in results) {
+        const res = results[i];
+        if ("search_queries" in res) {
+            const search_queries = res["search_queries"];
+            for (const q in search_queries) {
+                const res_query = kg_results_to_ast(search_queries[q].complete_query);
+                if (query == res_query) {
+                    (res["hasMatchedModel"] || []).forEach((m) => tt.add(m));
+                }
+            }
+        }
+    }
+
+    return [[...tt], undefined];
 }
