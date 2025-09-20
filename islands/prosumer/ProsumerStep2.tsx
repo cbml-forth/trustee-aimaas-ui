@@ -84,12 +84,12 @@ export default function ProsumerStep2(props: {
                         <div class="alert">No Models Found!</div>
 
                         <button
-                            class="button ripple small-round upper elevate bg-trusteeBtn"
+                            class="button ripple small-round upper bg-trusteeBtn"
                             type="submit"
                             name="action"
                             value="back"
                         >
-                            Previous<i>chevron_left</i>
+                            <i>chevron_left</i>Previous
                         </button>
                     </>
                 )}
@@ -118,7 +118,7 @@ export default function ProsumerStep2(props: {
                         {!props.disabled && (
                             <>
                                 <button
-                                    class="button ripple small-round upper elevate bg-trusteeBtn"
+                                    class="button ripple small-round upper bg-trusteeBtn"
                                     type="submit"
                                     name="action"
                                     value="do_fl"

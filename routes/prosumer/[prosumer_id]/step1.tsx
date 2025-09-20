@@ -103,10 +103,10 @@ export const handler: Handlers<unknown, SessionState> = {
         console.log("KG RESULTS", kg_results);
         if (kg_results && kg_results.length > 0) {
             w.kg_results = kg_results;
-            w.ssi.status = "FINISHED";
-            w.ssi.results = kg_results;
+            // w.ssi.status = "FINISHED";
+            // w.ssi.results = kg_results;
             await db_store(prosumer_key(user, prosumer_id), w);
-            return redirect("step2");
+            return redirect("step2_1");
         }
 
         if (perform_ssi) {

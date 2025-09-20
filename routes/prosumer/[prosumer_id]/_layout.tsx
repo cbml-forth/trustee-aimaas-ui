@@ -17,6 +17,7 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
     const step = paths[paths.length - 1];
 
     const step2_enabled = w?.ssi != undefined;
+    const step21_enabled = step2_enabled && w?.kg_results.length > 0;
     const step3_enabled = step2_enabled && w?.models_selected.length > 0;
     const step4_enabled = step3_enabled &&
         ["NOT STARTED", "STARTED", "IN EXECUTION", "COMPLETED"].includes(w?.fl_process?.status || "-");
@@ -26,6 +27,7 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
     const access_control: Map<string, boolean> = new Map([
         ["step1", true],
         ["step2", step2_enabled],
+        ["step2_1", step21_enabled],
         ["step3", step3_enabled],
         ["step4", step4_enabled],
         ["step5", step5_enabled],
