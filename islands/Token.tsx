@@ -4,7 +4,8 @@ function copyToClibpoard(event, elementId: string) {
     event.preventDefault();
     const ta = document.getElementById(elementId);
     if (!ta) return;
-    const text = ta.innerText;
+    console.dir(ta);
+    const text = ta instanceof HTMLInputElement ? ta.value : ta.innerText;
     // navigator.permissions.query({ name: "clipboard-write" }).then((result) => {
     //     if (result.state == "granted" || result.state == "prompt") {
     //         navigator.clipboard.writeText(text);
@@ -42,6 +43,28 @@ export default function ShowToken(props: { user: User }) {
         <div class="padding">
             <h5>Token for {user.email}</h5>
             <h6>Expires on: {expires_at.toLocaleDateString()} {expires_at.toLocaleTimeString()}</h6>
+
+            <div style="flex: 1; min-width: 300px;">
+                <div class="field">
+                    <label>User ID</label>
+                    <input
+                        class="field"
+                        readonly
+                        disabled
+                        id="sub"
+                        value={user.id}
+                        style="border: none; outline: none; background: #f5f5f5; color: #666; padding: 0.5rem; font-size: 1rem; width: fit-content; min-width: 0;"
+                        size={50}
+                    />
+                </div>
+                <button
+                    class="button ripple small-round upper elevate bg-trusteeBtn"
+                    type="button"
+                    onClick={(_e) => copyToClibpoard(_e, "sub")}
+                >
+                    Copy User ID to clipboard
+                </button>
+            </div>
             <pre style={{ "margin-top": "4rem", "max-width": "600px", "overflow-wrap": "break-word" }}>
                 <code id="token">{user.tokens.id_token}</code>
             </pre>
@@ -52,7 +75,7 @@ export default function ShowToken(props: { user: User }) {
                     type="button"
                     onClick={(_e) => copyToClibpoard(_e, "token")}
                 >
-                    Copy to clipboard
+                    Copy Token to clipboard
                 </button>
                 <a href={"https://jwt.ms/"} target={"_blank"}>
                     <button className="button ripple small-round upper elevate bg-trusteeBtn">
