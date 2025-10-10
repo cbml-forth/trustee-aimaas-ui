@@ -30,6 +30,7 @@ export function provider_key(user: User, provider_id?: string): string[] {
 
 function idp_config(): oauth.Configuration {
     const OAUTH_SERVER = new URL(getRequiredEnv("OAUTH_SERVER"));
+    const server = OAUTH_SERVER.href.endsWith("/") ? OAUTH_SERVER : OAUTH_SERVER + "/";
     /*
     const oauth_config = await oauth.discovery(
         OAUTH_SERVER,
@@ -44,17 +45,17 @@ function idp_config(): oauth.Configuration {
 
     const serverMetadata: oauth.ServerMetadata = {
         issuer: getRequiredEnv("AM_ISSUER"),
-        authorization_endpoint: OAUTH_SERVER + "/oauth/authorize",
-        jwks_uri: OAUTH_SERVER + "/oauth/jwks",
+        authorization_endpoint: server + "oauth/authorize",
+        jwks_uri: server + "oauth/jwks",
         id_token_signing_alg_values_supported: ["HS256", "RS256"],
         response_types_supported: ["code"],
         subject_types_supported: ["public"],
-        token_endpoint: OAUTH_SERVER + "/oauth/token",
+        token_endpoint: server + "oauth/token",
         token_endpoint_auth_methods_supported: [
             "client_secret_post",
             "client_secret_basic",
         ],
-        userinfo_endpoint: OAUTH_SERVER + "/oauth/userinfo",
+        userinfo_endpoint: server + "oauth/userinfo",
     };
 
     const oauth_config = new oauth.Configuration(
