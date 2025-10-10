@@ -41,7 +41,8 @@ export default defineRoute(async (req: Request, ctx: SessionRouteContext) => {
 
     const session_id = crypto.randomUUID();
 
-    const user_name = user_profile.name ?? user_profile.firstname + " " + user_profile.lastname;
+    const user_name = user_profile.company_name ?? user_profile.name ??
+        user_profile.firstname + " " + user_profile.lastname;
 
     const expires_at = claims.exp * 1000;
     const now = Date.now();

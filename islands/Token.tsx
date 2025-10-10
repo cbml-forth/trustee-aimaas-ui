@@ -41,7 +41,7 @@ export default function ShowToken(props: { user: User }) {
     const expires_at = new Date(user.tokens.expires_at || 0);
     return (
         <div class="padding">
-            <h5>Token for {user.email}</h5>
+            <h5>Token for {user.name}</h5>
             <h6>Expires on: {expires_at.toLocaleDateString()} {expires_at.toLocaleTimeString()}</h6>
 
             <div style="flex: 1; min-width: 300px;">
