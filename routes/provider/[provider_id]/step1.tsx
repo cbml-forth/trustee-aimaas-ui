@@ -1,9 +1,9 @@
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
 import { get_user, redirect, redirect_to_login, SessionState } from "@/utils/http.ts";
 import { provider_key } from "@/utils/misc.ts";
-import { Domain, ProviderModelData, ProviderWorkflowData, User } from "@/utils/types.ts";
+import { Domain, ProviderWorkflowData, User } from "@/utils/types.ts";
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { dl_domains, do_dl_provider_model_update } from "@/utils/backend.ts";
+import { dl_domains, dl_get_fl_endpoint, do_dl_provider_model_update } from "@/utils/backend.ts";
 import { BasicSelect } from "@/components/Select.tsx";
 
 interface Data {
@@ -14,6 +14,8 @@ interface Data {
     source_url?: string;
     ecosystem?: string;
     provider_id: string;
+    fl_endpoint: string;
+    model_name?: string;
     domains: Domain[];
     user: User;
     error?: string;
@@ -30,6 +32,14 @@ async function get_domains(user: User): Promise<Domain[]> {
     return domains.filter((d) => d.attributes) || [];
 }
 
+async function provider_fl_endpoint(user: User): Promise<string> {
+    let fl_endpoint = await dl_get_fl_endpoint(user.tokens.id_token, user.id);
+    if (!fl_endpoint) return "https://example.com/";
+    if (!fl_endpoint.endsWith("/")) {
+        fl_endpoint += "/";
+    }
+    return fl_endpoint;
+}
 export const handler: Handlers<Data, SessionState> = {
     async GET(req, ctx) {
         const provider_id = ctx.params["provider_id"];
@@ -40,17 +50,20 @@ export const handler: Handlers<Data, SessionState> = {
         }
 
         const domains = await get_domains(user);
-        const data = await db_get<ProviderWorkflowData>(
+        const data: ProviderWorkflowData | null = await db_get<ProviderWorkflowData>(
             provider_key(user, provider_id),
         );
+        const fl_endpoint: string = await provider_fl_endpoint(user);
 
         return ctx.render({
             id: data?.model_id,
             domain_id: data?.domain_id,
             credential_id: data?.credential_id,
-            model_provider_id: data?.model_provider_id,
+            model_provider_id: user.id,
+            model_name: data?.name,
             source_url: data?.source_url,
             ecosystem: data?.ecosystem,
+            fl_endpoint,
             provider_id,
             domains,
             user,
@@ -67,27 +80,34 @@ export const handler: Handlers<Data, SessionState> = {
         const formData: FormData = await req.formData();
         const domain_id = parseInt(formData.get("domain_id")?.toString() || "");
         const credential_id = formData.get("credential_id")?.toString();
-        const source_url = formData.get("source_url")?.toString();
+        const model_name = formData.get("model_name")?.toString() || "";
         const ecosystem = formData.get("ecosystem")?.toString();
 
-        if (!domain_id || !credential_id || !source_url || !ecosystem) {
+        if (!domain_id || !credential_id || !model_name || !ecosystem) {
             return redirect("step1");
         }
+
+        const fl_endpoint: string = await provider_fl_endpoint(user);
+        const source_url = fl_endpoint + model_name;
 
         let w = await db_get<ProviderWorkflowData>(provider_key(user, provider_id));
         if (!w) {
             w = {
                 id: provider_id,
+                model_provider_id: user.id, // user's "sub" from token
+                name: model_name,
+                fl_endpoint,
                 domain_id,
                 credential_id,
-                model_provider_id: user.id, // user's "sub" from token
                 source_url,
                 ecosystem,
             };
         } else {
             w.domain_id = domain_id;
-            w.credential_id = credential_id;
             w.model_provider_id = user.id; // user's "sub" from token
+            w.fl_endpoint = fl_endpoint;
+            w.name = model_name;
+            w.credential_id = credential_id;
             w.source_url = source_url;
             w.ecosystem = ecosystem;
         }
@@ -100,7 +120,7 @@ export const handler: Handlers<Data, SessionState> = {
                 global_model_id: w.global_model_id,
                 process_id: `provider:${provider_id}`,
                 credential_id: w.credential_id || "",
-                model_provider_id: user.id, // user's "sub" from token
+                model_provider_id: w.model_provider_id,
                 source_url: w.source_url || "",
                 source: w.ecosystem || "TRUSTEE",
                 format: "torch",
@@ -116,6 +136,7 @@ export const handler: Handlers<Data, SessionState> = {
                 model_provider_id: w.model_provider_id,
                 source_url: w.source_url,
                 ecosystem: w.ecosystem,
+                fl_endpoint: w.fl_endpoint,
                 provider_id,
                 domains,
                 user,
@@ -193,7 +214,7 @@ export default function ProviderStep1Page({ data }: PageProps<Data>) {
                             <input
                                 type="text"
                                 name="model_provider_id"
-                                value={data.user.id}
+                                value={data.model_provider_id}
                                 readonly
                                 disabled
                             />
@@ -202,14 +223,26 @@ export default function ProviderStep1Page({ data }: PageProps<Data>) {
                 </div>
 
                 <div class="field">
-                    <label>Client Endpoint URL *</label>
-                    <input
-                        type="url"
-                        name="source_url"
-                        placeholder="Enter the endpoint URL"
-                        value={data.source_url || ""}
-                        required
-                    />
+                    <label>FL Client endpoint *</label>
+                    <div style="display: flex; align-items: center; border: 1px solid #ccc; border-radius: 4px; overflow: hidden;">
+                        <input
+                            type="text"
+                            name="fl_endpoint"
+                            value={data.fl_endpoint}
+                            readOnly
+                            disabled
+                            style="border: none; outline: none; background: #f5f5f5; color: #666; padding: 0.5rem; font-size: 1rem; width: fit-content; min-width: 0;"
+                            size={Math.ceil(data.fl_endpoint.length * 0.67) + 1}
+                        />
+                        <input
+                            type="text"
+                            name="model_name"
+                            placeholder="Model Name"
+                            value={data.model_name || ""}
+                            required
+                            style="border: none; outline: none; flex: 1; padding: 0.5rem; font-size: 1rem; min-width: 150px;"
+                        />
+                    </div>
                 </div>
 
                 <div class="center-align">

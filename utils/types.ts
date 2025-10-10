@@ -134,14 +134,16 @@ export interface FLStartAggregationRequest {
 }
 
 export interface ProviderWorkflowData {
+    readonly id: string; // "provider id"
+    model_provider_id: string; // step1: model provider id (user's sub)
+    fl_endpoint: string; // fl endpoint, comes from DL stored in the "AIMaaS/Providers" resource
+
     model_id?: number;
     global_model_id?: number;
-    readonly id: string; // "provider id"
     name?: string;
     model_description?: string; // step1: model description
     domain_id?: number; // step1: domain id
     credential_id?: string; // step1: credential id
-    model_provider_id?: string; // step1: model provider id (user's sub)
     source_url?: string; // step1: source url
     ecosystem?: string; // step1: ecosystem (Trustee, Gaiax, Copernicus, IDS)
     agreements_created?: boolean; // step5: agreements signed status

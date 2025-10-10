@@ -60,6 +60,24 @@ export async function dl_domains(id_token: string): Promise<Domain[]> {
     return data;
 }
 
+export async function dl_get_fl_endpoint(id_token: string, model_provider_id: string): Promise<string | undefined> {
+    const url = new URL(DL_API + "/AIMaaS/providers");
+
+    url.searchParams.append("model_provider_id", model_provider_id);
+
+    const req = await fetch(url.href, {
+        headers: { "Authorization": `Bearer ${id_token}` },
+        method: "GET",
+    });
+    if (!req.ok) {
+        print(`DL provider for ${model_provider_id} not found with token ${id_token}`);
+        return undefined;
+    }
+
+    const data = await req.json();
+    return data["fl_client_endpoint"] || undefined;
+}
+
 export async function atr_log(
     user: string,
     domain: string,
