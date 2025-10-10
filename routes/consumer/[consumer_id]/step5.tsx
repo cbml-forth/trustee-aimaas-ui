@@ -39,8 +39,10 @@ export const handler: Handlers<Data, SessionState> = {
 export default function Step5Page(props: PageProps<Data>) {
     const docker_image_file = "trustee-xai-tool.tar.gz";
     const container_name = "trustee-xai-tool";
+    const id_token = props.data.user.tokens.id_token;
+    const model_id = props.data.selected_model_id;
     const docker_cmd =
-        `docker run -d --name ${container_name} --rm -p 8000:8501 -e TRUSTEE_DL_TOKEN=${props.data.user.tokens.id_token} trustee-xai-tool:latest`;
+        `docker run -d --name ${container_name} --rm -p 8000:8501 -e TRUSTEE_DL_TOKEN=${id_token} -e TRUSTEE_DL_MODEL_ID=${model_id} trustee-xai-tool:latest`;
     return (
         <div class="padding">
             <h5 class="extra-text">Perform XAI - Deployment Instructions</h5>
