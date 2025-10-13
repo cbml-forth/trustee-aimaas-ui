@@ -76,7 +76,7 @@ export async function dl_get_fl_endpoint(id_token: string, model_provider_id: st
 
     const data = await req.json();
     if (data && data.length > 0) {
-        return data[0]["fl_client_endpoint"] || undefined;
+        return data[data.length - 1]["fl_client_endpoint"] || undefined;
     }
     return undefined;
 }
