@@ -75,10 +75,14 @@ export async function dl_get_fl_endpoint(id_token: string, model_provider_id: st
     }
 
     const data = await req.json();
-    if (data && data.length > 0) {
+    if (!data) {
+        return undefined;
+    }
+
+    if (Array.isArray(data) && data.length > 0) {
         return data[data.length - 1]["fl_client_endpoint"] || undefined;
     }
-    return undefined;
+    return data["fl_client_endpoint"] || undefined;
 }
 
 export async function atr_log(
