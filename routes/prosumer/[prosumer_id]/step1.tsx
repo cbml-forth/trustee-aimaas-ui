@@ -70,7 +70,7 @@ export const handler: Handlers<unknown, SessionState> = {
             const d = data.get(`domain${sep}${fid}`)?.toString();
             const a = data.get(`attribute${sep}${fid}`)?.toString();
             const v = data.get(`value${sep}${fid}`)?.toString();
-            const op = data.get(`rel${sep}${fid}`)?.toString() as SSISearchCriterionOperator;
+            const op = data.get(`rel${sep}${fid}`)?.toString()?.toLowerCase() as SSISearchCriterionOperator;
             if (!d || !a || !v || !op) return;
             const dom = domains.get(d);
             if (!dom) return;
