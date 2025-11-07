@@ -1,6 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { Domain, ProsumerWorkflowData, ProsumerWorkflowFLData, SSISearchCriterion, User } from "@/utils/types.ts";
-import { dl_domains, do_fl_submit, do_ssi_poll } from "@/utils/backend.ts";
+import { dl_domains, do_fl_poll, do_fl_submit, do_ssi_poll } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
 
@@ -65,16 +65,15 @@ export const handler: Handlers<unknown, SessionState> = {
         console.log("FL REQUEST", fl_request);
         const fl_started = await do_fl_submit(user, fl_request);
         console.log("FL", process_name, fl_started ? "STARTED" : "NOT STARTED");
-
+        const flprocessstatus = await do_fl_poll(user, process_name);
         const fl_data: ProsumerWorkflowFLData = {
-            status: fl_started ? "STARTED" : "NOT STARTED",
+            status: flprocessstatus,
             process_id: process_name,
             models: w.models_selected,
             computation: aggregationRule,
             solver: fl_request.solver,
             denoiser: fl_request.denoiser,
             num_of_iterations: fl_request["num-of-iterations"],
-            current_round: 0,
             number_of_rounds: fl_request.numberOfRounds,
         };
         w.fl_process = fl_data;

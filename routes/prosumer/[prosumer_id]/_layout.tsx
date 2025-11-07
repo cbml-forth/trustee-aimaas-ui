@@ -20,9 +20,9 @@ export default defineLayout(async (req, ctx: SessionRouteContext) => {
     const step21_enabled = step2_enabled && w?.kg_results.length > 0;
     const step3_enabled = step2_enabled && w?.models_selected.length > 0;
     const step4_enabled = step3_enabled &&
-        ["NOT STARTED", "STARTED", "IN EXECUTION", "COMPLETED"].includes(w?.fl_process?.status || "-");
+        ["NOT STARTED", "STARTED", "IN EXECUTION", "COMPLETED"].includes(w?.fl_process?.status?.status || "-");
     const step5_enabled = step4_enabled &&
-        ["COMPLETED"].includes(w?.fl_process?.status || "-");
+        ["COMPLETED"].includes(w?.fl_process?.status?.status || "-");
 
     const access_control: Map<string, boolean> = new Map([
         ["step1", true],

@@ -72,10 +72,18 @@ export interface ProsumerWorkflowSSIData {
     results?: string[]; // Results, "model ids"
 }
 
+export interface FLProcessStatusData {
+    current_round: number;
+    total_rounds: number;
+    rounds_completed: number;
+    has_completed: boolean;
+    has_failed: boolean;
+    status: string;
+}
+
 export interface ProsumerWorkflowFLData {
     process_id: string;
-    status: string;
-    current_round: number;
+    status: FLProcessStatusData;
     number_of_rounds: number;
     models: string[];
     computation: string;

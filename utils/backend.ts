@@ -1,11 +1,11 @@
 import {
     Domain,
     DomainAttr,
+    FLProcessStatusData,
     FLStartAggregationRequest,
     ModelSearchCriterion,
     ModelSearchResponseItem,
     ProsumerWorkflowData,
-    ProsumerWorkflowSSIData,
     ProviderModelData,
     ssi_criteria_to_ast,
     SSISearchCriterion,
@@ -235,18 +235,35 @@ export async function do_fl_submit(
 export async function do_fl_poll(
     user: User,
     process_name: string,
-): Promise<string> {
+): Promise<FLProcessStatusData> {
     const id_token = user.tokens.id_token;
     const req = await fetch(FL_API_SERVER + "/status/" + process_name, {
         headers: { "Authorization": `Bearer ${id_token}`, "Content-Type": "application/json" },
     });
+    const data: FLProcessStatusData = {
+        current_round: 0,
+        total_rounds: 0,
+        has_completed: false,
+        has_failed: false,
+        rounds_completed: 0,
+        status: "",
+    };
     if (!req.ok) {
         print("FL ERROR", await req.json());
-        return "ERROR";
+        data.has_failed = true;
+        return data;
     }
     const res = await req.json();
     print("FL POLL returned:", res);
-    return res.status;
+
+    data.status = res.status;
+    data.has_completed = res.status === "COMPLETED";
+    data.has_failed = res.status === "FAILED";
+    data.current_round = res.current_round;
+    data.total_rounds = res.total_rounds;
+    data.rounds_completed = res.endpoints_by_round?.length || 0;
+
+    return data;
 }
 
 export async function do_dl_model_search(

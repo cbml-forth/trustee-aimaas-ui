@@ -15,19 +15,19 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
     list.sort((a, b) => decodeTime(a.id) > decodeTime(b.id) ? -1 : 1);
 
     const nextStep = function (w: ProsumerWorkflowData) {
-        // console.log("ROUTING ", w);
+        console.log("ROUTING ", w);
         // if (w.model_downloaded === true) {
         //     return "step5";
         // }
         if (
             w.fl_process != undefined &&
-            ["COMPLETED"].includes(w.fl_process.status)
+            ["COMPLETED"].includes(w.fl_process.status.status)
         ) {
             return "step5";
         }
         if (
             w.fl_process != undefined &&
-            ["NOT STARTED", "STARTED", "IN EXECUTION", "COMPLETED"].includes(w.fl_process.status)
+            ["NOT STARTED", "STARTED", "IN EXECUTION", "COMPLETED"].includes(w.fl_process.status.status)
         ) {
             return "step4";
         }
@@ -85,7 +85,7 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
         }
     };
 
-    console.log("PROSUMERS", list);
+    // console.log("PROSUMERS", list);
     const prosumer_id: string = ulid();
     const props = {
         headerText: "Use AI models provided to TRUSTEE, fuse them, and extract results from computations",
@@ -128,7 +128,8 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
     };
 
     const canBeDeleted = function (w: ProsumerWorkflowData): boolean {
-        return ["COMPLETED"].includes(w.fl_process?.status || "-");
+        // return ["COMPLETED"].includes(w.fl_process?.status.status || "-");
+        return true;
     };
 
     return (
