@@ -108,18 +108,6 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
                 imgURL: "fusion_workflow.svg",
                 text: "Perform FL Aggregation",
             },
-            // {
-            //     imgURL: "safedoc_workflow.svg",
-            //     text: "Perform a Privacy Impact Assessment",
-            // },
-            // {
-            //     imgURL: "gdpr_workflow.svg",
-            //     text: "Perform a GDPR compliance check",
-            // },
-            // {
-            //     imgURL: "contract_workflow.svg",
-            //     text: "Sign the necessary agreements",
-            // },
             {
                 imgURL: "results_workflow.svg",
                 text: "View Computation Results",

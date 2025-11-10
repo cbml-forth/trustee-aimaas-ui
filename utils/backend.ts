@@ -261,7 +261,7 @@ export async function do_fl_poll(
     data.has_failed = res.status === "FAILED";
     data.current_round = res.current_round;
     data.total_rounds = res.total_rounds;
-    data.rounds_completed = res.endpoints_by_round?.length || 0;
+    data.rounds_completed = Object.keys(res.endpoints_by_round || {}).length;
 
     return data;
 }

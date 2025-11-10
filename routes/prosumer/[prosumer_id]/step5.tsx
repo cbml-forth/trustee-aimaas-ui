@@ -111,7 +111,7 @@ export const handler: Handlers<unknown, SessionState> = {
         if (!prosumer_data.fl_process) {
             return redirect("step3");
         }
-        if (prosumer_data.fl_process.status !== "COMPLETED") {
+        if (prosumer_data.fl_process.status.status !== "COMPLETED") {
             return redirect("step4");
         }
 
