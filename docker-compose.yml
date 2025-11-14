@@ -1,4 +1,3 @@
-
 services:
   server:
     image: aimaas_ui_fresh:latest
@@ -24,6 +23,7 @@ services:
       AM_ISSUER: ${AM_ISSUER}
       ATR_API_KEY: ${ATR_API_KEY}
       KR_API_KEY: ${KR_API_KEY}
+      XAI_DOCKER_IMAGE_URL: ${XAI_DOCKER_IMAGE_URL}
       DENO_KV_PATH: /data/aimas_kv.sqlite
       AIMAAS_SESSION_EXPIRE_HOURS: 12
 
