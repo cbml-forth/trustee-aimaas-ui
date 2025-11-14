@@ -8,6 +8,8 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import { redirect_to_login, SessionState } from "@/utils/http.ts";
 import DockerCmd from "@/islands/prosumer/DockerCmd.tsx";
 
+const XAI_DOCKER_IMAGE_URL = Deno.env.get("XAI_DOCKER_IMAGE_URL");
+
 interface Data {
     selected_model_id: number;
     error: boolean;
