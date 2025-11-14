@@ -56,7 +56,7 @@ export default function Step5Page(props: PageProps<Data>) {
                 as a compressed file:
             </p>
             <p>
-                <a href={"/xai_docker/" + docker_image_file} download={docker_image_file}>
+                <a href={XAI_DOCKER_IMAGE_URL} download={docker_image_file}>
                     <button>
                         XAI Docker Image <i class="small">download</i>
                     </button>
