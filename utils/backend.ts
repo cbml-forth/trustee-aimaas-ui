@@ -14,6 +14,8 @@ import {
     SSISearchStatus,
     User,
 } from "@/utils/types.ts";
+
+import { encodeHex } from "jsr:@std/encoding/hex";
 import { db_get, db_store } from "@/utils/db.ts";
 import { prosumer_key } from "@/utils/misc.ts";
 import { decodeTime, ulid } from "jsr:@std/ulid";
@@ -264,6 +266,78 @@ export async function do_fl_poll(
     data.rounds_completed = Object.keys(res.endpoints_by_round || {}).length;
 
     return data;
+}
+
+export async function update_global_model_round(
+    user: User,
+    process_id: string,
+    round: number,
+    criteria: SSISearchCriterion[],
+): Promise<[number | undefined, string | undefined]> {
+    // We need to retrieve the current round's model (from /hedf/ProcessResults) and store it
+
+    const process_name = `AIMaaS-FL-${process_id}`;
+    const response = await do_dl_hedf_result_download(user, process_name);
+    if (!response.ok) {
+        const error = (await response.text()) || "";
+        print("DL hedf/process_results retrieve ERROR", error);
+        return [undefined, error];
+    }
+    const process_result: string = (await response.json())["process_result"] as string;
+
+    const url2 = new URL(DL_API + "/AIMaaS/models");
+
+    // Now register it as a global model:
+
+    const global_model_id = undefined;
+    const isRegisteredAlready = global_model_id ?? 0 > 0;
+    const formData = new FormData();
+    for (let i = 0; i < criteria.length; i++) {
+        const criterion = criteria[i];
+        formData.set("domain_id", criterion.domain.id.toString());
+        if (criterion.attribute.name == "name") {
+            formData.set("name", criterion.value);
+        } else if (criterion.attribute.name == "application_type") {
+            formData.set("application_type", criterion.value);
+        } else if (criterion.attribute.name == "input") {
+            formData.set("input", criterion.value);
+        } else if (criterion.attribute.name == "output") {
+            formData.set("output", criterion.value);
+        } else if (criterion.attribute.name == "number_of_parameters") {
+            formData.set("number_of_parameters", criterion.value);
+        } else if (criterion.attribute.name == "nn_architecture") {
+            formData.set("nn_architecture", criterion.value);
+        }
+    }
+    formData.set("round", round.toString());
+    formData.set("process_id", process_id);
+    // Process result was a "strange" format, like a JSON array of Arrays of Numbers, but with no commas!
+    // Should we transfrom it to CSV? Hmm, why bother?
+    formData.set("model_file", new Blob([process_result]), `global_model_${process_name}.data`);
+    // Compute Hash:
+    const messageBuffer = new TextEncoder().encode(process_result);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", messageBuffer);
+    const hash = encodeHex(hashBuffer);
+    formData.set("hash", hash);
+
+    print(
+        "Uploading Global model to",
+        url2.href,
+        "model:",
+        formData,
+    );
+    const response2 = await fetch(url2.href, {
+        body: formData,
+        headers: { "Authorization": `Bearer ${user.tokens.id_token}` },
+        method: isRegisteredAlready ? "PUT" : "POST",
+    });
+    if (response2.status / 100 != 2) {
+        const error = (await response2.text()) || "";
+        print("FL (global) model update returned DL ERROR (status:", response2.status, "):", error);
+        return [undefined, error];
+    }
+    const r2 = await response2.json();
+    return [r2["id"], undefined];
 }
 
 export async function do_dl_model_search(

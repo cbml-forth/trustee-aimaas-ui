@@ -182,24 +182,34 @@ function test_vf(domains: Domain[]): FilterValue[] {
     assert(at_attr, "Not application_type attr for automotive!!???");
     const name_attr = auto.attributes.find((a) => a.name == "name");
     assert(name_attr, "Not name attr for automotive!!???");
+    // const vf1: FilterValue = {
+    //     id: new_id(),
+    //     dom: auto,
+    //     attr: name_attr,
+    //     operator: "equal",
+    //     value: "automotive1_superresolution",
+    //     valid: true,
+    // };
+    // const vf2: FilterValue = {
+    //     id: new_id(),
+    //     dom: auto,
+    //     attr: at_attr,
+    //     operator: "equal",
+    //     value: "superresolution",
+    //     valid: true,
+    // };
+
+    // return [vf1, vf2];
     const vf1: FilterValue = {
         id: new_id(),
         dom: auto,
         attr: name_attr,
         operator: "equal",
-        value: "automotive1_superresolution",
-        valid: true,
-    };
-    const vf2: FilterValue = {
-        id: new_id(),
-        dom: auto,
-        attr: at_attr,
-        operator: "equal",
-        value: "superresolution",
+        value: "pureacl",
         valid: true,
     };
 
-    return [vf1, vf2];
+    return [vf1];
 }
 export default function ProsumerStep1(props: {
     domains: Domain[];

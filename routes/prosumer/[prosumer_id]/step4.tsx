@@ -1,6 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
 import { FLProcessStatusData, ProsumerWorkflowData, ProsumerWorkflowFLData, User } from "@/utils/types.ts";
-import { do_fl_poll } from "@/utils/backend.ts";
+import { do_fl_poll, update_global_model_round } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
 
@@ -111,6 +111,20 @@ export const handler: Handlers<unknown, SessionState> = {
 
         if (!fl_process_data.status.has_completed) {
             const flprocessstatus: FLProcessStatusData = await do_fl_poll(user, fl_process_data.process_id);
+            const previous_status = prosumer_data.fl_process.status;
+            if (previous_status.current_round < flprocessstatus.current_round) {
+                const [global_model_id, dl_error] = await update_global_model_round(
+                    user,
+                    fl_process_data.process_id,
+                    flprocessstatus.current_round,
+                    prosumer_data.ssi.criteria,
+                );
+                if (global_model_id) {
+                    console.log(
+                        `Global model ${global_model_id} stored successfully for round ${flprocessstatus.current_round} for prosumer ${prosumer_id}`,
+                    );
+                }
+            }
             prosumer_data.fl_process.status = flprocessstatus;
             await db_store(prosumer_key(user, prosumer_id), prosumer_data);
         }

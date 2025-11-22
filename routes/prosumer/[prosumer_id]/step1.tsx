@@ -1,13 +1,6 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import {
-    Domain,
-    DomainAttr,
-    ProsumerWorkflowData,
-    SSISearchCriterion,
-    SSISearchCriterionOperator,
-    User,
-} from "@/utils/types.ts";
-import { dl_domains, do_fl_submit, do_kg_get_prosumer_data, do_ssi_search } from "@/utils/backend.ts";
+import { Domain, ProsumerWorkflowData, SSISearchCriterion, SSISearchCriterionOperator, User } from "@/utils/types.ts";
+import { dl_domains, do_kg_get_prosumer_data, do_ssi_search } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import ProsumerStep1 from "@/islands/prosumer/ProsumerStep1.tsx";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
