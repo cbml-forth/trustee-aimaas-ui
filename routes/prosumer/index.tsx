@@ -1,19 +1,87 @@
 import WorkflowWelcome from "@/components/WorkflowWelcome.tsx";
-import { defineRoute } from "$fresh/server.ts";
-import { get_user, redirect_to_login, SessionRouteContext } from "@/utils/http.ts";
-import { list_all } from "@/utils/db.ts";
+import { get_user, redirect, redirect_to_login, SessionState } from "@/utils/http.ts";
+import { db_del, list_all } from "@/utils/db.ts";
 import { prosumer_key } from "@/utils/misc.ts";
 import { ProsumerWorkflowData, ssi_criteria_to_ast, User } from "@/utils/types.ts";
 import { decodeTime, ulid } from "jsr:@std/ulid";
+import { Handlers, PageProps } from "$fresh/server.ts";
 
-export default defineRoute(async (req, ctx: SessionRouteContext) => {
-    const user: User | null = await get_user(req, ctx.state.session);
-    if (!user) {
-        return redirect_to_login(req);
-    }
-    const list = await list_all<ProsumerWorkflowData>(prosumer_key(user));
-    list.sort((a, b) => decodeTime(a.id) > decodeTime(b.id) ? -1 : 1);
+interface Data {
+    headerText: string;
+    titleText: string;
+    pageURL: string;
+    items: { imgURL: string; text: string }[];
+    list: ProsumerWorkflowData[];
+}
+export const handler: Handlers<Data, SessionState> = {
+    async POST(req, ctx) {
+        const user: User | null = await get_user(req, ctx.state.session);
+        const sessionId = user?.session_id;
+        if (!sessionId) {
+            return redirect_to_login(req);
+        }
 
+        const data: FormData = await req.formData();
+        const prosumer_id = data.get("id")?.toString();
+        if (prosumer_id && data.get("_method")?.toString() === "DELETE") {
+            console.log(data);
+            await db_del(prosumer_key(user, prosumer_id));
+        }
+
+        return redirect("/prosumer");
+    },
+    async GET(req, ctx) {
+        const user = await get_user(req, ctx.state.session);
+        if (!user) {
+            return redirect_to_login(req);
+        }
+
+        const list = await list_all<ProsumerWorkflowData>(prosumer_key(user));
+        list.sort((a, b) => decodeTime(a.id) > decodeTime(b.id) ? -1 : 1);
+
+        // console.log("PROSUMERS", list);
+        const prosumer_id: string = ulid();
+        const props = {
+            headerText: "Use AI models provided to TRUSTEE, fuse them, and extract results from computations",
+            titleText: "TRUSTEE Model Prosumer Workflow",
+            pageURL: `/prosumer/${prosumer_id}/step1`,
+            items: [
+                {
+                    imgURL: "select_filters_workflow.svg",
+                    text: "Select search filters to find the most suitable among existing AI models",
+                },
+                {
+                    imgURL: "select_datasets_workflow.svg",
+                    text: "Select from the AI model list the one to be used",
+                },
+                {
+                    imgURL: "select_computation_workflow.svg",
+                    text: "Select the computation to be performed on the selected models",
+                },
+                {
+                    imgURL: "fusion_workflow.svg",
+                    text: "Perform FL Aggregation",
+                },
+                {
+                    imgURL: "results_workflow.svg",
+                    text: "View Computation Results",
+                },
+            ],
+            list: list,
+        };
+
+        // const page_props = {
+        //     headerText: "Search for AI models provided to TRUSTEE, stemming from several past processes",
+        //     titleText: "TRUSTEE Model Consumer Workflow",
+        //     pageURL: `/consumer/${consumer_id}/step1`,
+        //     items: workflowItems,
+        //     list,
+        // };
+        return ctx.render(props);
+    },
+};
+
+export default function ProsumerIndexPage({ data }: PageProps<Data>) {
     const nextStep = function (w: ProsumerWorkflowData) {
         console.log("ROUTING ", w);
         // if (w.model_downloaded === true) {
@@ -85,36 +153,6 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
         }
     };
 
-    // console.log("PROSUMERS", list);
-    const prosumer_id: string = ulid();
-    const props = {
-        headerText: "Use AI models provided to TRUSTEE, fuse them, and extract results from computations",
-        titleText: "TRUSTEE Model Prosumer Workflow",
-        pageURL: `/prosumer/${prosumer_id}/step1`,
-        items: [
-            {
-                imgURL: "select_filters_workflow.svg",
-                text: "Select search filters to find the most suitable among existing AI models",
-            },
-            {
-                imgURL: "select_datasets_workflow.svg",
-                text: "Select from the AI model list the one to be used",
-            },
-            {
-                imgURL: "select_computation_workflow.svg",
-                text: "Select the computation to be performed on the selected models",
-            },
-            {
-                imgURL: "fusion_workflow.svg",
-                text: "Perform FL Aggregation",
-            },
-            {
-                imgURL: "results_workflow.svg",
-                text: "View Computation Results",
-            },
-        ],
-    };
-
     const canBeDeleted = function (w: ProsumerWorkflowData): boolean {
         // return ["COMPLETED"].includes(w.fl_process?.status.status || "-");
         return true;
@@ -122,11 +160,11 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
 
     return (
         <div class="vertical">
-            <WorkflowWelcome {...props}></WorkflowWelcome>
+            <WorkflowWelcome {...data}></WorkflowWelcome>
             <div class="padding elevate" style={{ "margin-top": "4rem" }}>
-                <h5 class="left-align extra-text text-primary">Previous prosumer flows: {list.length}</h5>
+                <h5 class="left-align extra-text text-primary">Previous prosumer flows: {data.list.length}</h5>
                 <ul class="list no-elevate surface-container-lowest">
-                    {list.map((w, index) => {
+                    {data.list.map((w, index) => {
                         return (
                             <>
                                 {index > 0 && <hr class="padding surface-container-lowest" />}
@@ -168,4 +206,4 @@ export default defineRoute(async (req, ctx: SessionRouteContext) => {
             </div>
         </div>
     );
-});
+}
