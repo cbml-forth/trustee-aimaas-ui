@@ -72,10 +72,12 @@ export default function Step2Page(props: PageProps<Data>) {
                     />
                     <span>Model {r.name ?? ""} ({r.id} - {r.size ?? ""})</span>
                 </label>
-                <div>Application type: {r.application_type}</div>
-                <div>Input: {r.input}</div>
-                <div>Output: {r.output}</div>
-                <div>Architecture: {r.nn_architecture}</div>
+                {r.name && <div>Name: {r.name}</div>}
+                {r.application_type && <div>Application type: {r.application_type}</div>}
+                {r.round && <div>Round: {r.round}</div>}
+                {r.input && <div>Input: {r.input}</div>}
+                {r.output && <div>Output: {r.output}</div>}
+                {r.nn_architecture && <div>Architecture: {r.nn_architecture}</div>}
             </div>
         );
     };
