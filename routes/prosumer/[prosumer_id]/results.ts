@@ -29,7 +29,8 @@ export const handler: Handlers<unknown, SessionState> = {
         if (!prosumer_data) {
             return redirect("step1");
         }
-        if (!prosumer_data.fl_process?.status?.has_completed) {
+        console.log(`DOWNLOAD? ${prosumer_id} : Status: ${prosumer_data.fl_process?.status?.status}`);
+        if ((prosumer_data.fl_process?.status?.status || "-") != "COMPLETED") {
             return redirect("step4");
         }
 
