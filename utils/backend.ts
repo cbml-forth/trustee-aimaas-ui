@@ -276,7 +276,7 @@ export async function update_global_model_round(
 ): Promise<[number | undefined, string | undefined]> {
     // We need to retrieve the current round's model (from /hedf/ProcessResults) and store it
 
-    const process_name = `AIMaaS-FL-${process_id}`;
+    const process_name = `${process_id}`;
     const response = await do_dl_hedf_result_download(user, process_name);
     if (!response.ok) {
         const error = (await response.text()) || "";
