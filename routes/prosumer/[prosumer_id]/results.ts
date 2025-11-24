@@ -29,7 +29,7 @@ export const handler: Handlers<unknown, SessionState> = {
         if (!prosumer_data) {
             return redirect("step1");
         }
-        if (prosumer_data.fl_process?.status !== "COMPLETED") {
+        if (!prosumer_data.fl_process?.status?.has_completed) {
             return redirect("step4");
         }
 
@@ -37,13 +37,13 @@ export const handler: Handlers<unknown, SessionState> = {
         if (!response.ok) {
             return ctx.render({ selected_model_id: prosumer_id, error: true });
         }
-        // const filename = `model-${prosumer_id}.obj`;
+        const filename = `model-${prosumer_id}.obj`;
         return new Response(response.body, {
             status: response.status,
             headers: {
-                "Content-Type": "application/json",
-                // "Content-Type": "application/octet-stream",
-                // "Content-Disposition": `attachment; filename="${filename}"`,
+                // "Content-Type": "application/json",
+                "Content-Type": "application/octet-stream",
+                "Content-Disposition": `attachment; filename="${filename}"`,
             },
         });
     },
