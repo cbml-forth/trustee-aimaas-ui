@@ -38,14 +38,27 @@ export const handler: Handlers<unknown, SessionState> = {
         if (!response.ok) {
             return ctx.render({ selected_model_id: prosumer_id, error: true });
         }
-        const filename = `model-${prosumer_id}.obj`;
-        return new Response(response.body, {
-            status: response.status,
-            headers: {
-                // "Content-Type": "application/json",
-                "Content-Type": "application/octet-stream",
-                "Content-Disposition": `attachment; filename="${filename}"`,
+        // const filename = `model-${prosumer_id}.obj`;
+        // return new Response(response.body, {
+        //     status: response.status,
+        //     headers: {
+        //         // "Content-Type": "application/json",
+        //         "Content-Type": "application/octet-stream",
+        //         "Content-Disposition": `attachment; filename="${filename}"`,
+        //     },
+        // });
+
+        const filename = `model-${prosumer_id}.csv`;
+        const text: string = (await response.json())["process_result"] as string;
+        return new Response(
+            text.replace(/\[ *\[/, "").replace(/\] *\]/, "").replaceAll(/\] *\[/g, "\r\n").replaceAll(" ", ","),
+            {
+                status: response.status,
+                headers: {
+                    "Content-Type": "text/csv",
+                    "Content-Disposition": `attachment; filename="${filename}"`,
+                },
             },
-        });
+        );
     },
 };
