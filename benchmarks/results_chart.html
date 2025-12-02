@@ -1,0 +1,43 @@
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>Firefox vs Chrome – FCP Benchmark</title>
+		<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+		<style>
+			body{font-family:system-ui,Arial,sans-serif;margin:2rem;background:#f5f7fa;color:#111}
+			canvas{max-width:100%;height:400px;margin-bottom:50px}
+		</style>
+	</head>
+	<body>
+		<h1>First Contentful Paint (average of 10 runs, ms)</h1>
+
+		<h2>Cold Cache</h2>
+		<canvas id="coldChart"></canvas>
+
+		<h2>Warm Cache</h2>
+		<canvas id="warmChart"></canvas>
+
+		<script>
+			const coldCtx = document.getElementById('coldChart').getContext('2d');
+			const warmCtx = document.getElementById('warmChart').getContext('2d');
+			new Chart(coldCtx, {
+				type: 'bar',
+				data: {
+					labels: ["Chrome JS_on https://aimaas.trustee-1.ics.forth.gr/","Firefox JS_on https://aimaas.trustee-1.ics.forth.gr/","WebKit JS_on https://aimaas.trustee-1.ics.forth.gr/"],
+					datasets: [{label: 'FCP (ms)', data: [233.2,740.4,249.8]}]
+				},
+				options: {responsive:true, indexAxis:'y', scales:{x:{beginAtZero:true}}}
+			});
+			new Chart(warmCtx, {
+				type: 'bar',
+				data: {
+					labels: ["Chrome JS_on https://aimaas.trustee-1.ics.forth.gr/","Firefox JS_on https://aimaas.trustee-1.ics.forth.gr/","WebKit JS_on https://aimaas.trustee-1.ics.forth.gr/"],
+					datasets: [{label: 'FCP (ms)', data: [null,null,null]}]
+				},
+				options: {responsive:true, indexAxis:'y', scales:{x:{beginAtZero:true}}}
+			});
+		</script>
+	</body>
+</html>

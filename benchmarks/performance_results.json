@@ -1,0 +1,239 @@
+{
+  "Chrome": {
+    "JS_on": {
+      "https://aimaas.trustee-1.ics.forth.gr/": {
+        "cold": [
+          {
+            "browser_start_time": 401,
+            "fcp": 292,
+            "dom_interactive": 107.19999998807907,
+            "dom_content_loaded": 269.69999998807907,
+            "load": 454.39999997615814
+          },
+          {
+            "browser_start_time": 185,
+            "fcp": 240,
+            "dom_interactive": 78.5,
+            "dom_content_loaded": 220.30000001192093,
+            "load": 408
+          },
+          {
+            "browser_start_time": 177,
+            "fcp": 220,
+            "dom_interactive": 65.5,
+            "dom_content_loaded": 209.89999997615814,
+            "load": 389.10000002384186
+          },
+          {
+            "browser_start_time": 168,
+            "fcp": 236,
+            "dom_interactive": 77.39999997615814,
+            "dom_content_loaded": 226.30000001192093,
+            "load": 404.10000002384186
+          },
+          {
+            "browser_start_time": 172,
+            "fcp": 220,
+            "dom_interactive": 66.09999996423721,
+            "dom_content_loaded": 209.69999998807907,
+            "load": 388.5999999642372
+          },
+          {
+            "browser_start_time": 169,
+            "fcp": 236,
+            "dom_interactive": 74.19999998807907,
+            "dom_content_loaded": 225.30000001192093,
+            "load": 403.60000002384186
+          },
+          {
+            "browser_start_time": 175,
+            "fcp": 224,
+            "dom_interactive": 67.69999998807907,
+            "dom_content_loaded": 207.39999997615814,
+            "load": 391.80000001192093
+          },
+          {
+            "browser_start_time": 171,
+            "fcp": 232,
+            "dom_interactive": 72.09999996423721,
+            "dom_content_loaded": 221.5,
+            "load": 399.39999997615814
+          },
+          {
+            "browser_start_time": 162,
+            "fcp": 216,
+            "dom_interactive": 63,
+            "dom_content_loaded": 206.10000002384186,
+            "load": 421.5
+          },
+          {
+            "browser_start_time": 156,
+            "fcp": 216,
+            "dom_interactive": 65.60000002384186,
+            "dom_content_loaded": 208.4000000357628,
+            "load": 387.80000001192093
+          }
+        ],
+        "warm": []
+      }
+    }
+  },
+  "Firefox": {
+    "JS_on": {
+      "https://aimaas.trustee-1.ics.forth.gr/": {
+        "cold": [
+          {
+            "browser_start_time": 1188,
+            "fcp": 640,
+            "dom_interactive": 399,
+            "dom_content_loaded": 638,
+            "load": 816
+          },
+          {
+            "browser_start_time": 935,
+            "fcp": 537,
+            "dom_interactive": 326,
+            "dom_content_loaded": 536,
+            "load": 730
+          },
+          {
+            "browser_start_time": 1164,
+            "fcp": 639,
+            "dom_interactive": 386,
+            "dom_content_loaded": 627,
+            "load": 803
+          },
+          {
+            "browser_start_time": 2653,
+            "fcp": 1093,
+            "dom_interactive": 746,
+            "dom_content_loaded": 1080,
+            "load": 1319
+          },
+          {
+            "browser_start_time": 2401,
+            "fcp": 748,
+            "dom_interactive": 484,
+            "dom_content_loaded": 738,
+            "load": 918
+          },
+          {
+            "browser_start_time": 2937,
+            "fcp": 755,
+            "dom_interactive": 491,
+            "dom_content_loaded": 741,
+            "load": 946
+          },
+          {
+            "browser_start_time": 1920,
+            "fcp": 908,
+            "dom_interactive": 622,
+            "dom_content_loaded": 893,
+            "load": 1122
+          },
+          {
+            "browser_start_time": 1596,
+            "fcp": 902,
+            "dom_interactive": 617,
+            "dom_content_loaded": 942,
+            "load": 1089
+          },
+          {
+            "browser_start_time": 1349,
+            "fcp": 622,
+            "dom_interactive": 387,
+            "dom_content_loaded": 606,
+            "load": 795
+          },
+          {
+            "browser_start_time": 1106,
+            "fcp": 560,
+            "dom_interactive": 346,
+            "dom_content_loaded": 554,
+            "load": 730
+          }
+        ],
+        "warm": []
+      }
+    }
+  },
+  "WebKit": {
+    "JS_on": {
+      "https://aimaas.trustee-1.ics.forth.gr/": {
+        "cold": [
+          {
+            "browser_start_time": 338,
+            "fcp": 256,
+            "dom_interactive": 54,
+            "dom_content_loaded": 244,
+            "load": 390
+          },
+          {
+            "browser_start_time": 244,
+            "fcp": 204.00000000000003,
+            "dom_interactive": 42,
+            "dom_content_loaded": 217,
+            "load": 372
+          },
+          {
+            "browser_start_time": 267,
+            "fcp": 254,
+            "dom_interactive": 46,
+            "dom_content_loaded": 212,
+            "load": 409.00000000000006
+          },
+          {
+            "browser_start_time": 324,
+            "fcp": 248,
+            "dom_interactive": 56,
+            "dom_content_loaded": 277,
+            "load": 418
+          },
+          {
+            "browser_start_time": 411,
+            "fcp": 251,
+            "dom_interactive": 49,
+            "dom_content_loaded": 232,
+            "load": 400
+          },
+          {
+            "browser_start_time": 491,
+            "fcp": 300,
+            "dom_interactive": 55,
+            "dom_content_loaded": 244,
+            "load": 430
+          },
+          {
+            "browser_start_time": 491,
+            "fcp": 289,
+            "dom_interactive": 69,
+            "dom_content_loaded": 249,
+            "load": 513
+          },
+          {
+            "browser_start_time": 523,
+            "fcp": 245,
+            "dom_interactive": 52.00000000000001,
+            "dom_content_loaded": 228,
+            "load": 420
+          },
+          {
+            "browser_start_time": 473,
+            "fcp": 228,
+            "dom_interactive": 50,
+            "dom_content_loaded": 250,
+            "load": 396
+          },
+          {
+            "browser_start_time": 389,
+            "fcp": 223,
+            "dom_interactive": 52.00000000000001,
+            "dom_content_loaded": 242,
+            "load": 394
+          }
+        ],
+        "warm": []
+      }
+    }
+  }
+}
