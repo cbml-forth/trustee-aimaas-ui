@@ -628,8 +628,9 @@ export async function do_kg_get_prosumer_data(user: User, w: ProsumerWorkflowDat
             for (const q in search_queries) {
                 const res_query = kg_results_to_ast(search_queries[q].complete_query);
                 if (query == res_query && res.hasMatchedModel) {
-                    console.log("KG: Found models:", res.hasMatchedModel);
-                    (res.hasMatchedModel || []).forEach((m: string) => tt.add(m));
+                    const results = Array.isArray(res.hasMatchedModel) ? res.hasMatchedModel : [res.hasMatchedModel];
+                    console.log("KG: Found models:", results);
+                    results.forEach((m: string) => tt.add(m));
                 }
             }
         }
