@@ -2,13 +2,11 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import { FLProcessStatusData, ProsumerWorkflowData, ProsumerWorkflowFLData, User } from "@/utils/types.ts";
 import { do_fl_poll, update_global_model_round } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
-import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
+import { db_get, db_store, user_session_data } from "@/utils/db.ts";
 
 import { redirect } from "@/utils/http.ts";
 import { prosumer_key } from "@/utils/misc.ts";
-import ProsumerStep3 from "@/islands/prosumer/ProsumerStep3.tsx";
 import AutoReload from "@/islands/AutoReload.tsx";
-import { DATA_CURRENT } from "$fresh/src/constants.ts";
 
 interface Data {
     process_name: string;
@@ -28,7 +26,7 @@ async function user_profile(sessionId: string): Promise<User> {
 // STEP3: allow the user to select the FL parameters and start the FL process
 
 export const handler: Handlers<unknown, SessionState> = {
-    async POST(req, ctx) {
+    async POST(_req, _ctx) {
         // const user = await get_user(req, ctx.state.session);
         // if (!user) {
         //     return redirect_to_login(req);
@@ -113,7 +111,7 @@ export const handler: Handlers<unknown, SessionState> = {
             const flprocessstatus: FLProcessStatusData = await do_fl_poll(user, fl_process_data.process_id);
             const previous_status = prosumer_data.fl_process.status;
             if (previous_status.current_round < flprocessstatus.current_round) {
-                const [global_model_id, dl_error] = await update_global_model_round(
+                const [global_model_id, _dl_error] = await update_global_model_round(
                     user,
                     fl_process_data.process_id,
                     flprocessstatus.current_round,

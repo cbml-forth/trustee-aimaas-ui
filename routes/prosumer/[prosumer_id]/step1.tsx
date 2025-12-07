@@ -1,6 +1,14 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { Domain, ProsumerWorkflowData, SSISearchCriterion, SSISearchCriterionOperator, User } from "@/utils/types.ts";
-import { dl_domains, do_kg_get_prosumer_data, do_ssi_search } from "@/utils/backend.ts";
+import {
+    Domain,
+    ModelSearchAttributeCriterion,
+    ModelSearchCriterion,
+    ProsumerWorkflowData,
+    SSISearchCriterion,
+    SSISearchCriterionOperator,
+    User,
+} from "@/utils/types.ts";
+import { dl_domains, do_dl_model_search, do_kg_get_prosumer_data, do_ssi_search } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import ProsumerStep1 from "@/islands/prosumer/ProsumerStep1.tsx";
 import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
@@ -74,6 +82,27 @@ export const handler: Handlers<unknown, SessionState> = {
 
         console.log("CRITERIA", filters);
 
+        // Make a similar query to the DL to locate global models
+        // that can be used as starting points for the FL process
+
+        const model_search_map: Map<Domain, ModelSearchAttributeCriterion[]> = new Map();
+        filters.forEach((filter) => {
+            if (model_search_map.has(filter.domain)) {
+                model_search_map.get(filter.domain)?.push({ attribute: filter.attribute, value: filter.value });
+            } else {
+                model_search_map.set(filter.domain, [{ attribute: filter.attribute, value: filter.value }]);
+            }
+        });
+        const model_search_criteria: ModelSearchCriterion[] = model_search_map.entries().map(([domain, criteria]) => ({
+            domain,
+            attributes: criteria,
+        })).toArray();
+
+        const global_models = (await do_dl_model_search(
+            user,
+            model_search_criteria,
+        )) ?? [];
+
         const w: ProsumerWorkflowData = {
             id: prosumer_id,
             name: process_name,
@@ -81,6 +110,7 @@ export const handler: Handlers<unknown, SessionState> = {
                 status: "NOT STARTED",
                 process_id: "",
                 criteria: filters,
+                global_models: global_models,
             },
             models_selected: [],
             kg_results: [],

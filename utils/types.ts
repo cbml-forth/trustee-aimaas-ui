@@ -69,6 +69,7 @@ export interface ProsumerWorkflowSSIData {
     process_id: string;
     status: SSISearchStatus;
     criteria: SSISearchCriterion[];
+    global_models: ModelSearchResponseItem[]; // Global models matching SSI criteria if found
     results?: string[]; // Results, "model ids"
 }
 

@@ -1,12 +1,13 @@
 import { BasicSelect, SelectOption, SelectProps } from "@/components/Select.tsx";
 import { batch, Signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
 import classNames from "@/utils/classnames.js";
-import { ProsumerWorkflowFLData } from "@/utils/types.ts";
+import { ModelSearchResponseItem, ProsumerWorkflowFLData } from "@/utils/types.ts";
 
 export default function ProsumerStep3(props: {
     process_name: string;
     disabled: boolean;
     fl_process?: ProsumerWorkflowFLData;
+    global_models: ModelSearchResponseItem[];
 }) {
     console.log("STEP2 disabled", props.disabled);
     // const initial_filters = props.criteria
@@ -64,12 +65,15 @@ export default function ProsumerStep3(props: {
     //     })
     // );
 
+    const selected_global_model_id = useSignal<number>(0);
     const aggregationRule = useSignal<string>(props.fl_process?.computation ?? "Simple Averaging");
     const num_of_fl_rounds = useSignal<number>(props.fl_process?.number_of_rounds ?? 1);
     const num_of_iterations = useSignal<number>(props.fl_process?.num_of_iterations ?? 1);
     const error_num_of_iterations = useSignal<boolean>(false);
     const solver = useSignal<string>(props.fl_process?.solver ?? "HQS"); //  ["HQS", "ADMM"]
     const denoiser = useSignal<string>(props.fl_process?.denoiser ?? "CNN"); // ["CNN", "Autoencoder", "Transformer"]
+
+    console.log(props);
 
     const onChangeAggregationRule = (e: Event) => {
         const target = e.target as HTMLInputElement;
@@ -197,6 +201,33 @@ export default function ProsumerStep3(props: {
                         <label>Number of FL Rounds</label>
                         <i>numbers</i>
                     </div>
+                    {props.global_models.length > 0 && (
+                        <>
+                            <h5>Global Models to initialize the FL process</h5>
+                            <div class="grid large-space">
+                                {props.global_models.map((r, index) => (
+                                    <div class="secondary-container padding s12 m6 l3" id={`model-${index}`}>
+                                        <label class="radio extra">
+                                            <input
+                                                type="radio"
+                                                name="model"
+                                                value={r.id}
+                                                disabled={props.disabled}
+                                                checked={r.id == selected_global_model_id.peek()}
+                                            />
+                                            <span>Model {r.name ?? ""} (ID: {r.id} - Size: {r.size ?? ""})</span>
+                                        </label>
+                                        {r.name && <div>Name: {r.name}</div>}
+                                        {r.application_type && <div>Application type: {r.application_type}</div>}
+                                        {r.round && <div>Rounds: {r.round}</div>}
+                                        {r.input && <div>Input: {r.input}</div>}
+                                        {r.output && <div>Output: {r.output}</div>}
+                                        {r.nn_architecture && <div>Architecture: {r.nn_architecture}</div>}
+                                    </div>
+                                ))}
+                            </div>
+                        </>
+                    )}
                 </p>
 
                 {!props.disabled && (

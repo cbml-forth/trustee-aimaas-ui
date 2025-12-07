@@ -61,7 +61,7 @@ export default function Step2Page(props: PageProps<Data>) {
     const disabled = !!selected_model_id;
     const pp = (r: ModelSearchResponseItem) => {
         return (
-            <div class="padding ">
+            <div class="padding secondary-container s12 m6 l3">
                 <label class="radio extra">
                     <input
                         type="radio"
@@ -70,7 +70,7 @@ export default function Step2Page(props: PageProps<Data>) {
                         disabled={disabled}
                         checked={r.id == selected_model_id}
                     />
-                    <span>Model {r.name ?? ""} ({r.id} - {r.size ?? ""})</span>
+                    <span>Model {r.name ?? ""} (ID: {r.id} - Size: {r.size ?? ""})</span>
                 </label>
                 {r.name && <div>Name: {r.name}</div>}
                 {r.application_type && <div>Application type: {r.application_type}</div>}
@@ -90,7 +90,7 @@ export default function Step2Page(props: PageProps<Data>) {
                     <legend>
                         {disabled ? "You have selected the following model" : "Select one of the models below"}
                     </legend>
-                    <nav class="vertical">
+                    <nav class="grid large-space">
                         {results.map(pp)}
                     </nav>
                 </fieldset>

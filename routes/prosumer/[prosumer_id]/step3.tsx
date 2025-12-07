@@ -1,8 +1,8 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { Domain, ProsumerWorkflowData, ProsumerWorkflowFLData, SSISearchCriterion, User } from "@/utils/types.ts";
-import { dl_domains, do_fl_poll, do_fl_submit, do_ssi_poll } from "@/utils/backend.ts";
+import { ModelSearchResponseItem, ProsumerWorkflowData, ProsumerWorkflowFLData, User } from "@/utils/types.ts";
+import { do_fl_poll, do_fl_submit, do_ssi_poll } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
-import { db_get, db_store, set_user_session_data, user_session_data } from "@/utils/db.ts";
+import { db_get, db_store, user_session_data } from "@/utils/db.ts";
 
 import { redirect } from "@/utils/http.ts";
 import { prosumer_key } from "@/utils/misc.ts";
@@ -12,6 +12,7 @@ interface Data {
     process_name: string;
     disabled: boolean;
     fl_process?: ProsumerWorkflowFLData;
+    global_models: ModelSearchResponseItem[];
 }
 
 async function user_profile(sessionId: string): Promise<User> {
@@ -117,17 +118,19 @@ export const handler: Handlers<unknown, SessionState> = {
             process_name: prosumer_data?.name || "",
             fl_process: fl_process_data,
             disabled: disabled,
+            global_models: prosumer_data.ssi.global_models,
         });
     },
 };
 
 export default function Step3Page(props: PageProps<Data>) {
-    console.log("disabled", props.data.disabled);
+    console.log("disabled-3", props.data.disabled);
     return (
         <ProsumerStep3
             process_name={props.data.process_name}
             disabled={props.data.disabled}
             fl_process={props.data.fl_process}
+            global_models={props.data.global_models}
         />
     );
 }
