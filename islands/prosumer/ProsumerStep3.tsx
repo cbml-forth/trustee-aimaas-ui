@@ -203,8 +203,21 @@ export default function ProsumerStep3(props: {
                     </div>
                     {props.global_models.length > 0 && (
                         <>
-                            <h5>Global Models to initialize the FL process</h5>
+                            <h5>Choose existing Models to initialize the FL process</h5>
                             <div class="grid large-space">
+                                <div class="secondary-container padding s12 m6 l3" id="model-random-init">
+                                    <label class="radio extra">
+                                        <input
+                                            type="radio"
+                                            name="model"
+                                            value="0"
+                                            disabled={props.disabled}
+                                            checked={true}
+                                        />
+                                        <span>Random weights initialization</span>
+                                    </label>
+                                </div>
+
                                 {props.global_models.map((r, index) => (
                                     <div class="secondary-container padding s12 m6 l3" id={`model-${index}`}>
                                         <label class="radio extra">
