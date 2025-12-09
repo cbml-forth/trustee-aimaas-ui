@@ -91,6 +91,7 @@ export interface ProsumerWorkflowFLData {
     solver: string;
     denoiser: string;
     num_of_iterations: number;
+    fl_initialization_model?: number;
 }
 
 export interface ProsumerWorkflowData {

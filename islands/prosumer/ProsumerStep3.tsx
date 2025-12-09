@@ -213,7 +213,7 @@ export default function ProsumerStep3(props: {
                                     <label class="radio extra">
                                         <input
                                             type="radio"
-                                            name="fl_initialization"
+                                            name="fl_initialization_model"
                                             value="0"
                                             disabled={props.disabled}
                                             checked={0 == selected_global_model_id.value}
@@ -228,7 +228,7 @@ export default function ProsumerStep3(props: {
                                         <label class="radio extra">
                                             <input
                                                 type="radio"
-                                                name="fl_initialization"
+                                                name="fl_initialization_model"
                                                 value={r.id}
                                                 disabled={props.disabled}
                                                 checked={r.id == selected_global_model_id.value}
