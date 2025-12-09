@@ -46,7 +46,7 @@ export const handler: Handlers<unknown, SessionState> = {
 
         const process_name = `AIMaaS-FL-${prosumer_id}`;
         const aggregationRule = data.get("computation")?.toString() || "Simple Averaging";
-        const fl_initialization_model = data.get("fl_initialization_model")?.toString() || "0";
+        const fl_initialization_model = parseInt(data.get("fl_initialization_model")?.toString() || "0");
         const fl_request = {
             dataProviderIDs: w.models_selected,
             modelConsumerEndpoint: "https://trustee-test-hedf-mc.cybersec.digital.tecnalia.dev",
@@ -56,7 +56,7 @@ export const handler: Handlers<unknown, SessionState> = {
             "num-of-iterations": parseInt(data.get("num-of-iterations")?.toString() || "1"),
             solver: data.get("solver")?.toString() || "ADMM",
             denoiser: data.get("denoiser")?.toString() || "Transformer",
-            fl_initialization_model: parseInt(fl_initialization_model),
+            fl_initialization_model: fl_initialization_model,
         };
 
         console.log("FL REQUEST", fl_request);
@@ -72,6 +72,7 @@ export const handler: Handlers<unknown, SessionState> = {
             denoiser: fl_request.denoiser,
             num_of_iterations: fl_request["num-of-iterations"],
             number_of_rounds: fl_request.numberOfRounds,
+            fl_initialization_model: fl_request.fl_initialization_model,
         };
         w.fl_process = fl_data;
         await db_store(prosumer_key(user, prosumer_id), w);

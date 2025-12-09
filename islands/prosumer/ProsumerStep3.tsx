@@ -64,7 +64,7 @@ export default function ProsumerStep3(props: {
     //     })
     // );
 
-    const selected_global_model_id: Signal<number> = useSignal<number>(0);
+    const selected_global_model_id: Signal<number> = useSignal<number>(props.fl_process?.fl_initialization_model ?? 0);
     const aggregationRule: Signal<string> = useSignal<string>(props.fl_process?.computation ?? "Simple Averaging");
     const num_of_fl_rounds: Signal<number> = useSignal<number>(props.fl_process?.number_of_rounds ?? 1);
     const num_of_iterations: Signal<number> = useSignal<number>(props.fl_process?.num_of_iterations ?? 1);
