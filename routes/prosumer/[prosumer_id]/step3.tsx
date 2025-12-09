@@ -1,5 +1,11 @@
 import { Handlers, PageProps } from "$fresh/server.ts";
-import { ModelSearchResponseItem, ProsumerWorkflowData, ProsumerWorkflowFLData, User } from "@/utils/types.ts";
+import {
+    FLStartAggregationRequest,
+    ModelSearchResponseItem,
+    ProsumerWorkflowData,
+    ProsumerWorkflowFLData,
+    User,
+} from "@/utils/types.ts";
 import { do_fl_poll, do_fl_submit, do_ssi_poll } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
 import { db_get, db_store, user_session_data } from "@/utils/db.ts";
@@ -46,18 +52,25 @@ export const handler: Handlers<unknown, SessionState> = {
 
         const process_name = `AIMaaS-FL-${prosumer_id}`;
         const aggregationRule = data.get("computation")?.toString() || "Simple Averaging";
+        const solver = data.get("solver")?.toString() || "ADMM";
+        const denoiser = data.get("denoiser")?.toString() || "Transformer";
+        const numIterations = parseInt(data.get("num-of-iterations")?.toString() || "1");
         const fl_initialization_model = parseInt(data.get("fl_initialization_model")?.toString() || "0");
-        const fl_request = {
+        const fl_request: FLStartAggregationRequest = {
             dataProviderIDs: w.models_selected,
             modelConsumerEndpoint: "https://trustee-test-hedf-mc.cybersec.digital.tecnalia.dev",
             computation: aggregationRule,
             processID: process_name,
             numberOfRounds: parseInt(data.get("number-of-rounds")?.toString() || "1"),
-            "num-of-iterations": parseInt(data.get("num-of-iterations")?.toString() || "1"),
-            solver: data.get("solver")?.toString() || "ADMM",
-            denoiser: data.get("denoiser")?.toString() || "Transformer",
             fl_initialization_model: fl_initialization_model,
-        };
+        } as FLStartAggregationRequest;
+        if (aggregationRule == "Extended Averaging") {
+            fl_request.extendedAggregationParameters = {
+                iterations: numIterations,
+                denoiser: denoiser,
+                solver: solver,
+            };
+        }
 
         console.log("FL REQUEST", fl_request);
         const fl_started = await do_fl_submit(user, fl_request);
@@ -68,12 +81,13 @@ export const handler: Handlers<unknown, SessionState> = {
             process_id: process_name,
             models: w.models_selected,
             computation: aggregationRule,
-            solver: fl_request.solver,
-            denoiser: fl_request.denoiser,
-            num_of_iterations: fl_request["num-of-iterations"],
+            solver: solver,
+            denoiser: denoiser,
+            num_of_iterations: numIterations,
             number_of_rounds: fl_request.numberOfRounds,
             fl_initialization_model: fl_request.fl_initialization_model,
         };
+
         w.fl_process = fl_data;
         await db_store(prosumer_key(user, prosumer_id), w);
 

@@ -83,7 +83,7 @@ export const handler: Handlers<Data, SessionState> = {
 
 export default function ProsumerIndexPage({ data }: PageProps<Data>) {
     const nextStep = function (w: ProsumerWorkflowData) {
-        console.log("ROUTING ", w);
+        // console.log("ROUTING ", w);
         // if (w.model_downloaded === true) {
         //     return "step5";
         // }

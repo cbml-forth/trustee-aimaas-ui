@@ -135,6 +135,12 @@ Field Descriptions:
 
 */
 
+export interface FLExtendedAggregationParameters {
+    iterations: number;
+    solver: string;
+    denoiser: string;
+}
+
 export interface FLStartAggregationRequest {
     dataProviderIDs: string[]; // json: "data-provider-IDs"
     modelConsumerEndpoint: string; // json: "model-consumer-endpoint"
@@ -142,6 +148,7 @@ export interface FLStartAggregationRequest {
     processID: string; // json: "process-ID"
     numberOfRounds: number; // json: "number-of-rounds"
     fl_initialization_model?: number;
+    extendedAggregationParameters?: FLExtendedAggregationParameters;
 }
 
 export interface ProviderWorkflowData {

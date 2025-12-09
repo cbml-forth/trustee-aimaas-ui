@@ -54,7 +54,7 @@ export async function user_profile(session_id: string | null): Promise<User | nu
 }
 
 export async function db_store(key: string[], data: unknown) {
-    console.log("DB store at", key, data);
+    // console.log("DB store at", key, data);
     return await kv.set(key, data);
 }
 export async function db_get<T = unknown>(key: string[]): Promise<T | null> {
