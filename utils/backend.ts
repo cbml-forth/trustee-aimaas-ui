@@ -214,6 +214,7 @@ export async function do_fl_submit(
         "computation": flReq.computation,
         "process-ID": flReq.processID,
         "number-of-rounds": flReq.numberOfRounds,
+        "fl-initialization-model": flReq.fl_initialization_model || 0,
     };
     const id_token = user.tokens.id_token;
     print(`FLStartAggregation with token ${id_token} and body:\n`, q);

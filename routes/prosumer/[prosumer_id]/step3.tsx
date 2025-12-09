@@ -15,12 +15,6 @@ interface Data {
     global_models: ModelSearchResponseItem[];
 }
 
-async function user_profile(sessionId: string): Promise<User> {
-    const { value } = await user_session_data(sessionId, "user");
-    const user: User = value as User;
-    return user;
-}
-
 // STEP3: allow the user to select the FL parameters and start the FL process
 
 export const handler: Handlers<unknown, SessionState> = {
@@ -52,6 +46,7 @@ export const handler: Handlers<unknown, SessionState> = {
 
         const process_name = `AIMaaS-FL-${prosumer_id}`;
         const aggregationRule = data.get("computation")?.toString() || "Simple Averaging";
+        const fl_initialization_model = data.get("fl_initialization_model")?.toString() || "0";
         const fl_request = {
             dataProviderIDs: w.models_selected,
             modelConsumerEndpoint: "https://trustee-test-hedf-mc.cybersec.digital.tecnalia.dev",
@@ -61,6 +56,7 @@ export const handler: Handlers<unknown, SessionState> = {
             "num-of-iterations": parseInt(data.get("num-of-iterations")?.toString() || "1"),
             solver: data.get("solver")?.toString() || "ADMM",
             denoiser: data.get("denoiser")?.toString() || "Transformer",
+            fl_initialization_model: parseInt(fl_initialization_model),
         };
 
         console.log("FL REQUEST", fl_request);

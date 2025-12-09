@@ -1,6 +1,5 @@
-import { BasicSelect, SelectOption, SelectProps } from "@/components/Select.tsx";
-import { batch, Signal, useComputed, useSignal, useSignalEffect } from "@preact/signals";
-import classNames from "@/utils/classnames.js";
+import { BasicSelect, SelectOption } from "@/components/Select.tsx";
+import { Signal, useSignal } from "@preact/signals";
 import { ModelSearchResponseItem, ProsumerWorkflowFLData } from "@/utils/types.ts";
 
 export default function ProsumerStep3(props: {
@@ -65,19 +64,18 @@ export default function ProsumerStep3(props: {
     //     })
     // );
 
-    const selected_global_model_id = useSignal<number>(0);
-    const aggregationRule = useSignal<string>(props.fl_process?.computation ?? "Simple Averaging");
-    const num_of_fl_rounds = useSignal<number>(props.fl_process?.number_of_rounds ?? 1);
-    const num_of_iterations = useSignal<number>(props.fl_process?.num_of_iterations ?? 1);
-    const error_num_of_iterations = useSignal<boolean>(false);
-    const solver = useSignal<string>(props.fl_process?.solver ?? "HQS"); //  ["HQS", "ADMM"]
-    const denoiser = useSignal<string>(props.fl_process?.denoiser ?? "CNN"); // ["CNN", "Autoencoder", "Transformer"]
+    const selected_global_model_id: Signal<number> = useSignal<number>(0);
+    const aggregationRule: Signal<string> = useSignal<string>(props.fl_process?.computation ?? "Simple Averaging");
+    const num_of_fl_rounds: Signal<number> = useSignal<number>(props.fl_process?.number_of_rounds ?? 1);
+    const num_of_iterations: Signal<number> = useSignal<number>(props.fl_process?.num_of_iterations ?? 1);
+    const error_num_of_iterations: Signal<boolean> = useSignal<boolean>(false);
+    const solver: Signal<string> = useSignal<string>(props.fl_process?.solver ?? "HQS"); //  ["HQS", "ADMM"]
+    const denoiser: Signal<string> = useSignal<string>(props.fl_process?.denoiser ?? "CNN"); // ["CNN", "Autoencoder", "Transformer"]
 
     console.log(props);
 
     const onChangeAggregationRule = (e: Event) => {
         const target = e.target as HTMLInputElement;
-        console.log("GOT", target, target.value);
         aggregationRule.value = target.value;
     };
 
@@ -96,6 +94,12 @@ export default function ProsumerStep3(props: {
         const target = e.currentTarget as HTMLInputElement;
         const value = parseInt(target.value);
         num_of_fl_rounds.value = value;
+    };
+
+    const onChangeFLInitialization = (e: Event) => {
+        const target = e.currentTarget as HTMLInputElement;
+        const value = parseInt(target.value);
+        selected_global_model_id.value = value;
     };
 
     const solverOptions: SelectOption[] = ["HQS", "ADMM"].map(
@@ -203,16 +207,17 @@ export default function ProsumerStep3(props: {
                     </div>
                     {props.global_models.length > 0 && (
                         <>
-                            <h5>Choose existing Models to initialize the FL process</h5>
+                            <h5>FL Initialization</h5>
                             <div class="grid large-space">
                                 <div class="secondary-container padding s12 m6 l3" id="model-random-init">
                                     <label class="radio extra">
                                         <input
                                             type="radio"
-                                            name="model"
+                                            name="fl_initialization"
                                             value="0"
                                             disabled={props.disabled}
-                                            checked={true}
+                                            checked={0 == selected_global_model_id.value}
+                                            onChange={onChangeFLInitialization}
                                         />
                                         <span>Random weights initialization</span>
                                     </label>
@@ -223,10 +228,11 @@ export default function ProsumerStep3(props: {
                                         <label class="radio extra">
                                             <input
                                                 type="radio"
-                                                name="model"
+                                                name="fl_initialization"
                                                 value={r.id}
                                                 disabled={props.disabled}
-                                                checked={r.id == selected_global_model_id.peek()}
+                                                checked={r.id == selected_global_model_id.value}
+                                                onChange={onChangeFLInitialization}
                                             />
                                             <span>Model {r.name ?? ""} (ID: {r.id} - Size: {r.size ?? ""})</span>
                                         </label>

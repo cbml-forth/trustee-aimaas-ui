@@ -140,6 +140,7 @@ export interface FLStartAggregationRequest {
     computation: string; // json: "computation"
     processID: string; // json: "process-ID"
     numberOfRounds: number; // json: "number-of-rounds"
+    fl_initialization_model?: number;
 }
 
 export interface ProviderWorkflowData {

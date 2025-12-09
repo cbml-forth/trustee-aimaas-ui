@@ -65,7 +65,7 @@ export default function Step2Page(props: PageProps<Data>) {
                 <label class="radio extra">
                     <input
                         type="radio"
-                        name="model"
+                        name="fl_initialization"
                         value={r.id}
                         disabled={disabled}
                         checked={r.id == selected_model_id}
