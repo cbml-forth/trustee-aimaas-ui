@@ -6,9 +6,9 @@ import {
     ProsumerWorkflowFLData,
     User,
 } from "@/utils/types.ts";
-import { do_fl_poll, do_fl_submit, do_ssi_poll } from "@/utils/backend.ts";
+import { dl_get_consumer_endpoint, do_fl_poll, do_fl_submit, do_ssi_poll } from "@/utils/backend.ts";
 import { get_user, redirect_to_login, SessionState } from "@/utils/http.ts";
-import { db_get, db_store, user_session_data } from "@/utils/db.ts";
+import { db_get, db_store } from "@/utils/db.ts";
 
 import { redirect } from "@/utils/http.ts";
 import { prosumer_key } from "@/utils/misc.ts";
@@ -25,7 +25,7 @@ interface Data {
 
 export const handler: Handlers<unknown, SessionState> = {
     async POST(req, ctx) {
-        const user = await get_user(req, ctx.state.session);
+        const user: User | null = await get_user(req, ctx.state.session);
         if (!user) {
             return redirect_to_login(req);
         }
@@ -56,9 +56,11 @@ export const handler: Handlers<unknown, SessionState> = {
         const denoiser = data.get("denoiser")?.toString() || "Transformer";
         const numIterations = parseInt(data.get("num-of-iterations")?.toString() || "1");
         const fl_initialization_model = parseInt(data.get("fl_initialization_model")?.toString() || "0");
+        const endpoint = (await dl_get_consumer_endpoint(user.tokens.id_token, user.id)) ||
+            "https://trustee-test-hedf-mc.cybersec.digital.tecnalia.dev";
         const fl_request: FLStartAggregationRequest = {
             dataProviderIDs: w.models_selected,
-            modelConsumerEndpoint: "https://trustee-test-hedf-mc.cybersec.digital.tecnalia.dev",
+            modelConsumerEndpoint: endpoint,
             computation: aggregationRule,
             processID: process_name,
             numberOfRounds: parseInt(data.get("number-of-rounds")?.toString() || "1"),

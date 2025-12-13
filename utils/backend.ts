@@ -87,6 +87,34 @@ export async function dl_get_fl_endpoint(id_token: string, model_provider_id: st
     return data["fl_client_endpoint"] || undefined;
 }
 
+export async function dl_get_consumer_endpoint(
+    id_token: string,
+    data_provider_id: string,
+): Promise<string | undefined> {
+    const url = new URL(DL_API + "/hedf/ConsumerEndpoints");
+
+    url.searchParams.append("data_provider_id", data_provider_id);
+
+    const req = await fetch(url.href, {
+        headers: { "Authorization": `Bearer ${id_token}` },
+        method: "GET",
+    });
+    if (!req.ok) {
+        print(`DL HEDF Consumer Endpoint for ${data_provider_id} not found with token ${id_token}`);
+        return undefined;
+    }
+
+    const data = await req.json();
+    if (!data) {
+        return undefined;
+    }
+
+    if (Array.isArray(data) && data.length > 0) {
+        return data[data.length - 1]["endpoint"] || undefined;
+    }
+    return data["endpoint"] || undefined;
+}
+
 export async function atr_log(
     user: string,
     domain: string,
